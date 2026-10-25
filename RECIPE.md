@@ -94,7 +94,8 @@ mkdir -p "$COMFY/models/diffusion_models" "$COMFY/models/text_encoders" "$COMFY/
 | `minimax_h3_audio_vae_fp32.safetensors` | `vae/` | 605,254,808 | `8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48` |
 
 **Check the encoder before you trust it.** A truncated or corrupted safetensors file can have a
-healthy header and garbage behind it. The trap is a model that loads and then produces nothing. The receipt `receipts/encoder-diagnosis.md` documents the exact case we hit: the file
+healthy header and garbage behind it. The trap is a model that loads and then produces nothing.
+The receipt `receipts/encoder-diagnosis.md` documents the exact case we hit: the file
 arrived at 21,714,795,671 bytes — 6,027,653,120 bytes of unaccounted trailing data past a header
 that declared the right length.
 

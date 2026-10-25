@@ -92,6 +92,11 @@ is the next run, and those two components are what the published 1.54× ladder d
     figures, and our own seed-matched A/B at **1.44×** (8 steps), **1.17×** (16 steps) and
     **3.16×** (4-step turbo LoRA).
   - Six rendered clips and a demo video, with hashes for all of them.
+  - **Verified on a fresh clone.** A clean clone installs the node packs against a clean ComfyUI
+    and renders the shipped `workflows/h3-fullstack.json` end to end — 864×480, 124 frames, seed
+    46 — with FirstBlockCache skipping the same six sampling steps as the published ladder, and
+    the output byte-identical across two runs. Receipt:
+    [`receipts/fresh-clone-render.md`](receipts/fresh-clone-render.md).
   - `scripts/check_receipts.py`, run on every push and every pull request, which stops the build
     when a published number stops matching the file behind it.
 

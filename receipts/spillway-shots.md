@@ -58,9 +58,10 @@ and the third is an auto-selected shot made during the run.
 
 **`accelerate` is `false` on all three.** These clips were rendered with the acceleration stack
 switched off. They are evidence that the production harness, the gates and the curation work; they
-are not evidence that the acceleration stack is faster. The one speed claim this repository makes
-about its own hardware is the SageAttention A/B in `receipts/sage-attention-ab.md`, and that
-result was **no measurable gain**.
+are not evidence that the acceleration stack is faster. This repository's speed claims about its
+own hardware are the seed-matched A/B — **1.44×** at 8 steps and **1.17×** at 16 steps — recorded
+in `receipts/bench-matrix.tsv` and `receipts/our-acceleration-ab.md`. The isolated SageAttention
+arm in `receipts/sage-attention-ab.md` was rejected before sampling.
 
 ## Measured motion metrics
 

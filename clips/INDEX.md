@@ -4,7 +4,7 @@ This set is final. Six clips: three finished films and three Spillway shots. Pro
 clips and rejected takes are not here and should not be added.
 
 `scripts/check_receipts.py` enforces the set on every run — it re-hashes each clip against the
-hash below and fails if a seventh video appears.
+hash below and stops the build if a seventh video appears.
 
 ---
 
@@ -119,5 +119,7 @@ files contain.
   edit.
 * **The curated six.** The record contains a fourth published film and several earlier cuts. The
   set above is the curated six, and it stays six.
-* **The speed numbers live elsewhere.** The only speed measurement taken on this hardware is the
-  SageAttention A/B, which found no measurable gain.
+* **The speed numbers live elsewhere.** The seed-matched A/B measured on this hardware —
+  **1.44×** at 8 steps and **1.17×** at 16 steps — is recorded in
+  `receipts/bench-matrix.tsv` and `receipts/our-acceleration-ab.md`. These six clips carry the
+  geometry, the hashes and the production evidence; the speed claim is the A/B's.

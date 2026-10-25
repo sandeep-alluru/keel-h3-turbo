@@ -73,6 +73,9 @@ Measured by us on our own DGX Spark (`sm_121`). Hashes and byte counts are in th
 | Number | What it is | Receipt |
 |---|---|---|
 | `20,958,205,608` bytes (`21.0 GB`) | Pruned FP8-scaled FL2VA DiT, SHA-256 `12944c1f7791637e7de12208aef04da82bd26b95271b1b47d817364315ade993` | `receipts/verification.json` |
+| `20,970,379,616` bytes (`21.0 GB`) | Pruned INT8 ConvRot FL2VA DiT — the denoiser the shipped workflow names — SHA-256 `e889202c41dafb67b10d67b97f0d8541508036a6090af23425a5c2615d03c47a`, re-hashed at render time | `receipts/weights.md`, `receipts/fresh-clone-render.md` |
+| `5d4ac708…` | SHA-256 of the clip rendered by the shipped workflow from a fresh clone, 864×480, 124 frames — byte-identical across two runs | `receipts/fresh-clone-render.md` |
+| steps **6, 7, 9, 10, 12, 13** skipped of 20 | FirstBlockCache's decisions on this stack — the same six the published ladder skips | `receipts/fresh-clone-render.md` |
 | `15,687,142,551` bytes (`15.7 GB`) | NVFP4/AWQ Qwen3-VL-32B text encoder, re-downloaded clean | `receipts/verification.json` |
 | `21,714,795,671` bytes | The corrupt encoder file: `6,027,653,120` unaccounted trailing bytes | `receipts/verification.json`, `receipts/encoder-diagnosis.md` |
 | `5,207,808,496` / `605,254,808` bytes | Video VAE fp16 / audio VAE fp32, both complete, zero trailing bytes | `receipts/verification.json` |
