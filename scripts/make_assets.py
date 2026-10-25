@@ -271,6 +271,9 @@ def make_poster(frame_path: pathlib.Path, dest: pathlib.Path, title: str, subtit
 TEASER_SOURCE = "FILM-BEACON-1920x1056.mp4"
 TEASER_START = 3.5
 TEASER_LENGTH = 12.0
+# The teaser's own geometry, and the hero poster's: 1920x1056 scaled to 1280 wide.
+TEASER_WIDTH = 1280
+TEASER_HEIGHT = 704
 
 
 def make_teaser(films: pathlib.Path, dest: pathlib.Path) -> None:
@@ -280,7 +283,8 @@ def make_teaser(films: pathlib.Path, dest: pathlib.Path) -> None:
     subprocess.run(
         ["ffmpeg", "-v", "error", "-y",
          "-ss", f"{TEASER_START:.3f}", "-t", f"{TEASER_LENGTH:.3f}", "-i", str(src),
-         "-vf", "scale=1280:704:force_original_aspect_ratio=decrease,pad=1280:704:(ow-iw)/2:(oh-ih)/2",
+         "-vf", f"scale={TEASER_WIDTH}:{TEASER_HEIGHT}:force_original_aspect_ratio=decrease,"
+                f"pad={TEASER_WIDTH}:{TEASER_HEIGHT}:(ow-iw)/2:(oh-ih)/2",
          "-c:v", "libx264", "-preset", "slow", "-crf", "23", "-pix_fmt", "yuv420p",
          "-movflags", "+faststart", "-c:a", "aac", "-b:a", "128k",
          str(dest)],
@@ -351,9 +355,11 @@ def main() -> int:
         hero_src = films / "FILM-BEACON-1920x1056.mp4"
         if hero_src.is_file():
             hero_frame = tmp / "hero.png"
-            grab(hero_src, 6.0, hero_frame)
+            # The poster carries the teaser's geometry exactly, so the still the reader sees
+            # before the video starts is the video's own framing, and nothing shifts.
+            grab(hero_src, 6.0, hero_frame, width=TEASER_WIDTH, height=TEASER_HEIGHT)
             make_poster(hero_frame, ASSETS / "hero-poster.png", "MiniMax H3",
-                        "rendered on one DGX Spark")
+                        "rendered on one DGX Spark", size=(TEASER_WIDTH, TEASER_HEIGHT))
             make_teaser(films, ASSETS / "keel-teaser.mp4")
 
     if args.clips and not args.skip_posters:

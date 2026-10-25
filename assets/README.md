@@ -10,7 +10,7 @@ Brand and media for the README.
 | `keel-logo-dark.png` | the wordmark on the dark card, raster |
 | `keel-mark.png` | the square mark, 512×512, transparent |
 | `keel-social-preview.png` | the card a link unfurls into, 1280×640 |
-| `hero-poster.png` | the hero still, 1280×720 |
+| `hero-poster.png` | the hero still, 1280×704 — the teaser's own geometry, so nothing shifts when the video starts |
 | `keel-teaser.mp4` | a 12-second teaser cut from the strongest clip |
 | `posters/` | one poster per clip, 1280×720 |
 
@@ -26,7 +26,9 @@ The brand assets need only Pillow and the DejaVu fonts — they are pure geometr
 identically anywhere. The posters and the teaser need `ffmpeg`, and the films to cut from.
 
 The posters are single frames from the real files, cropped to fill 1280×720 and labelled with a
-scrim. The teaser is 12 seconds of the film that carries the most movement, cut with:
+scrim; the hero poster is the exception, cut at the teaser's own 1280×704 so the still a reader
+sees before the video starts is the video's own framing. The teaser is 12 seconds of the film that
+carries the most movement, cut with:
 
 ```bash
 ffmpeg -ss 3.5 -t 12.0 -i FILM-BEACON-1920x1056.mp4 \
