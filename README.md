@@ -314,6 +314,8 @@ minimax-h3-local-engine/
 │   ├── bench-results.md            the published ladder, verbatim, attributed
 │   ├── checkpoint-sizes.md         byte-exact size table and the residency math
 │   ├── spillway-keepers.md         the three keepers, their lock status, the halt
+│   ├── our-acceleration-ab.md      our own A/B: 1.17x combined, ~1.0x isolated
+│   ├── spin-wait-patch.md          the GB10 spin-wait patch, and who measured it
 │   ├── verification.json           model-file hashes and tensor dtype counts
 │   ├── forward-receipt.json        a real forward pass and decode
 │   ├── keeper-receipt.json         the S01 keeper, with motion metrics
@@ -321,9 +323,17 @@ minimax-h3-local-engine/
 │   ├── encoder-diagnosis.md        the corrupt encoder, and the fix
 │   └── CURATION-NOTE.md            why the set is six
 ├── scripts/
-│   └── check_receipts.py           fails the build if a claim stops matching its receipt
+│   ├── check_receipts.py           fails the build if a claim stops matching its receipt
+│   └── make_demo.py                rebuilds the demo video from the repo
+├── workflows/                      the A/B pair — same seed, same geometry
+│   ├── README.md
+│   ├── h3-dense-baseline.json
+│   └── h3-fullstack.json
 └── training/                       turbo LoRA shelf and its training config
 ```
+
+`.github/workflows/claims.yml` runs `scripts/check_receipts.py` on every push and every pull
+request, so a claim that loses its receipt fails the build rather than shipping.
 
 ## Credits
 
