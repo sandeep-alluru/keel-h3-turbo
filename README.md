@@ -7,8 +7,8 @@
 <p align="center">For people who render MiniMax H3 themselves on one 128 GB box: installable ComfyUI node packs, a weight set that fits in unified memory, and a receipt behind every number.</p>
 
 <p align="center">
-  <a href="#install">Install</a> ·
   <a href="docs/deployment-guide.md">Docs</a> ·
+  <a href="#install">Install</a> ·
   <a href="#benchmarks">Benchmarks</a> ·
   <a href="#watch">Watch</a>
 </p>
@@ -56,27 +56,28 @@ every row is a single render — no batching.</sub>
 <sub>Measured here, `receipts/bench-matrix.tsv`. The plain control and the accelerated arm share
 the seed, the geometry, the step count and the scheduler, and differ only in the acceleration.</sub>
 
+Every ladder behind these rows — the published end-to-end and per-step arms, NVIDIA's published
+figures, the ComfyUI-Sol-H3 A/B, and the byte-exact residency ladder — is in
+[`docs/benchmarks.md`](docs/benchmarks.md), each with the conditions that produced it.
+
 ---
 
-## What Keel is, and what it is not
+## What Keel is
 
 **Keel is** a way to run MiniMax H3 — a 33B joint video-and-audio diffusion model — on one 128 GB
 DGX Spark. It ships three installable ComfyUI node packs, the weight set that actually fits in
 unified memory, a seed-matched A/B method so you can measure the difference on your own box, and
-a checker that fails the build if a published number stops matching its receipt.
+a checker that stops the build if a published number stops matching its receipt.
 
-**Keel is not** NVIDIA's Sol-Engine, and it does not try to be. Sol-Engine is their inference
-codebase with their own kernels; `Sol-Attn` is their name for their method. Keel is the ComfyUI
-side of the same problem: the node packs, the resident-weight recipe, the step-distillation
-adapters, and the discipline around the numbers. It is not an NVIDIA release, not an official
-Sol Engine port, and not a reproduction of NVIDIA code. The published speed ladder quoted above
-belongs to the community Sol-Engine port, and it is attributed wherever it appears.
+Keel is the ComfyUI side of the same problem NVIDIA's Sol-Engine solves. Sol-Engine is their
+inference codebase with their own kernels, and `Sol-Attn` is their name for their method. Keel is
+an independent implementation on the ComfyUI side — the node packs, the resident-weight recipe,
+the step-distillation adapters, and the discipline around the numbers. The published speed ladder
+quoted above belongs to the community Sol-Engine port, and it is attributed wherever it appears.
 
-Two limits worth stating before you read anything else. The acceleration stack here does **not**
-include the Sol-Attn kernel or the batched VAE decode node, and the published 1.54× ladder
-depends on both — so that ladder is unproven on this stack, not disproven. And the largest
-first-party speedup below is not the attention work at all: it is the 4-step turbo LoRA, a
-step-count reduction as much as an acceleration.
+The largest first-party speedup below comes from the 4-step turbo LoRA: a step-count reduction as
+much as an acceleration. Bringing the Sol-Attn kernel and the batched VAE decode into this stack
+is the next run, and those two components are what the published 1.54× ladder depends on.
 
 ---
 
@@ -91,7 +92,7 @@ step-count reduction as much as an acceleration.
     figures, and our own seed-matched A/B at **1.44×** (8 steps), **1.17×** (16 steps) and
     **3.16×** (4-step turbo LoRA).
   - Six rendered clips and a demo video, with hashes for all of them.
-  - `scripts/check_receipts.py`, run on every push and every pull request, which fails the build
+  - `scripts/check_receipts.py`, run on every push and every pull request, which stops the build
     when a published number stops matching the file behind it.
 
 ---
@@ -160,7 +161,7 @@ only difference is the acceleration nodes. See [`workflows/README.md`](workflows
 python3 scripts/check_receipts.py
 ```
 
-[`RECIPE.md`](RECIPE.md) is the same thing written for an agent, and
+[`RECIPE.md`](RECIPE.md) is the same thing written as a procedure, and
 [`docs/deployment-guide.md`](docs/deployment-guide.md) is the longer version.
 
 ---
@@ -176,25 +177,26 @@ cut.**
 | | What it does | Weights it touches | Measured effect |
 |---|---|---|---|
 | **Trim-Residency** | Picks the weight set that fits in the 121 GB a Spark actually shows the runtime: a pruned FP8 DiT and an NVFP4/AWQ encoder instead of the BF16 pair. | `minimax_h3_fl2va_pruned_fp8_scaled.safetensors` (20.96 GB), `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` (15.69 GB) | **42.46 GB** for DiT + encoder + both VAEs, against 123.60 GB for the BF16 pair — the difference between running and not running. The precision cost is nil: NVIDIA measure their FP8 baseline at 13,428 ms/step against the BF16 model's 13,417 ms, a **0.08 % difference**. *(FP8 cost: published · NVIDIA. Residency: measured here.)* |
-| **Trim-INT8** | The convert path for machines with more room: INT8 ConvRot DiTs at 34.04 GB, or the pruned INT8 ConvRot DiTs at 20.97 GB, in place of the BF16 66.28 GB. | `minimax_h3_fl2va_int8_convrot.safetensors` (34.04 GB), `minimax_h3_fl2va_pruned_int8_convrot.safetensors` (20.97 GB) | **No speed measurement of its own.** It is a residency choice, not an acceleration. |
+| **Trim-INT8** | The convert path for machines with more room: INT8 ConvRot DiTs at 34.04 GB, or the pruned INT8 ConvRot DiTs at 20.97 GB, in place of the BF16 66.28 GB. | `minimax_h3_fl2va_int8_convrot.safetensors` (34.04 GB), `minimax_h3_fl2va_pruned_int8_convrot.safetensors` (20.97 GB) | **A residency choice.** Its effect is residency, measured in the models table below: 55.54 GB with the NVFP4 conditioner. The speed measurements in this table come from the other five rows. |
 | **Trim-NVFP4** | The INT4 conditioner, and the download discipline that goes with it: quote a checkpoint size from the safetensors header, never from `stat`. | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` (15.69 GB) | Caught a **21,714,795,671-byte** encoder with **6,027,653,120 bytes** of trailing garbage behind a healthy header, and a **truncated BF16 DiT** 30.6 GB short of its own header. *(Measured here — `receipts/encoder-diagnosis.md`.)* |
 | **Trim-Step** | Step distillation. A 4-step or 8-step turbo LoRA replaces 20 sampling steps. | `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors` (1.96 GB) and siblings | **201 s** for a 4-step 1280×704 render against the 635 s 16-step plain baseline — **3.16×**. A step-count reduction as much as an acceleration, and a quality trade rather than a free win. *(Measured here.)* |
 | **Trim-A/B** | The measurement method: a control and a treatment that differ *only* in the acceleration, on the same seed, the same geometry, the same step count, the same scheduler. | none | **1.44×** at 8 steps, **1.17×** at 16 steps, against matched plain controls. *(Measured here — `receipts/bench-matrix.tsv`.)* |
-| **Trim-Receipts** | The discipline: every published number maps to who measured it, and a checker fails the build when a number loses its receipt. | none | Not a speed effect. It is the reason the other five rows can be trusted. *(Measured here — `scripts/check_receipts.py`.)* |
+| **Trim-Receipts** | The discipline: every published number maps to who measured it, and a checker fails the build when a number loses its receipt. | none | **The trust mechanism**, and the reason the other five rows can be believed. *(Measured here — `scripts/check_receipts.py`.)* |
 
 ### What this actually does for you
 
-You keep one machine. You download one weight set that fits in unified memory instead of
-discovering halfway through a render that it does not. You cut twenty sampling steps to four
+You keep one machine. You download one weight set that fits in unified memory, instead of
+discovering halfway through a render that it never will. You cut twenty sampling steps to four
 when you want a draft and you keep twenty when you want the quality. And when you quote a number
 — to yourself or to anyone else — you can point at the file that holds it.
 
-### What Trim does not claim
+### What's next
 
-It does not claim per-technique speedups where none were isolated. Trim-INT8 has no number of its
-own, and Trim-A/B cannot separate Sage attention from FirstBlockCache, because the surviving
-records do not resolve which of the two produced the gain. And it does not claim the published
-1.54×: the acceleration arms never had the Sol-Attn kernel or the batched VAE decode installed.
+* **Install the Sol-Attn kernel and the batched VAE decode**, then run the published 1.54× ladder
+  on this stack and file the receipt beside theirs.
+* **Separate Sage attention from FirstBlockCache** inside the accelerated arms, so each technique
+  in the table carries its own number rather than sharing one.
+* **Give Trim-INT8 its own timing**, so all six techniques have a measured effect.
 
 ---
 
@@ -287,7 +289,8 @@ two places, and the distinction is kept visible everywhere:
   configuration, the wall time and, where there is a file, its SHA-256.
 
 The index is [`receipts/PROVENANCE.md`](receipts/PROVENANCE.md): one row per number, with where
-it came from.
+it came from. The full set of tables, each with its conditions and its chart, is
+[`docs/benchmarks.md`](docs/benchmarks.md).
 
 And the checker enforces it:
 
@@ -306,7 +309,7 @@ One GPU, idle, seed matched. The plain control and the accelerated arm share the
 geometry, the step count, the scheduler and the sampler, and differ only in the acceleration. A
 contended run is not a slower run, it is a different experiment. The full matrix, including the
 rows that are not comparable, is in [`receipts/bench-matrix.tsv`](receipts/bench-matrix.tsv), and
-[`RECIPE.md`](RECIPE.md) is the procedure written for an agent to run from a fresh box.
+[`RECIPE.md`](RECIPE.md) is the procedure to run from a fresh box.
 
 Two things worth knowing before you quote any of it. `torch flex_attention` is wrong on Blackwell
 — cosine similarity against dense SDPA is 0.9167 at S=1536 and 0.9688 at S=4096, and the error

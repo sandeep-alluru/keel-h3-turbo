@@ -107,7 +107,7 @@ def text_width(word: str, fnt: ImageFont.FreeTypeFont, tracking: float) -> int:
 
 def draw_tracked(draw: ImageDraw.ImageDraw, xy, word: str, fnt: ImageFont.FreeTypeFont,
                  fill, tracking: float):
-    """Draw a word with letter-spacing, which Pillow does not do on its own."""
+    """Draw a word with letter-spacing, which Pillow leaves to the caller."""
     x, y = xy
     for ch in word:
         draw.text((x, y), ch, font=fnt, fill=fill)

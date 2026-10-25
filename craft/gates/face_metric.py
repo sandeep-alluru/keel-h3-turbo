@@ -52,7 +52,7 @@ def main():
 
     anchor_img = cv2.imread(args.anchor)
     if anchor_img is None:
-        raise SystemExit(f"cannot read anchor {args.anchor}")
+        raise SystemExit(f"unable to read anchor {args.anchor}")
     anchor_emb, anchor_box = embed(app, anchor_img)
     if anchor_emb is None:
         raise SystemExit("no face detected in the anchor")

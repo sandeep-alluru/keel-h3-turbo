@@ -55,7 +55,7 @@ and `receipts/sage-attention-ab.md` records the Sage arm **rejecting Sage compat
 sampling** at the shot's own geometry and seed.
 
 So the honest claim is "the acceleration arms as configured". The attribution between Sage and
-FirstBlockCache inside those arms is unresolved, and this receipt does not resolve it.
+FirstBlockCache inside those arms is unresolved, and this receipt leaves it unresolved.
 
 **The Sol-Attn kernel was never installed on this box, and the batched VAE decode node was never
 enabled in any of these runs.** That is the single biggest difference between this table and the
@@ -69,7 +69,7 @@ difference", taken from the session's own summary line:
 > *"We got 1.17× from Sage + FirstBlockCache, and ~1.0× when we isolated them at 704×1280
 > (B1 347 s vs B4 344 s) … FirstBlockCache: ~0×."*
 
-**347 does not appear anywhere in the matrix.** The matrix's B1 is **496 s**. The artifact of
+**347 appears nowhere in the matrix.** The matrix's B1 is **496 s**. The artifact of
 record beats the prose summary, and the summary line appears to have mis-stated the control arm.
 Every downstream conclusion in that session — "FirstBlockCache ~0×", "we validated almost none of
 it" — was derived from the mis-stated number.
@@ -81,7 +81,7 @@ control at the same resolution and step count.
 
 | | Published ladder | Our own A/B |
 |---|---|---|
-| Who measured it | The community Sol-Engine port's author | This team |
+| Who measured it | The community Sol-Engine port's author | We |
 | Host | `spark-13b3` | our Spark |
 | Geometry | 864×480, 124 frames, 20 steps | 1280×704, 124 frames, 8 and 16 steps |
 | Control | 312.7 s end-to-end, 14.40 s/step | 496 s (8 steps) / 635 s (16 steps) |
@@ -97,10 +97,10 @@ hardware**, which is more than the earlier draft of this repository claimed, and
 published 1.54× has still not been reproduced here because the two pieces it depends on — the
 Sol-Attn kernel and the batched VAE decode — were never installed in these runs.
 
-## What this receipt does not say
+## What this receipt leaves out
 
-It does not say the published ladder is wrong. It says our box, our configuration, our
+It never says the published ladder is wrong. It says our box, our configuration, our
 resolution, and our measurement produced 1.17×–1.44×, and that the ladder's extra 1.54× rests on
-two components this team has not yet run.
+two components we have yet to run.
 
 `RECIPE.md` is written for the run that would close that gap.

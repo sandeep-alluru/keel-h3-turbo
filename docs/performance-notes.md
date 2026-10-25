@@ -5,7 +5,7 @@ and each one is filed in `receipts/`.
 
 ## 1 — `torch flex_attention` is wrong on Blackwell
 
-It compiles, it runs, and it does not error. Cosine similarity against dense SDPA is **0.9167 at
+It compiles, it runs, and it raises nothing. Cosine similarity against dense SDPA is **0.9167 at
 S=1536** and **0.9688 at S=4096**. The error compounds across 50 blocks × 20 steps into visible
 noise. The working alternatives measure 0.99995–0.99998.
 
@@ -16,10 +16,10 @@ Do not reach for `flex_attention` on `sm_121`.
 Twice on this project, and both times the file had the right name.
 
 The text encoder arrived at 21,714,795,671 bytes with a header declaring the right length and
-6,027,653,120 bytes of garbage behind it. It loads. It produces nothing. It does not error.
+6,027,653,120 bytes of garbage behind it. It loads. It produces nothing. It raises nothing.
 
 The BF16 DiT arrived at 35,660,245,251 bytes with a header declaring **66,280,487,368**. It is
-30,620,242,117 bytes short and cannot load at all. That truncated file's size is where this
+30,620,242,117 bytes short and will not load at all. That truncated file's size is where this
 repository's old "35.7 GB BF16" claim came from — it was `ls -l` output read as a model size.
 
 **Quote a checkpoint size from the safetensors header, never from `stat`.** The header is what

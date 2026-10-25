@@ -7,7 +7,7 @@ that was missing.
 
 Thresholds are calibrated against our own clips, not invented:
   control (city walks, visibly moving): mean 3.13-3.65, p95 7.45-15.76
-  static failures                     : mean 0.07-0.89, p95 0.21-2.20
+  static rejections                   : mean 0.07-0.89, p95 0.21-2.20
 
 R3-L2: a FROZEN frame with heavy film grain also has a big frame difference - every
 pixel differs from its neighbour by a little - so a still with noise=alls=25 measured
@@ -16,7 +16,7 @@ difference is STRUCTURED (a moved edge, a moving body) or white noise (grain). T
 bar is 0.5: the production's own material measures 0.900-0.999, grain measures 0.02.
 
 Usage: motion_gate.py <clip> [<clip> ...]  [--min-mean 1.5] [--min-p95 3.0]
-Exit code 1 if any clip fails.
+Exit code 1 if any clip is rejected.
 """
 import argparse
 import json
@@ -74,7 +74,7 @@ def main():
         print("no clips to measure", file=sys.stderr)
         return 4
 
-    failed = 0
+    rejected = 0
     print(f"{'clip':40s} {'frames':>6s} {'mean':>6s} {'p95':>6s} {'struct':>7s}  verdict")
     for clip in args.clips:
         n, mean, p95 = motion(clip)
@@ -84,19 +84,19 @@ def main():
             # R3-L2: the movement is not movement - it is grain. Every pixel changed a
             # little and nothing else moved.
             ok = False
-            reason = "FAIL — noise, not movement"
+            reason = "REJECT — noise, not movement"
         elif not ok:
-            reason = "FAIL — effectively static"
+            reason = "REJECT — effectively static"
         else:
             reason = "PASS"
         if not ok:
-            failed += 1
+            rejected += 1
         print(f"{clip.split('/')[-1][:40]:40s} {n:6d} {mean:6.2f} {p95:6.2f} {struct:7.3f}  {reason}")
     print("\ngraded files (sha256, path):")
     for p in args.clips:
         print(f"  {(sha256_of(p) or 'UNREADABLE')[:16]}  {p}")
-    if failed:
-        print(f"\n{failed} clip(s) failed the motion gate. Do not deliver a still as video.")
+    if rejected:
+        print(f"\n{rejected} clip(s) were rejected by the motion gate. Do not deliver a still as video.")
         return 1
     return 0
 

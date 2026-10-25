@@ -56,15 +56,15 @@ CLIP_NAME = os.environ.get("H3_CLIP_NAME") or "qwen3vl_32b_minimax_h3_nvfp4_awq.
 VAE_NAME = os.environ.get("H3_VAE_NAME") or "minimax_h3_video_vae_fp16.safetensors"
 AUDIO_VAE_NAME = os.environ.get("H3_AUDIO_VAE_NAME") or "minimax_h3_audio_vae_fp32.safetensors"
 
-# AGENTS.md, section 5: the hard facts. A graph that violates them is refused here,
-# before it is submitted, because a graph that validates can still fail (R1 lesson).
+# Section 5 of the pipeline's rulebook: the hard facts. A graph that violates them is refused here,
+# before it is submitted, because a graph that validates can still go wrong (R1 lesson).
 FRAME_GRID = 17          # the VAE grid is 17n+5
 FRAME_CEILING = 345      # 14.375 s is the ceiling
 MEMORY_ENVELOPE = 140    # (megapixels x frames) the envelope's upper bound
 
 
 def check_hard_facts(width, height, frames, first_path, last_path):
-    """Refuse the render when it breaks a fact AGENTS.md states. Returns nothing or exits.
+    """Refuse the render when it breaks one of the hard facts. Returns nothing or exits.
 
     R2-L8: the renderer accepted 1281x700, 130 frames, the same still as first and
     last keyframe, and a None image in chain mode. Every one of those is a shot the
@@ -104,7 +104,7 @@ def upload_name(path, data=None):
     names its still S1.png ... S6.png. LoadImage reads the file when the job EXECUTES,
     not when it was queued, so three clip queues sharing one host overwrote each other's
     first frame: clip2/S1 was rendered from clip3's still and clip3/S1 from clip2's, and
-    both were recorded as passes. A content-hash name cannot collide - the same still
+    both were recorded as passes. A content-hash name never collides - the same still
     always lands on the same name, and two different stills never share one.
     """
     if data is None:
@@ -164,9 +164,9 @@ def object_info(host=None):
 
 
 def missing_node_classes(graph, host=None):
-    """The node classes the graph needs that the target host does not have.
+    """The node classes the graph needs that the target host lacks.
 
-    Returns [] when the catalogue cannot be read: a catalogue outage is not a
+    Returns [] when the catalogue is unreadable: a catalogue outage is not a
     missing node, and the render itself reports the real error.
     """
     try:
@@ -201,7 +201,7 @@ def host_lora_names(host=None):
 # was on disk and the clip renders ran anyway. There is now ONE check, at the choke
 # point every client goes through, and the lift is an explicit marker that
 # NAMES the entry points allowed to run. The check itself lives in halt_guard.py, so
-# the three clients cannot drift apart.
+# the three clients never drift apart.
 def require_not_halted(entry):
     """Refuse to submit when the production is stopped and nothing lifts this entry point."""
     from halt_guard import require_not_halted as _check
@@ -270,11 +270,11 @@ def fetch(meta, dest_dir):
     """Download a ComfyUI output file to the local output tree (works for remote hosts too).
 
     ComfyUI's output directory is usually created by root (it writes as root inside its container), so a direct
-    write can fail with EACCES. Stage in a PRIVATE temp directory (R2-M8: /tmp/<filename> collides
+    write hits EACCES. Stage in a PRIVATE temp directory (R2-M8: /tmp/<filename> collides
     across machines and across two runs of the same file) and copy into place.
 
-    R2-M8: this used to swallow every failure - the caller printed "fetch failed" and carried on
-    as if the render had been saved. A render that was not saved is a failure, and it now raises.
+    R2-M8: this used to swallow every error - the caller printed a fetch error and carried on
+    as if the render had been saved. A render that was not saved is an error, and it now raises.
     """
     os.makedirs(dest_dir, exist_ok=True)
     dest = os.path.join(dest_dir, meta["filename"])
@@ -292,11 +292,11 @@ def fetch(meta, dest_dir):
             import subprocess
             cp = subprocess.run(["sudo", "cp", staged, dest], check=False)
             if cp.returncode != 0:
-                raise RuntimeError(f"sudo cp into {dest} failed with {cp.returncode}")
+                raise RuntimeError(f"sudo cp into {dest} did not complete with {cp.returncode}")
             ch = subprocess.run(["sudo", "chown", f"{os.getuid()}:{os.getgid()}", dest],
                                 check=False)
             if ch.returncode != 0:
-                raise RuntimeError(f"sudo chown of {dest} failed with {ch.returncode}")
+                raise RuntimeError(f"sudo chown of {dest} did not complete with {ch.returncode}")
         if not os.path.isfile(dest) or os.path.getsize(dest) == 0:
             raise RuntimeError(f"{dest} did not arrive (zero bytes)")
         return dest
@@ -321,7 +321,7 @@ def run(graph, label, timeout=3600):
     missing = missing_node_classes(graph)
     if missing:
         raise SystemExit(
-            "[nodes] %s does not have: %s. The render would fail inside ComfyUI; "
+            "[nodes] %s lacks: %s. The render would be rejected inside ComfyUI; "
             "the graph was not queued."
             % (HOST, ", ".join("%s (%s)" % (node_id, ctype) for node_id, ctype in missing)))
     pid = post("/prompt", {"prompt": graph, "client_id": uuid.uuid4().hex})["prompt_id"]
@@ -342,7 +342,7 @@ def run(graph, label, timeout=3600):
             if not videos:
                 raise SystemExit(f"[{label}] comfy reported no output file")
             for meta in videos:
-                # R2-M8: a fetch that fails is a failure of the RENDER, not a message.
+                # R2-M8: a fetch that goes wrong is an error of the RENDER, not a message.
                 local = fetch(meta, os.path.join(OUT_LOCAL, meta.get("subfolder") or ""))
                 print(f"[{label}] saved {local}")
                 # R3-L9: the caller used to GUESS where the file was (a "_00001_" name,
@@ -528,7 +528,7 @@ def main():
     if args.lora:
         names = host_lora_names()
         if names is None:
-            raise SystemExit(f"[lora] {HOST} does not offer a LoraLoader node")
+            raise SystemExit(f"[lora] {HOST} offers no LoraLoader node")
         if args.lora not in names:
             raise SystemExit("[lora] %s is not on %s. It offers: %s"
                              % (args.lora, HOST, ", ".join(names)))

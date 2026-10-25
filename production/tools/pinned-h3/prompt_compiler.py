@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""prompt_compiler.py — build H3 prompts that cannot omit a researched rule.
+"""prompt_compiler.py — build H3 prompts that never omit a researched rule.
 
 Written after an audit found 3 of 12 researched rules applied in 0 of 24 prompts: named permanent features,
 <Subject N> labels, and in-render cuts. Rules were being remembered rather than enforced; this compiles them in.

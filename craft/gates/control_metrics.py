@@ -3,7 +3,7 @@
 
 Why this exists: the production's recurring defect is a shot that performs one plausible action and
 stops ("the soldier shot the bullet only once; it should show blast action"). A motion-mean
-gate cannot see that — a shot with one trigger and a shot with six distinct events can carry
+gate never sees that — a shot with one trigger and a shot with six distinct events can carry
 the same mean. What differs is the *shape* of motion over time: where the events are.
 
 So this measures the shape, not the amount:
@@ -38,7 +38,7 @@ def read_grey(path, width=320):
     """Decode a clip to a list of float32 grey frames, downscaled for speed."""
     cap = cv2.VideoCapture(path)
     if not cap.isOpened():
-        raise SystemExit(f"control_metrics: cannot open {path}")
+        raise SystemExit(f"control_metrics: unable to open {path}")
     fps = float(cap.get(cv2.CAP_PROP_FPS) or 24.0)
     frames = []
     while True:
@@ -231,7 +231,7 @@ def timeline(path, width=320, bucket_s=1.0):
 # What separates them is the SPATIAL STRUCTURE of the difference image. A moved edge,
 # a moving body or a pan produce a difference image whose neighbours differ together
 # (lag-1 autocorrelation near 1). Film grain produces white noise (autocorrelation near
-# 0), and the autocorrelation does NOT care how strong the grain is - white noise is
+# 0), and the autocorrelation NEVER cares how strong the grain is - white noise is
 # white noise at any amplitude. Measured on the production's own material:
 #
 #   the 15-clip delivered library      0.930 - 0.999

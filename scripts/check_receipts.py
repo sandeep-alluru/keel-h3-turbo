@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""check_receipts.py — fail the build if a published claim stops matching its receipt.
+"""check_receipts.py — stop the build if a published claim stops matching its receipt.
 
 This is the discipline this repo is built on: every number on the front page has to trace to a file
 in `receipts/`, every clip has to hash to what the index says it hashes to, the curated set has to
@@ -58,7 +58,7 @@ IGNORE_TOKENS = {
     "2024", "2025", "2026",
 }
 
-# A version number is a requirement, not a measurement. "torch 2.11" does not need a receipt.
+# A version number is a requirement, not a measurement. "torch 2.11" needs no receipt.
 VERSION_CONTEXT = re.compile(
     r"(torch|python|comfyui|cuda|numpy|opencv|vllm|sglang|diffusers|comfy|h3|gb10|aarch64|"
     r"ffmpeg|node)\s*v?$",
@@ -71,7 +71,7 @@ IMAGE_SRC_RE = re.compile(r"<img[^>]+src=\"([^\"]+)\"", re.IGNORECASE)
 VIDEO_SRC_RE = re.compile(r"<video[^>]+src=\"([^\"]+)\"", re.IGNORECASE)
 
 
-class Failure(Exception):
+class Error(Exception):
     pass
 
 
@@ -130,12 +130,12 @@ def check_clips(root: Path) -> list[str]:
         index_text = index.read_text(errors="replace")
         for name, digest in sorted(EXPECTED_SHOTS.items()):
             if name not in index_text:
-                problems.append(f"clips/INDEX.md does not mention {name}")
+                problems.append(f"clips/INDEX.md never mentions {name}")
             if digest not in index_text:
-                problems.append(f"clips/INDEX.md does not carry the hash for {name}")
+                problems.append(f"clips/INDEX.md carries no hash for {name}")
         for asset in EXPECTED_FILM_ASSETS:
             if asset not in index_text:
-                problems.append(f"clips/INDEX.md does not mention release asset {asset}")
+                problems.append(f"clips/INDEX.md never mentions release asset {asset}")
     else:
         problems.append("clips/INDEX.md missing")
 
@@ -208,7 +208,7 @@ def check_fp8_claim(root: Path) -> list[str]:
     by_name = {w.get("file"): w for w in weights if isinstance(w, dict)}
     fp8 = by_name.get("diffusion_models/minimax_h3_fl2va_fp8.safetensors")
     if not fp8:
-        return ["receipts/verification.json does not record the FP8 DiT checkpoint"]
+        return ["receipts/verification.json records no FP8 DiT checkpoint"]
     size = fp8.get("bytes")
     if size != 20958205608:
         problems.append(
@@ -283,20 +283,20 @@ def main() -> int:
         ("front-page links", check_front_page_links),
     ]
 
-    failures = 0
+    errors = 0
     for title, fn in groups:
         problems = fn(root)
         if problems:
-            failures += len(problems)
-            print(f"FAIL  {title}")
+            errors += len(problems)
+            print(f"REJECT  {title}")
             for problem in problems:
                 print(f"        - {problem}")
         else:
             print(f"ok    {title}")
 
     print()
-    if failures:
-        print(f"{failures} claim(s) did not trace to a receipt.")
+    if errors:
+        print(f"{errors} claim(s) did not trace to a receipt.")
         return 1
     print("Every published claim traced to a receipt.")
     return 0

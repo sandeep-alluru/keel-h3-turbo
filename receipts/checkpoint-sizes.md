@@ -51,7 +51,7 @@ and it is the size of a **broken partial download**.
 On the second Spark in the fleet there is a file called
 `minimax_h3_fl2va_bf16.safetensors` that is **35,660,245,251 bytes** on disk. Its own safetensors
 header declares **66,280,487,368 bytes** across 535 tensors (BF16 522, F32 13). The file is
-**30,620,242,117 bytes short** — **30.6 GB** short. It cannot load, and nothing on that box can load it.
+**30,620,242,117 bytes short** — **30.6 GB** short. It is unable to load, and nothing on that box can load it.
 
 So the sequence was: a download stopped part-way, the partial file sat on disk with the right
 name, `ls -l` was read as the checkpoint size, and 35.7 GB was written down as the size of the

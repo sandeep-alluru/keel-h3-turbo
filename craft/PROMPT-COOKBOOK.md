@@ -34,7 +34,7 @@ The three fields, in this exact order and with these exact snake_case names [H2 
 |---|---|
 | `integrated_multimodal_description` | "Describes visuals, actions, shots, speakers, dialogue, singing, and diegetic audio along the timeline." The main body. |
 | `overall_soundscape` | "Summarizes ambient sound, physical action sounds, and non-verbal human sounds across the entire video." |
-| `non_diegetic_music` | "Describes background music that the characters cannot hear and only the audience can hear." |
+| `non_diegetic_music` | "Describes background music that the characters never hear and only the audience can hear." |
 
 For I2VA/FL2VA/L2VA a one-line **instruction** precedes the fields, separated by exactly one
 blank line [H2 §2.1]. I2VA's fixed sentence:
@@ -177,8 +177,8 @@ So there are **three time notations** in the corpus, and they are not interchang
   seconds)" [G1].
 - Cut times must fall inside the duration [H2 §4.2]. With 124 frames, the last usable cue is
   ≈ 5.10 s; **keep every cut ≤ 00:04.500** to stay clear of the tail.
-- The 15 s single-pass workflow in our reference pipeline is a *runtime* preset; it does not
-  change the prompt grammar, only how many cues fit.
+- The 15 s single-pass workflow in our reference pipeline is a *runtime* preset; it never
+  changes the prompt grammar, only how many cues fit.
 
 ### 2.4 What I am inferring, and what I refuse to claim
 
@@ -350,7 +350,7 @@ video [H1][H4].
 
 ---
 
-## 6. Failure modes
+## 6. What goes wrong
 
 ### 6.1 Identity drift — documented, not hypothetical [V]
 
@@ -389,7 +389,7 @@ motion over cuts — which the guide independently recommends [H2 §4.2].
 - Small text is the known weak point: H3-Regenerate-2K exists partly to "recover information
   that conventional super-resolution methods would otherwise have to guess, such as **small
   text** and fine details" [H1]. At 480×832 there is no 2K regeneration stage, so assume small
-  type will fail.
+  type will not survive.
 - Never fake a mark: "Do not redraw or approximate logos, wordmarks, product UI, packaging…"
   [G3]; "Add a logo only when the user provides one. Do not generate a fake logo." [G2]
 
@@ -413,7 +413,7 @@ sharp") — that phrasing is **[I]**, untested.
 | H3-Context-IR (the prompt rewriter) is **not** open-sourced; the API is the only faithful path | [H1] |
 | Prompt/dialogue moderation may block content; false positives admitted | [H1] |
 | Local two-stage recipe fixes Stage-2 text conditioning to a generic prompt, so scene control rides entirely on the Stage-1 prompt | [L3] |
-| Guide's style warnings: no plot summary, no camera-label stacking, no unresolved reference labels, timing must match duration | [G1][H3 §5.2] |
+| Guide's style cautions: no plot summary, no camera-label stacking, no unresolved reference labels, timing must match duration | [G1][H3 §5.2] |
 
 ---
 
@@ -517,7 +517,7 @@ non_diegetic_music: A low sustained synth pulse at a slow tempo, holding one lev
 ### Scene C — poster / key-art motion piece
 
 **C0 is the baseline for C1–C2.** Abstract type-free poster: geometric bars stand in for a title
-block, so a text failure here cannot contaminate the camera reading.
+block, so a text error here never contaminates the camera reading.
 
 **C0 · baseline**
 Hypothesis: n/a — control for whether a flat graphic composition holds still under a slow push.
@@ -542,7 +542,7 @@ non_diegetic_music: A sparse analog synth chord at a slow tempo, held without sw
 **C2 · variable: audio forced to silence (`N/A` on both fields)**
 Hypothesis: both fields as `N/A` yield a silent track rather than an invented ambience — the
 documented silence route [H2 §4.6–4.7]. We need this for clips that will be cut to an external
-music bed, so a failure here changes our pipeline, not just one shot.
+music bed, so an error here changes our pipeline, not just one shot.
 
 ```text
 integrated_multimodal_description: [Shot 1] Graphic design motion piece, a flat poster composition fills the portrait frame: a deep indigo field, a centered block of solid off-white geometric bars standing in for a title, and a thin gold rule beneath it. The camera pushes in with small amplitude at slow speed. The bars hold their position, the gold rule stays level, and no other graphic appears. No cuts and no on-screen text.
@@ -600,7 +600,7 @@ continuous transformation [G5], and the whole Ref2VA path with `<Subject N>` lab
 | S2 | https://nvlabs.github.io/Sana/Sol-Engine/ — landing page; JS-rendered, returned only the page title, so it contributed no citable prompt guidance |
 
 Note on [S1] provenance: the page labels the panels "View exact prompt" and pairs each with a
-rendered clip, but it does not state who authored them or whether they were post-edited. Treat
+rendered clip, but it states neither who authored them nor whether they were post-edited. Treat
 them as strong evidence of *what ships*, not as official syntax.
 
 ---

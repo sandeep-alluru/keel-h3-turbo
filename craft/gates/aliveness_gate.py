@@ -2,8 +2,8 @@
 """aliveness_gate.py — a video-level liveness gate.
 
 motion_gate.py asks "does this clip move at all" — it catches a still photo shipped as
-video (mean >= 1.5/255, p95 >= 3.0/255). It cannot catch a video that moves for five
-seconds and then holds a frame for the other twenty-five. That failure shipped:
+video (mean >= 1.5/255, p95 >= 3.0/255). It never catches a video that moves for five
+seconds and then holds a frame for the other twenty-five. That defect shipped:
 
   CITY-mara-solene-30s.mp4   alive in only 16.1 % of its seconds
   MARA-G-approved-keys-30s    alive in only 12.9 % of its seconds
@@ -13,7 +13,7 @@ for five seconds is a five-second video with padding.
 
 Criterion: a delivered video must be alive (per-second motion energy >= 25 % of that
 clip's own peak) in at least 35 % of its duration. 35 % is set from the measured
-distribution of the delivered library: it passes thirteen of fifteen videos and fails
+distribution of the delivered library: it passes thirteen of fifteen videos and rejects
 exactly the two dead ones. A shot-level rule is separate — a 5 s shot must show at least
 two discrete events, which control_metrics.py reports.
 
@@ -65,13 +65,13 @@ def main():
         raise SystemExit("give clips or --dir")
 
     rows = []
-    failed = []
+    rejected = []
     for f in files:
         r = aliveness(f)
-        r["verdict"] = "PASS" if r["alive_frac"] >= args.min_alive else "FAIL — mostly still"
+        r["verdict"] = "PASS" if r["alive_frac"] >= args.min_alive else "REJECT — mostly still"
         rows.append(r)
-        if r["verdict"].startswith("FAIL"):
-            failed.append(r)
+        if r["verdict"].startswith("REJECT"):
+            rejected.append(r)
 
     if args.json:
         print(json.dumps({"min_alive": args.min_alive, "clips": rows}, indent=2))
@@ -81,8 +81,8 @@ def main():
             print(f"{os.path.basename(r['path']):<40} {r['alive_frac']*100:>6.1f}% "
                   f"{r['alive_frac_10pct']*100:>8.1f}% {r['duration_s']:>6}  {r['verdict']}")
 
-    if failed:
-        print(f"\n{len(failed)} clip(s) are mostly still — do not deliver them as video.")
+    if rejected:
+        print(f"\n{len(rejected)} clip(s) are mostly still — do not deliver them as video.")
         raise SystemExit(1)
     print(f"\nall {len(rows)} clip(s) alive in at least {args.min_alive*100:.0f}% of their duration")
 

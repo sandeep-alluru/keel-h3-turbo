@@ -18,7 +18,7 @@ busy_loop_s: float = 1,   ->   busy_loop_s: float = 0.002,
 | CPU 333 % → 89 %, SoC −11 °C, no throughput change | **Upstream** (the vLLM GB10 spin-wait artifact the port credits) | the same file, quoted by the port author |
 | SoC reaching 96 °C (shutdown ~87 °C) while the GPU was only 72.7 °C | **Upstream** | same |
 | TP=1 single-GPU serve: container CPU 93.4 % unpatched vs 92.9 % patched — **no significant change** | **The port author's own fleet**, 2026-08-17 | `custom_nodes/H3-SolAttn-SM121/GB10_SPIN_WAIT_PATCH.md` |
-| Anything on this team's own hardware | **Nothing.** | — |
+| Anything on our own hardware | **Nothing.** | — |
 
 Upstream source: <https://nacyot.github.io/artifacts/vllm-spin-wait-gb10/>
 Full text as vendored: `custom_nodes/H3-SolAttn-SM121/GB10_SPIN_WAIT_PATCH.md`
@@ -59,7 +59,7 @@ docker exec <container> grep -n 'busy_loop_s: float' \
 
 ## The ComfyUI path
 
-This patch is for vLLM, and the ComfyUI node stack in `custom_nodes/` does not run vLLM. The patch
+This patch is for vLLM, and the ComfyUI node stack in `custom_nodes/` never runs vLLM. The patch
 matters if you serve H3 through a vLLM or SGLang route — it is the route NVIDIA's Sol-Engine
-release uses, and the route the spin-wait artifact targets. It does not change any number in the
+release uses, and the route the spin-wait artifact targets. It changes no number in the
 ComfyUI bench in `receipts/bench-results.md`.

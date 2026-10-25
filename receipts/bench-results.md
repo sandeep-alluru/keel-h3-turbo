@@ -5,7 +5,7 @@
 > Every table below was measured by the author of the community Sol-Engine port for a single
 > DGX Spark, on **their** host `spark-13b3`, and published in their repository. That port is
 > vendored here unchanged under `custom_nodes/H3-SolAttn-SM121/`; this file reproduces their
-> published benchmark **as the published benchmark it is** — it is not a measurement this team
+> published benchmark **as the published benchmark it is** — it is not a measurement we
 > took, and it is not presented as one anywhere in this repository.
 >
 > | | |
@@ -15,7 +15,7 @@
 > | Source commit | `7e3db54a0ecf7fa524ee3b01ea9ef7092b0e3318` (2026-08-16) |
 > | Upstream host | `spark-13b3` (not ours) |
 > | Upstream hardware | NVIDIA DGX Spark, GB10, `sm_121`, 128 GB unified |
-> | Re-measured by this team? | **No.** |
+> | Re-measured by us? | **No.** |
 > | Where our own numbers live | `receipts/verification.json`, `receipts/forward-receipt.json`, `receipts/shot-receipt.json`, `receipts/sage-attention-ab.md`, `receipts/spillway-shots.md`, `receipts/checkpoint-sizes.md` |
 > | Full number-by-number map | `receipts/PROVENANCE.md` |
 >

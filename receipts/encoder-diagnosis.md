@@ -2,7 +2,7 @@
 
 Step-0 runtime verification of the production stack caught a corrupt model file *before* any production work ran on it. Recorded in the production plan ledger, 2026-10-25.
 
-## The failure
+## The error
 
 Configured text encoder: `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`
 
@@ -14,7 +14,7 @@ Configured text encoder: `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors`
 | SHA-256 of the corrupt file | `61f55b01f03e9cd9ec2b10e3084e74519230373135aef5c84ec6b7ec04208340` |
 | Loader verdict | both `safetensors.safe_open` and `comfy.utils.load_torch_file` reject it: `incomplete metadata, file not fully covered` |
 
-Raw loader log: [`text-encoder-load.log`](text-encoder-load.log). Exact cause of the malformed file is unknown. No truncation, replacement or repair was attempted on it — the corrupt file was left unchanged, and step 0 stopped on the evidenced failure, per protocol.
+Raw loader log: [`text-encoder-load.log`](text-encoder-load.log). Exact cause of the malformed file is unknown. No truncation, replacement or repair was attempted on it — the corrupt file was left unchanged, and step 0 stopped on the evidenced error, per protocol.
 
 ## The fix
 

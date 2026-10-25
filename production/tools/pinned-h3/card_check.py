@@ -132,8 +132,8 @@ def check_scene_contract(data):
     The contract is now enforced HERE, at the one entry point every render goes
     through, and scene_schema keeps only the contract itself.
 
-    A card that does not carry the scene fields at all (the card check's own minimal
-    fixtures) is not a scene card, and the scene contract does not apply to it. A card
+    A card that carries no scene fields at all (the card check's own minimal
+    fixtures) is not a scene card, and the scene contract never applies to it. A card
     that carries them at the card level but not in its shots is refused: that is a card
     that was half built.
     """
@@ -154,8 +154,8 @@ def check_card(data):
     """Refuse a card that contradicts itself. Returns the facing of each shot."""
     facings = {}
     # RC-H3: a card that declares the RE-ROLL DISCIPLINE must give every one of its
-    # shots a rewritten prompt, or its re-roll is seed-only - and AGENTS.md says a shot
-    # that fails the motion gate is "re-rolled with a rewritten prompt, not just a new
+    # shots a rewritten prompt, or its re-roll is seed-only - and the rule is that a shot
+    # the motion gate rejects is "re-rolled with a rewritten prompt, not just a new
     # seed". Nine of the thirty clip shots carried no rewritten field at all, so their
     # re-roll silently fell back to the base text.
     #
@@ -171,7 +171,8 @@ def check_card(data):
         if declares_reroll and not (shot.get("reroll_action") or shot.get("reroll_camera")):
             raise SystemExit(
                 "%s carries no rewritten prompt (no 'reroll_action' and no 'reroll_camera'). "
-                "A re-roll with the same prompt is a seed-only re-roll, which AGENTS.md forbids."
+                "A re-roll with the same prompt is a seed-only re-roll, which the re-roll "
+                "discipline forbids."
                 % label)
         facings[shot_number(shot)] = check_shot(shot, label)
     check_scene_contract(data)

@@ -110,13 +110,14 @@ files contain.
 
 ---
 
-## What these six are not
+## About these six
 
-* **Not an accelerated render.** All three Spillway shots record `"accelerate": false`. The
-  production harness rendered them with the acceleration stack switched off.
-* **Not a finished Spillway film.** The Spillway production stopped on 2026-10-25, after S04 failed
-  at sampling step 4 of 20. These are three shots from that run, not an edit.
-* **Not everything that was rendered.** The record contains a fourth published film and several
-  earlier cuts. The set above is the curated six, and it stays six.
-* **Not proof that the acceleration stack is faster.** The only speed measurement taken on this
-  hardware is the SageAttention A/B, which found no measurable gain.
+* **Rendered with the acceleration stack switched off.** All three Spillway shots record
+  `"accelerate": false`. They are the evidence for the production harness and the craft gates.
+* **Three shots from a stopped production.** The Spillway production stopped on 2026-10-25, after
+  S04 was rejected at sampling step 4 of 20. These are the three shots from that run rather than an
+  edit.
+* **The curated six.** The record contains a fourth published film and several earlier cuts. The
+  set above is the curated six, and it stays six.
+* **The speed numbers live elsewhere.** The only speed measurement taken on this hardware is the
+  SageAttention A/B, which found no measurable gain.

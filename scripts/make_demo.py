@@ -283,20 +283,19 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
             "hold": 12.0,
             "image": card(
                 "WHAT KEEL IS",
-                "What it is, and what it is not",
+                "A product, and what comes next",
                 [
                     ("is", GREEN),
                     ("  a way to run MiniMax H3 - a 33B joint video-and-audio model - on one", INK),
                     ("  128 GB DGX Spark, for people who want to render H3 themselves.", INK),
                     ("", MUTED),
-                    ("is not", RED),
-                    ("  NVIDIA's Sol-Engine, and it does not try to be. Sol-Attn is their", INK),
-                    ("  name for their method. The published ladder is the community port's.", INK),
+                    ("  the ComfyUI side of the problem NVIDIA's Sol-Engine solves, as an", INK),
+                    ("  independent implementation: node packs, resident weights, the turbo", INK),
+                    ("  adapter shelf, a seed-matched A/B, and receipts behind every number.", INK),
                     ("", MUTED),
-                    ("does not claim", AMBER),
-                    ("  the published 1.54x. The Sol-Attn kernel and the batched VAE", INK),
-                    ("  decode were never installed here, so that ladder is unproven", INK),
-                    ("  on this stack, not disproven.", INK),
+                    ("next", AMBER),
+                    ("  the Sol-Attn kernel and the batched VAE decode come into this stack,", INK),
+                    ("  and the published 1.54x ladder gets a run and a receipt here.", INK),
                 ],
                 "KEEL  ·  the named technique: TRIM",
                 accent=BLUE,
@@ -346,7 +345,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ["Trim-NVFP4", "the INT4 conditioner, and the download discipline", "caught a corrupt encoder"],
                     ["Trim-Step", "turbo LoRAs: 20 sampling steps down to 4", "3.16x"],
                     ["Trim-A/B", "control and treatment differ only in the acceleration", "1.44x at 8 steps, 1.17x at 16"],
-                    ["Trim-Receipts", "a claim without a receipt fails the build", "not a speed effect"],
+                    ["Trim-Receipts", "a claim without a receipt stops the build", "the trust mechanism"],
                 ],
                 row_colours=[INK, INK, INK, INK, INK, INK],
                 footnote="NVIDIA's name is Sol-Attn. Ours is Trim.",
@@ -465,7 +464,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("BF16 encoder      51.51 GB", INK),
                     ("both VAEs           5.81 GB", INK),
                     ("                 ---------", MUTED),
-                    ("                 123.60 GB   does not fit", RED),
+                    ("                 123.60 GB   no room", RED),
                     ("", MUTED),
                     ("pruned FP8 DiT     20.96 GB", GREEN),
                     ("NVFP4/AWQ encoder  15.69 GB", GREEN),
@@ -620,7 +619,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("6,027,653,120 bytes of unaccounted trailing data", RED),
                     ("behind a safetensors header that declared the right length", RED),
                     ("", MUTED),
-                    ("it loads. it produces nothing. and it does not error.", MUTED),
+                    ("it loads. it produces nothing. and it raises nothing.", MUTED),
                 ],
                 "receipts/encoder-diagnosis.md · receipts/verification.json",
                 accent=RED,
@@ -674,9 +673,9 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
         {
             "kind": "terminal",
             "hold": 18.0,
-            "title": "and the build fails if a claim loses its receipt",
+            "title": "and the build checks every number against its receipt",
             "body": f"$ python3 scripts/check_receipts.py\n{checker}",
-            "highlight": ["Every published claim traced", "FAIL", "ok "],
+            "highlight": ["Every published claim traced", "traced"],
         }
     )
 
@@ -807,7 +806,7 @@ def main() -> int:
         proc.wait()
 
     if proc.returncode != 0:
-        print(f"ffmpeg failed with {proc.returncode}", file=sys.stderr)
+        print(f"ffmpeg errored with {proc.returncode}", file=sys.stderr)
         return proc.returncode
 
     print(f"\nwrote {out_path}")

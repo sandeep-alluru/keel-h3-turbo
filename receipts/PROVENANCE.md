@@ -9,7 +9,7 @@ There are three kinds of number in this repo, and they are never mixed:
 | Kind | Meaning | Marked as |
 |---|---|---|
 | **PUBLISHED** | Measured by somebody else and reproduced here as their published result. | Named source, named host, link to the source file. |
-| **OURS** | Measured by this team, on our own hardware, and filed here. | Our receipt, our host, our hashes. |
+| **OURS** | Measured by us, on our own hardware, and filed here. | Our receipt, our host, our hashes. |
 | **CORRECTED** | Was in an earlier revision of this repo without support. | What it said, what the record actually says, what replaced it. |
 
 ---
@@ -18,7 +18,7 @@ There are three kinds of number in this repo, and they are never mixed:
 
 Reproduced verbatim from `drowzeys/keys-SM121-Optimized-MiniMax-H3-Nvidia-Sol-Engine-Kijai-SolAttn_Triton-Single-DGX-Spark`
 at commit `7e3db54a0ecf7fa524ee3b01ea9ef7092b0e3318`, file `bench/results.md`.
-Upstream host `spark-13b3`. **This team did not re-run this ladder.**
+Upstream host `spark-13b3`. **We did not re-run this ladder.**
 
 | Number | What it is | Receipt |
 |---|---|---|
@@ -68,7 +68,7 @@ Full detail, with the quoted sentences, in `receipts/published-comparisons.md`.
 
 ## 2. Our own measurements — OURS
 
-Measured by this team on our own DGX Spark (`sm_121`). Hashes and byte counts are in the receipts.
+Measured by us on our own DGX Spark (`sm_121`). Hashes and byte counts are in the receipts.
 
 | Number | What it is | Receipt |
 |---|---|---|
@@ -116,7 +116,7 @@ What this repository said before, and what the record actually supports.
 | Bench receipt on host `gb10-spark` | The ladder was measured upstream on host `spark-13b3`. | Host restored, provenance header added, upstream credited. |
 | "Every row below was taken … on `gb10-spark`" | Upstream's own text says `spark-13b3`. | Replaced with an explicit provenance block. |
 | Node packages described as "ported and packaged by us" | All three `custom_nodes/` trees are unmodified upstream repositories (see Credits in the README). | Credits section names each author and links each source. |
-| "The BF16 checkpoint is 35.7 GB … it fits" | 66.3 GB BF16 does not share a 121 GB unified pool with a 51.5 GB BF16 encoder and the VAEs. | The FP8/NVFP4 row is the one that fits, and the guide says which. |
+| "The BF16 checkpoint is 35.7 GB … it fits" | 66.3 GB BF16 shares no 121 GB unified pool with a 51.5 GB BF16 encoder and the VAEs. | The FP8/NVFP4 row is the one that fits, and the guide says which. |
 | Spillway shots presented as accelerated output | Every shot receipt records `"accelerate": false`. | Stated plainly wherever the shots appear. |
 | "347 s → 344 s, ~0 % gain" | The session's prose summary quoted a B1 of 347 s. **347 appears nowhere in the matrix** — the matrix's B1 is **496 s**. Every conclusion drawn from the mis-stated number ("FirstBlockCache ~0×", "we validated almost none of it") was wrong, and the 347 s figure was also filed against `sage-attention-ab.md`, which actually records the Sage arm **rejected before sampling** with no speedup claimed. | Corrected to **496 s → 344 s = 1.44×** at 8 steps and **635 s → 545 s = 1.17×** at 16 steps, from the artifact of record. `receipts/our-acceleration-ab.md` names the correction explicitly. |
 | The adapter shelf dropped from the README, and its 8-step LoRA hash wrong | The 8-step LoRA hash in the old README was **63 hex characters** — not a valid SHA-256. The real value is `2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e`. | Adapter shelf restored, all three adapters' sizes and hashes verified directly on the weights tree. `receipts/adapter-shelf.md`. |

@@ -1,6 +1,6 @@
 # Spillway shots — the three clips in `clips/`
 
-`Spillway` is a short production that this team ran on the local DGX Spark in October 2026. It was
+`Spillway` is a short production that we ran on the local DGX Spark in October 2026. It was
 stopped on 2026-10-25. Three rendered shots survive, and those three are the only video this
 repository ships.
 
@@ -76,8 +76,8 @@ dimensions, motion mean, motion p95, motion structure and audio presence.
 `visual_verdict` and `audio_perceptual_verdict` are both `UNVERIFIED` on all three — the
 receipts cover the technical gates, and native audio was never put through a perceptual assessment.
 
-For scale: the motion gate in `craft/gates/motion_gate.py` was calibrated against this team's own
-clips, where a visibly moving control sat at mean 3.13–3.65 and known static failures at mean
+For scale: the motion gate in `craft/gates/motion_gate.py` was calibrated against our own
+clips, where a visibly moving control sat at mean 3.13–3.65 and clips rejected as static at mean
 0.07–0.89. All three shots sit inside the moving band.
 
 ## The production stop
@@ -109,13 +109,13 @@ The production stop record adds:
 }
 ```
 
-S04 failed at sampling step 4 of 20 with a runtime error, and the record does not attribute the
-interruption to anyone — `interruption_issuer` is `UNVERIFIED`. Only an explicit instruction can
+S04 stopped at sampling step 4 of 20 with a runtime error, and the record attributes the
+interruption to no one — `interruption_issuer` is `UNVERIFIED`. Only an explicit instruction can
 resume production. Nothing in this repository resumes it.
 
 ## What this means for how you read the clips
 
 These are shots from a stopped production, not a finished film. They exist here because they are
-the honest output of the harness this team built: one shot chosen by eye and signed off, one shot
+the honest output of the harness we built: one shot chosen by eye and signed off, one shot
 carried back by a source-grounded re-check, and one shot selected automatically and filed
 honestly as such.

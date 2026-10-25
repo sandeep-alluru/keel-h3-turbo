@@ -19,7 +19,7 @@ adapter makes there be fewer steps. They compose.
 
 ## What it measured
 
-The turbo adapter is the largest first-party speedup this team has recorded:
+The turbo adapter is the largest first-party speedup we have recorded:
 
 | Configuration | Steps | Wall | Against |
 |---|---:|---:|---|
@@ -39,7 +39,7 @@ were not retained.
 ## Where they are not
 
 These adapters are not vendored in this repository. They are published weights, downloaded and
-verified, like the DiT and the text encoder. The training-side recipe that produced this team's
+verified, like the DiT and the text encoder. The training-side recipe that produced our
 own LoRAs is in [`../training/TRAINING.md`](../training/TRAINING.md).
 
 ## The names in the repo's own workflow config

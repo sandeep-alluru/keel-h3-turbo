@@ -1,7 +1,7 @@
 # RECIPE — MiniMax H3 on a single DGX Spark
 
-**Who this is for:** an agent (or a person) that has to get from "nothing installed" to "I have a
-measured stock-vs-accelerated comparison and a receipt for each number", without guessing.
+**Who this is for:** anyone who has to get from "nothing installed" to "I have a measured
+stock-vs-accelerated comparison and a receipt for each number", without guessing.
 
 **Recommended starting point:** the pruned FP8-scaled DiT with the NVFP4/AWQ encoder, the
 `h3-fullstack.json` workflow, and the 16-step geometry. That combination is what the numbers in
@@ -24,7 +24,7 @@ nvidia-smi --query-gpu=name,compute_cap,memory.total --format=csv
 ```
 
 You need a **GB10 (`sm_121`, compute capability 12.1)** to reproduce the numbers in this repo, and
-you need **≥ 64 GB unified memory**. On a discrete GPU with 24 GB of VRAM this stack does not fit
+you need **≥ 64 GB unified memory**. On a discrete GPU with 24 GB of VRAM this stack has no room,
 and none of the timings below are comparable.
 
 Check the machine is idle before you time anything:
@@ -87,15 +87,14 @@ mkdir -p "$COMFY/models/diffusion_models" "$COMFY/models/text_encoders" "$COMFY/
 
 | File | Target | Bytes | SHA-256 |
 |---|---|---:|---|
-| `minimax_h3_fl2va_pruned_int8_convrot.safetensors` | `diffusion_models/` | 34,038,892,334 | `7ad4c73e6e378b822ffd1629f27f632d3787d95f5e468e3af958f98c58df96a5` |
+| `minimax_h3_fl2va_pruned_int8_convrot.safetensors` | `diffusion_models/` | 20,970,379,616 | `e889202c41dafb67b10d67b97f0d8541508036a6090af23425a5c2615d03c47a` |
 | `minimax_h3_fl2va_pruned_fp8_scaled.safetensors` | `diffusion_models/` | 20,958,205,608 | `12944c1f7791637e7de12208aef04da82bd26b95271b1b47d817364315ade993` |
 | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | `text_encoders/` | 15,687,142,551 | `35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6` |
 | `minimax_h3_video_vae_fp16.safetensors` | `vae/` | 5,207,808,496 | `7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522` |
 | `minimax_h3_audio_vae_fp32.safetensors` | `vae/` | 605,254,808 | `8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48` |
 
 **Check the encoder before you trust it.** A truncated or corrupted safetensors file can have a
-healthy header and garbage behind it. The failure mode is a model that loads and then produces
-nothing. The receipt `receipts/encoder-diagnosis.md` documents the exact case we hit: the file
+healthy header and garbage behind it. The trap is a model that loads and then produces nothing. The receipt `receipts/encoder-diagnosis.md` documents the exact case we hit: the file
 arrived at 21,714,795,671 bytes — 6,027,653,120 bytes of unaccounted trailing data past a header
 that declared the right length.
 
@@ -151,7 +150,7 @@ submission is not the render:
 
 * GPU idle before the run, `nvidia-smi --query-compute-apps` empty.
 * GPU ≤ 75 °C, SM clock ≥ 2398 MHz during sampling.
-* The treatment run must show the batched VAE active — if the log does not mention batched tile
+* The treatment run must show the batched VAE active — if the log never mentions batched tile
   decode, `H3_VAE_BATCHED=0` is set somewhere and the number is not the full-stack number.
 * Same seed in both runs. If you changed the seed, the comparison is void.
 
@@ -163,7 +162,7 @@ the noise. What you are looking for is the *shape*: the full stack meaningfully 
 the per-step ratio roughly 1.7×.
 
 If you get **less** than the upstream ladder, that is a legitimate result of your own and it
-belongs in this repository. It does not belong in the same table as the upstream numbers.
+belongs in this repository. It belongs in its own table, beside the upstream numbers.
 
 ## 4 — File your receipt
 
@@ -212,8 +211,8 @@ python3 craft/gates/aliveness_gate.py <your.mp4> [<your.mp4> ...]
 
 `motion_gate.py` refuses a clip whose mean frame difference is below the band. Thresholds are
 calibrated against our own clips: a visibly moving control sits at mean 3.13–3.65, p95
-7.45–15.76; known static failures sit at mean 0.07–0.89, p95 0.21–2.20. Exit code 1 means the
-clip failed.
+7.45–15.76; known static examples sit at mean 0.07–0.89, p95 0.21–2.20. Exit code 1 means the
+clip was rejected.
 
 `aliveness_gate.py` answers the other question — is there enough going on to call it alive.
 
@@ -228,10 +227,10 @@ has a file behind it.
 
 ---
 
-## What this recipe does not do
+## Scope of this recipe
 
-* It does not start or resume the Spillway production.
-* It does not publish, upload, or push anything anywhere.
-* It does not state a licence. That question is open, and this repository does not answer it.
-* It does not claim the upstream ladder as our own measurement. If you re-run it, the receipt is
-  yours and the number stays yours.
+* Every command here is local. Nothing is published, uploaded or pushed anywhere.
+* The Spillway production stays stopped; resuming it takes an explicit instruction.
+* This repository states no licence. That question is open and is answered elsewhere.
+* The upstream ladder stays the upstream ladder. If you re-run it, the receipt is yours and the
+  number stays yours.

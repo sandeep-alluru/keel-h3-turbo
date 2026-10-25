@@ -23,7 +23,7 @@ The upstream files are left untouched at
 `custom_nodes/H3-SolAttn-SM121/workflows/`, because that tree is vendored as its authors shipped
 it. The corrected pair lives here.
 
-The only other change is the output filename prefix, so a dense run and a full-stack run cannot
+The only other change is the output filename prefix, so a dense run and a full-stack run never
 overwrite each other.
 
 ## The batched VAE decode is not a graph node
@@ -44,7 +44,7 @@ echo "${H3_VAE_BATCHED:-0}"     # 0 means the patch is disabled
 
 ## Which checkpoint
 
-Both workflows load `minimax_h3_fl2va_pruned_int8_convrot.safetensors` (34,038,892,334 bytes),
+Both workflows load `minimax_h3_fl2va_pruned_int8_convrot.safetensors` (20,970,379,616 bytes),
 because that is the checkpoint the published ladder was measured on.
 
 For production on one Spark, swap it for `minimax_h3_fl2va_pruned_fp8_scaled.safetensors`

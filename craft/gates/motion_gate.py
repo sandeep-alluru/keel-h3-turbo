@@ -7,10 +7,10 @@ that was missing.
 
 Thresholds are calibrated against our own clips, not invented:
   control (city walks, visibly moving): mean 3.13-3.65, p95 7.45-15.76
-  static failures                     : mean 0.07-0.89, p95 0.21-2.20
+  static rejections                   : mean 0.07-0.89, p95 0.21-2.20
 
 Usage: motion_gate.py <clip> [<clip> ...]  [--min-mean 1.5] [--min-p95 3.0]
-Exit code 1 if any clip fails.
+Exit code 1 if any clip is rejected.
 """
 import argparse
 import sys
@@ -44,17 +44,17 @@ def main():
     ap.add_argument("--min-p95", type=float, default=3.0)
     args = ap.parse_args()
 
-    failed = 0
+    rejected = 0
     print(f"{'clip':40s} {'frames':>6s} {'mean':>6s} {'p95':>6s}  verdict")
     for clip in args.clips:
         n, mean, p95 = motion(clip)
         ok = mean >= args.min_mean and p95 >= args.min_p95
         if not ok:
-            failed += 1
+            rejected += 1
         print(f"{clip.split('/')[-1][:40]:40s} {n:6d} {mean:6.2f} {p95:6.2f}  "
-              f"{'PASS' if ok else 'FAIL — effectively static'}")
-    if failed:
-        print(f"\n{failed} clip(s) failed the motion gate. Do not deliver a still as video.")
+              f"{'PASS' if ok else 'REJECT — effectively static'}")
+    if rejected:
+        print(f"\n{rejected} clip(s) were rejected by the motion gate. Do not deliver a still as video.")
         return 1
     return 0
 

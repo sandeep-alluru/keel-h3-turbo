@@ -1,7 +1,7 @@
 # Published comparisons — NVIDIA Sol-Engine and ComfyUI-Sol-H3
 
 Every number in this file is **PUBLISHED**: measured by somebody else, and quoted here with the
-source it came from and the sentence it came from. Nothing here is a measurement this team took.
+source it came from and the sentence it came from. Nothing here is a measurement we took.
 
 This is the receipt behind the baseline comparison table on the front page. It exists so that the
 table's rows can be checked without leaving the repository.
@@ -44,7 +44,7 @@ per-GPU config `config/minimax_h3/gb10_fullopt.toml` gives the geometry as **832
 
 and the baseline config's `summary`:
 
-> *"The denominator for every row below. It is not the GB200 baseline and cannot be compared to
+> *"The denominator for every row below. It is not the GB200 baseline and is not comparable to
 > it: different hardware, different checkpoint, a tenth of the canvas."*
 
 Two things Keel quotes from this:
@@ -53,7 +53,7 @@ Two things Keel quotes from this:
   not a speed trick; it is the substitution that makes the model resident, at no measurable step
   cost. That is NVIDIA's measurement, not ours.
 * NVIDIA are careful about the same thing Keel is careful about: their baseline is *their* baseline
-  and does not transfer to another hardware or another checkpoint.
+  and never transfers to another hardware or another checkpoint.
 
 Source: <https://github.com/NVlabs/Sana/tree/sol-engine>
 
@@ -92,12 +92,12 @@ a quality regression:
 and:
 
 > *"The pair establishes that SOL-first execution **can** destabilize the initial trajectory. It
-> does not establish how frequently this occurs across seeds, prompts, references, resolutions or
+> says nothing about how frequently this occurs across seeds, prompts, references, resolutions or
 > model variants."*
 
 **That is why Keel publishes the speed mode separately from the default.** A 1.11× that comes with
-a documented trajectory destabilisation is a different claim from a 1.05× that does not, and
-presenting only the faster one would misrepresent it.
+a documented trajectory destabilisation is a different claim from a 1.05× that carries no
+documented destabilisation, and presenting only the faster one would misrepresent it.
 
 ### Hardware and geometry
 
@@ -105,9 +105,9 @@ Their production validation ran on:
 
 > *"an **NVIDIA RTX PRO 6000 Blackwell Workstation Edition (SM120)** with PyTorch `2.10.0+cu130`"*
 
-SM121 / GB10 support landed in v0.1.7, and they say plainly what that does and does not claim:
+SM121 / GB10 support landed in v0.1.7, and they say plainly where that claim stops:
 
-> *"This support does not claim an independent maintainer GB10 benchmark or SM120/SM121 performance
+> *"This support claims no independent maintainer GB10 benchmark or SM120/SM121 performance
 > equivalence."*
 
 **Their published timings do not state a resolution or a step count.** Their README and their
@@ -127,7 +127,7 @@ Their Exact Runtime A/B, from their README:
 
 > *"This is Exact-only evidence, not a SOL speed claim."*
 
-Keel does not reproduce or contest these; they are recorded here because the numbers are public
+Keel neither reproduces nor contests these; they are recorded here because the numbers are public
 and because Keel's own discipline — a matched A/B with the control stated explicitly — was written
 in the light of how they publish theirs.
 
@@ -143,14 +143,14 @@ Covered separately, because it is the one this repository reproduces most often:
 
 ---
 
-## What Keel does not claim from any of these
+## What Keel never claims from any of these
 
-* Keel does not claim NVIDIA's 3.92×. It was measured on NVIDIA's runtime, with NVIDIA's kernels,
+* Keel makes no claim to NVIDIA's 3.92×. It was measured on NVIDIA's runtime, with NVIDIA's kernels,
   at 832×480 and 50 steps.
-* Keel does not claim the community port's 1.54×. It was measured on `spark-13b3`, in that
+* Keel makes no claim to the community port's 1.54×. It was measured on `spark-13b3`, in that
   author's repository, and Keel reproduces it with attribution.
-* Keel does not claim xmarre's 1.05× or 1.11×. They were measured on SM120 with a different call
+* Keel makes no claim to xmarre's 1.05× or 1.11×. They were measured on SM120 with a different call
   topology, at an unstated geometry.
-* Keel does not compare its own 1.44× against any of them as though the geometries matched. They
-  do not. The front-page table is deliberately unblended so that a reader can see that for
+* Keel never compares its own 1.44× against any of them as though the geometries matched. They
+  never match. The front-page table is deliberately unblended so that a reader can see that for
   themselves.

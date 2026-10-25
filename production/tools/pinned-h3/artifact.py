@@ -46,7 +46,7 @@ Exit codes
   0  success / something new to grade
   3  nothing new to grade (every hash unchanged)
   4  a file is missing or unreadable
-  5  the operation failed
+  5  the operation did not complete
 """
 import argparse
 import hashlib
@@ -71,7 +71,7 @@ def normalise_shot(shot):
 
     The production's loops carry the shot as "S1" and the file is "level-S1.mp4".
     Normalising HERE means no caller has to know which form to pass - and the
-    chain scripts cannot produce "level-SS1.mp4" by accident.
+    chain scripts never produce "level-SS1.mp4" by accident.
     """
     s = str(shot).strip()
     if len(s) > 1 and s[0] in ('S', 's') and s[1:].isdigit():
@@ -162,16 +162,16 @@ def atomic_promote(rendered, canonical):
     """Put the rendered file onto the canonical name, atomically.
 
     The temporary file lives in the SAME directory so os.replace is a rename on
-    the same filesystem: the canonical name either does not exist or is a
+    the same filesystem: the canonical name either is absent or is a
     complete file. There is never a half-written canonical file.
     """
     rendered = os.path.abspath(rendered)
     canonical = os.path.abspath(canonical)
     if not os.path.isfile(rendered):
-        print('PROMOTE FAILED: no rendered file at %s' % rendered, file=sys.stderr)
+        print('PROMOTE ERROR: no rendered file at %s' % rendered, file=sys.stderr)
         return 5
     if os.path.getsize(rendered) == 0:
-        print('PROMOTE FAILED: rendered file is empty: %s' % rendered, file=sys.stderr)
+        print('PROMOTE ERROR: rendered file is empty: %s' % rendered, file=sys.stderr)
         return 5
     if os.path.abspath(rendered) == canonical:
         digest = sha256(canonical)
@@ -197,7 +197,7 @@ def atomic_promote(rendered, canonical):
                 os.remove(tmp)
             except OSError:
                 pass
-        print('PROMOTE FAILED: %s' % e, file=sys.stderr)
+        print('PROMOTE ERROR: %s' % e, file=sys.stderr)
         return 5
     digest = sha256(canonical)
     write_sidecar(canonical, digest)
@@ -229,7 +229,7 @@ def read_paths_file(path):
 
 
 def sha256_of(path):
-    """The hash of a file, or None when it cannot be read.
+    """The hash of a file, or None when the file is unreadable.
 
     The one implementation of this. It used to be copied into motion_gate.py and
     scene_continuity.py, so three files could drift apart and only one of them would
@@ -295,7 +295,7 @@ def cmd_check(args):
 
     Exit 3 = nothing new to grade AND the last grading of those exact bytes
     passed, so the gate must not run again. Exit 0 = there is something to
-    grade (a new file, or the last grading failed).
+    grade (a new file, or the last grading was rejected).
     """
     m = manifest_for(args)
     state = load_state(args.state)
@@ -322,13 +322,13 @@ def cmd_check(args):
                      prev.get('verdict', 'unknown')))
     if new:
         return 0
-    failed = [p for p, prev in unchanged
-              if (prev.get('verdict') or '').lower() != 'pass']
-    if failed:
-        print('NOTHING NEW TO GRADE, but the last grading FAILED for %d file(s) -'
-              % len(failed))
+    rejected = [p for p, prev in unchanged
+                if (prev.get('verdict') or '').lower() != 'pass']
+    if rejected:
+        print('NOTHING NEW TO GRADE, but the last grading was REJECTED for %d file(s) -'
+              % len(rejected))
         print('the gate must run again.')
-        for p in failed:
+        for p in rejected:
             print('  ! %s' % p)
         return 0
     print('NOTHING NEW TO GRADE - stopping before the gate')
@@ -459,8 +459,8 @@ def main():
                    help='the exact files that were graded, one path per line')
     p.add_argument('--state', required=True)
     p.add_argument('--gate')
-    p.add_argument('--verdict', required=True, choices=['pass', 'fail'],
-                   help='pass or fail: a failed grading must be re-run. R2-L2: this '
+    p.add_argument('--verdict', required=True, choices=['pass', 'reject'],
+                   help='pass or reject: a rejected grading must be re-run. R2-L2: this '
                         'defaulted to "pass", so a caller that forgot it recorded a PASS '
                         'for bytes that were never graded. It is required now.')
     p.set_defaults(func=cmd_record)

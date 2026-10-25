@@ -28,8 +28,8 @@ what makes the rest of this table trustworthy.
 
 | File | Bytes | GB | SHA-256 | What we did |
 |---|---:|---:|---|---|
-| `minimax_h3_fl2va_bf16.safetensors` | 66,280,487,368 | 66.28 | `907d4add438438ec1544f5240c3b38532ed934fe6be75677a6bbda2a6fdd6182` | **untouched** — we do not use it, and it does not fit |
-| `minimax_h3_ref2va_bf16.safetensors` | 66,280,487,368 | 66.28 | `e32c54c1a7b4f5f397f195cea267ccb18806303bb665678c4bee60953bdf3026` | **untouched** — does not fit |
+| `minimax_h3_fl2va_bf16.safetensors` | 66,280,487,368 | 66.28 | `907d4add438438ec1544f5240c3b38532ed934fe6be75677a6bbda2a6fdd6182` | **untouched** — we never use it, and it will not fit |
+| `minimax_h3_ref2va_bf16.safetensors` | 66,280,487,368 | 66.28 | `e32c54c1a7b4f5f397f195cea267ccb18806303bb665678c4bee60953bdf3026` | **untouched** — never fits |
 | `minimax_h3_fl2va_int8_convrot.safetensors` | 34,038,892,334 | 34.04 | `7ad4c73e6e378b822ffd1629f27f632d3787d95f5e468e3af958f98c58df96a5` | **untouched** — published as-is |
 | `minimax_h3_ref2va_int8_convrot.safetensors` | 34,038,894,550 | 34.04 | `9eef934046a0671bc8a5daf87100705e1478419c574cfde70c50fbe6885f76a9` | **untouched** — published as-is |
 | `minimax_h3_fl2va_pruned_fp8_scaled.safetensors` | 20,958,205,608 | 20.96 | `12944c1f7791637e7de12208aef04da82bd26b95271b1b47d817364315ade993` | **untouched** — **the one Keel runs** |
@@ -45,7 +45,7 @@ contribution is knowing which of them to put in which machine, and proving the b
 
 | File | Bytes | GB | SHA-256 | What we did |
 |---|---:|---:|---|---|
-| `qwen3vl_32b_minimax_h3_bf16.safetensors` | 51,506,295,256 | 51.51 | `600d567f6a9629c8574e8e7041b199bdd9c59a986afa7906910a81919610607d` | **untouched** — does not fit alongside a BF16 DiT |
+| `qwen3vl_32b_minimax_h3_bf16.safetensors` | 51,506,295,256 | 51.51 | `600d567f6a9629c8574e8e7041b199bdd9c59a986afa7906910a81919610607d` | **untouched** — never fits alongside a BF16 DiT |
 | `qwen3vl_32b_minimax_h3_int8_convrot.safetensors` | 27,141,342,152 | 27.14 | `bc2ced0fbea64757fa9acddccfc0b3f4819d1dcf1da6c124d690d368be283923` | **untouched** — published as-is |
 | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | 15,687,142,551 | 15.69 | `35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6` | **untouched, re-downloaded** — **the one Keel runs** |
 
@@ -57,7 +57,7 @@ The first copy of the NVFP4/AWQ encoder that reached our box was **21,714,795,67
 payload behind it was not. Its SHA-256 was
 `61f55b01f03e9cd9ec2b10e3084e74519230373135aef5c84ec6b7ec04208340`.
 
-It loads. It produces nothing. It does not error.
+It loads. It produces nothing. It never errors.
 
 A partial file of the same name also appeared on one of the fleet's Sparks — the BF16 DiT at
 **35,660,245,251 bytes** against a header declaring **66,280,487,368**, 30,620,242,117 bytes short
@@ -87,7 +87,7 @@ Step-distillation adapters. Sizes and hashes verified directly on the weights tr
 | `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors` | 1,956,193,000 | `2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e` | **untouched** — published adapter |
 | `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` | 1,956,193,000 | `5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c` | **untouched** — published adapter |
 
-These are published too. What this team *did* produce is its own LoRA work, and that is a
+These are published too. What we *did* produce is our own LoRA work, and that is a
 different artefact class — trained adapters, with training logs and reload-verification, catalogued
 in [`../training/TRAINING.md`](../training/TRAINING.md). No trained adapter ships in this
 repository either.
@@ -103,14 +103,14 @@ repository either.
 
 ## The publish-the-weights option — an open question, not a plan
 
-**Keel does not publish weights and this repository does not contain any.** If that ever changes,
+**Keel publishes no weights and this repository contains none.** If that ever changes,
 here is what it would actually take, so the decision can be made on facts:
 
 | | What it would involve |
 |---|---|
 | **What** | Hosting the pruned FP8 DiT and the NVFP4 encoder somewhere, and pointing the recipe at that host instead of at `Comfy-Org/MiniMax-H3`. |
 | **Size** | ~20.96 GB for the FL2VA DiT, ~15.69 GB for the encoder, ~5.82 GB for both VAEs, ~1.96 GB per turbo LoRA. |
-| **Why it might be wanted** | The corrupt-download failure was real and cost a render. A controlled host removes that failure mode. |
+| **Why it might be wanted** | The corrupt-download error was real and cost a render. A controlled host removes that error mode. |
 | **Why it might not** | These files are already published by the model repository. Re-hosting published weights duplicates a large artefact for no accuracy gain, and it is a redistribution decision rather than a technical one. |
 | **What we would need to settle first** | Whether to mirror the published files byte-for-byte or re-emit them; where they would live; how the hash table stays truthful if the mirror diverges from the publisher's copy. |
 
