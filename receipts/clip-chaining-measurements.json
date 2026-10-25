@@ -1,0 +1,340 @@
+{
+  "films": [
+    {
+      "film": "FILM-WAR-1920x1056.mp4",
+      "verdict": "REJECT",
+      "reason": "5 boundary/boundaries measured, 2 outside the bars",
+      "measured_on": "the delivered file itself",
+      "bars": {
+        "palette_corr_min": 0.35,
+        "luma_jump_max": 45.0
+      },
+      "boundaries": [
+        {
+          "time_s": 5.167,
+          "frame": 124,
+          "palette_corr": 0.31092625856399536,
+          "cv2_luma_jump": 10.460954861111112,
+          "signalstats_luma_jump": 4.041749999999993,
+          "within_bars": false,
+          "reasons": [
+            "palette 0.3109 below 0.35"
+          ]
+        },
+        {
+          "time_s": 10.333,
+          "frame": 248,
+          "palette_corr": 0.5066347718238831,
+          "cv2_luma_jump": 22.938072916666677,
+          "signalstats_luma_jump": 19.34415,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 15.5,
+          "frame": 372,
+          "palette_corr": 0.7672228217124939,
+          "cv2_luma_jump": 17.138090277777778,
+          "signalstats_luma_jump": 15.943783333333343,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 20.667,
+          "frame": 496,
+          "palette_corr": 0.4404655694961548,
+          "cv2_luma_jump": 6.807031249999994,
+          "signalstats_luma_jump": 6.622033333333334,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 25.833,
+          "frame": 620,
+          "palette_corr": 0.10318516939878464,
+          "cv2_luma_jump": 7.756180555555559,
+          "signalstats_luma_jump": 5.650633333333332,
+          "within_bars": false,
+          "reasons": [
+            "palette 0.1032 below 0.35"
+          ]
+        }
+      ],
+      "opencv_version": "5.0.0",
+      "sha256": "18cdfd1f4e5ae550b8c854efb71832802eddf4a3a47bbe547d7bd09e03c7c627",
+      "bytes": 75251626,
+      "frames_in_track": 744,
+      "cuts": {
+        "pyscenedetect": {
+          "tool": "pyscenedetect",
+          "times": [
+            5.167,
+            10.333,
+            15.5,
+            20.667,
+            25.833
+          ]
+        },
+        "ffmpeg": {
+          "tool": "ffmpeg",
+          "times": [
+            5.167,
+            15.5
+          ]
+        }
+      },
+      "cuts_found": 5,
+      "breaks": 2
+    },
+    {
+      "film": "FILM-BEACON-1920x1056.mp4",
+      "verdict": "REJECT",
+      "reason": "9 boundary/boundaries measured, 1 outside the bars",
+      "measured_on": "the delivered file itself",
+      "bars": {
+        "palette_corr_min": 0.35,
+        "luma_jump_max": 45.0
+      },
+      "boundaries": [
+        {
+          "time_s": 5.167,
+          "frame": 124,
+          "palette_corr": 0.4956645965576172,
+          "cv2_luma_jump": 36.20984375,
+          "signalstats_luma_jump": 30.742933333333333,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 7.875,
+          "frame": 189,
+          "palette_corr": 0.9809514284133911,
+          "cv2_luma_jump": 2.389097222222226,
+          "signalstats_luma_jump": 11.99666666666667,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 9.542,
+          "frame": 229,
+          "palette_corr": 0.9987280964851379,
+          "cv2_luma_jump": 2.0924479166666643,
+          "signalstats_luma_jump": 15.138133333333336,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 10.333,
+          "frame": 248,
+          "palette_corr": 0.38152799010276794,
+          "cv2_luma_jump": 22.844357638888894,
+          "signalstats_luma_jump": 20.591666666666676,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 15.5,
+          "frame": 372,
+          "palette_corr": 0.7021422386169434,
+          "cv2_luma_jump": 11.339791666666667,
+          "signalstats_luma_jump": 8.898716666666672,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 18.333,
+          "frame": 440,
+          "palette_corr": 0.9966443181037903,
+          "cv2_luma_jump": 1.4167187500000011,
+          "signalstats_luma_jump": 1.3944333333333319,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 20.667,
+          "frame": 496,
+          "palette_corr": 0.9242068529129028,
+          "cv2_luma_jump": 2.507256944444446,
+          "signalstats_luma_jump": 2.591750000000001,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 22.167,
+          "frame": 532,
+          "palette_corr": 0.9976640939712524,
+          "cv2_luma_jump": 1.1912673611111106,
+          "signalstats_luma_jump": 0.10243333333333382,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 25.833,
+          "frame": 620,
+          "palette_corr": 0.24132581055164337,
+          "cv2_luma_jump": 120.05697916666668,
+          "signalstats_luma_jump": 103.96688333333333,
+          "within_bars": false,
+          "reasons": [
+            "palette 0.2413 below 0.35",
+            "luma jump 120.06 above 45.0"
+          ]
+        }
+      ],
+      "opencv_version": "5.0.0",
+      "sha256": "03b4500d0fab85cf11e1cf859a16b77326900a4637042b81faea3f119104e220",
+      "bytes": 74441993,
+      "frames_in_track": 744,
+      "cuts": {
+        "pyscenedetect": {
+          "tool": "pyscenedetect",
+          "times": [
+            5.167,
+            7.875,
+            9.542,
+            10.333,
+            15.5,
+            18.333,
+            20.667,
+            22.167,
+            25.833
+          ]
+        },
+        "ffmpeg": {
+          "tool": "ffmpeg",
+          "times": [
+            5.167,
+            10.333,
+            25.833
+          ]
+        }
+      },
+      "cuts_found": 9,
+      "breaks": 1
+    },
+    {
+      "film": "FILM-BRIDGE-1920x1056.mp4",
+      "verdict": "REJECT",
+      "reason": "8 boundary/boundaries measured, 4 outside the bars",
+      "measured_on": "the delivered file itself",
+      "bars": {
+        "palette_corr_min": 0.35,
+        "luma_jump_max": 45.0
+      },
+      "boundaries": [
+        {
+          "time_s": 5.167,
+          "frame": 124,
+          "palette_corr": 0.28094083070755005,
+          "cv2_luma_jump": 6.410399305555558,
+          "signalstats_luma_jump": 5.438566666666674,
+          "within_bars": false,
+          "reasons": [
+            "palette 0.2809 below 0.35"
+          ]
+        },
+        {
+          "time_s": 10.333,
+          "frame": 248,
+          "palette_corr": 0.04967746138572693,
+          "cv2_luma_jump": 4.209878472222222,
+          "signalstats_luma_jump": 2.173883333333322,
+          "within_bars": false,
+          "reasons": [
+            "palette 0.0497 below 0.35"
+          ]
+        },
+        {
+          "time_s": 15.5,
+          "frame": 372,
+          "palette_corr": 0.32102590799331665,
+          "cv2_luma_jump": 51.06251736111111,
+          "signalstats_luma_jump": 49.8411,
+          "within_bars": false,
+          "reasons": [
+            "palette 0.3210 below 0.35",
+            "luma jump 51.06 above 45.0"
+          ]
+        },
+        {
+          "time_s": 20.667,
+          "frame": 496,
+          "palette_corr": 0.6612544059753418,
+          "cv2_luma_jump": 28.34197916666666,
+          "signalstats_luma_jump": 25.932133333333326,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 25.833,
+          "frame": 620,
+          "palette_corr": 0.3134840130805969,
+          "cv2_luma_jump": 5.048315972222227,
+          "signalstats_luma_jump": 4.330233333333339,
+          "within_bars": false,
+          "reasons": [
+            "palette 0.3135 below 0.35"
+          ]
+        },
+        {
+          "time_s": 27.042,
+          "frame": 649,
+          "palette_corr": 0.9914828538894653,
+          "cv2_luma_jump": 3.3672395833333297,
+          "signalstats_luma_jump": 9.28734999999999,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 29.875,
+          "frame": 717,
+          "palette_corr": 0.997406542301178,
+          "cv2_luma_jump": 1.7556770833333388,
+          "signalstats_luma_jump": 5.514616666666669,
+          "within_bars": true,
+          "reasons": []
+        },
+        {
+          "time_s": 30.75,
+          "frame": 738,
+          "palette_corr": 0.9957296848297119,
+          "cv2_luma_jump": 2.8489236111111182,
+          "signalstats_luma_jump": 4.634233333333327,
+          "within_bars": true,
+          "reasons": []
+        }
+      ],
+      "opencv_version": "5.0.0",
+      "sha256": "64a2b1c86b3bc89594ad1cadf4b0b0cad5f3adaf3dfab0175df78ce2cd6b18c2",
+      "bytes": 76399114,
+      "frames_in_track": 744,
+      "cuts": {
+        "pyscenedetect": {
+          "tool": "pyscenedetect",
+          "times": [
+            5.167,
+            10.333,
+            15.5,
+            20.667,
+            25.833,
+            27.042,
+            29.875,
+            30.75
+          ]
+        },
+        "ffmpeg": {
+          "tool": "ffmpeg",
+          "times": [
+            5.167,
+            10.333,
+            15.5,
+            20.667,
+            25.833
+          ]
+        }
+      },
+      "cuts_found": 8,
+      "breaks": 4
+    }
+  ]
+}

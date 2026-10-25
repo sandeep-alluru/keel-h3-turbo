@@ -190,7 +190,8 @@ cut.**
 | **Trim-NVFP4** | The INT4 conditioner, and the download discipline that goes with it: quote a checkpoint size from the safetensors header, never from `stat`. | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` (15.69 GB) | Caught a **21,714,795,671-byte** encoder with **6,027,653,120 bytes** of trailing garbage behind a healthy header, and a **truncated BF16 DiT** 30.6 GB short of its own header. *(Measured here — `receipts/encoder-diagnosis.md`.)* |
 | **Trim-Step** | Step distillation. A 4-step or 8-step turbo LoRA replaces 20 sampling steps. | `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors` (1.96 GB) and siblings | **201 s** for a 4-step 1280×704 render against the 635 s 16-step plain baseline — **3.16×**. A step-count reduction as much as an acceleration, and a quality trade rather than a free win. *(Measured here.)* |
 | **Trim-A/B** | The measurement method: a control and a treatment that differ *only* in the acceleration, on the same seed, the same geometry, the same step count, the same scheduler. | none | **1.44×** at 8 steps, **1.17×** at 16 steps, against matched plain controls. *(Measured here — `receipts/bench-matrix.tsv`.)* |
-| **Trim-Receipts** | The discipline: every published number maps to who measured it, and a checker fails the build when a number loses its receipt. | none | **The trust mechanism**, and the reason the other five rows can be believed. *(Measured here — `scripts/check_receipts.py`.)* |
+| **Trim-Chain** | Builds a 31-second film out of six 5.167-second generations, and measures every seam on the delivered file rather than trusting it. | none | **744 frames = 6 × 124 at 24 fps = 31.104 s**, and every seam scored against two bars — palette correlation at least 0.35, luma jump at most 45. Across the three delivered films: **5, 9 and 8 seams measured; 3, 8 and 4 holding the bars.** *(Measured here — `craft/gates/join_gate.py`.)* |
+| **Trim-Receipts** | The discipline: every published number maps to who measured it, and a checker fails the build when a number loses its receipt. | none | **The trust mechanism**, and the reason the other six rows can be believed. *(Measured here — `scripts/check_receipts.py`.)* |
 
 ### What this actually does for you
 
@@ -205,7 +206,7 @@ when you want a draft and you keep twenty when you want the quality. And when yo
   decode active, and file the receipt beside theirs.
 * **Separate Sage attention from FirstBlockCache** inside the accelerated arms, so each technique
   in the table carries its own number rather than sharing one.
-* **Give Trim-INT8 its own timing**, so all six techniques have a measured effect.
+* **Give Trim-INT8 its own timing**, so all seven techniques have a measured effect.
 
 ---
 
@@ -299,7 +300,8 @@ two places, and the distinction is kept visible everywhere:
 
 The index is [`receipts/PROVENANCE.md`](receipts/PROVENANCE.md): one row per number, with where
 it came from. The full set of tables, each with its conditions and its chart, is
-[`docs/benchmarks.md`](docs/benchmarks.md).
+[`docs/benchmarks.md`](docs/benchmarks.md). The seam measurements behind Trim-Chain are in
+[`receipts/clip-chaining.md`](receipts/clip-chaining.md).
 
 And the checker enforces it:
 

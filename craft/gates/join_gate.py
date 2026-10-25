@@ -151,7 +151,7 @@ def measure(film, fps=24.0):
     import hashlib
 
     receipt = {
-        "film": os.path.abspath(film),
+        "film": os.path.basename(film),
         "verdict": "ERROR",
         "reason": "",
         "measured_on": "the delivered file itself",
@@ -161,6 +161,15 @@ def measure(film, fps=24.0):
     if not os.path.isfile(film):
         receipt["reason"] = "the file is not there: %s" % film
         return receipt
+
+    # The palette correlation moves a little between OpenCV releases, so the version
+    # is part of the receipt: a number without it sits beside a number measured
+    # elsewhere rather than beside the same measurement.
+    try:
+        import cv2
+        receipt["opencv_version"] = cv2.__version__
+    except Exception:
+        receipt["opencv_version"] = "not available"
 
     digest = hashlib.sha256()
     with open(film, "rb") as fh:
