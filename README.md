@@ -253,9 +253,21 @@ The set that fits one Spark, with the bytes that decide it:
 | INT8 ConvRot 34.04 GB | NVFP4 15.69 GB | 5.81 GB | 55.54 GB | Yes |
 | **Pruned FP8 20.96 GB** | **NVFP4 15.69 GB** | 5.81 GB | **42.46 GB** | **Yes — the production pair** |
 
+The five files that make up that pair, and the step-distillation adapter:
+
+| File | Source | Bytes | SHA-256 | What we did to it |
+|---|---|---:|---|---|
+| `minimax_h3_fl2va_pruned_fp8_scaled.safetensors` | `Comfy-Org/MiniMax-H3` | 20,958,205,608 | `12944c1f7791637e7de12208aef04da82bd26b95271b1b47d817364315ade993` | untouched — the denoiser this stack runs |
+| `minimax_h3_ref2va_pruned_fp8_scaled.safetensors` | `Comfy-Org/MiniMax-H3` | 20,958,205,608 | `f86f2f79ebd2d76eb8eeb46091e83982e6ff51d255747e7b16e92834b392b8e9` | untouched — the Ref2VA arm |
+| `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | `Comfy-Org/MiniMax-H3` | 15,687,142,551 | `35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6` | untouched, re-downloaded — the conditioner this stack runs |
+| `minimax_h3_video_vae_fp16.safetensors` | `Comfy-Org/MiniMax-H3` | 5,207,808,496 | `7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522` | untouched — the video decoder |
+| `minimax_h3_audio_vae_fp32.safetensors` | `Comfy-Org/MiniMax-H3` | 605,254,808 | `8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48` | untouched — the audio decoder |
+| `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors` | `Comfy-Org/MiniMax-H3` | 1,956,192,992 | `c396a9a06f58399e9df9754b18299818d84a2ddd371724ba48fe4a41221437dc` | untouched — the step-distillation adapter |
+
 "Pruned", "FP8-scaled" and "INT8 ConvRot" are the publisher's names for their conversions, not
-ours. Byte-exact sizes and the residency arithmetic are in
-[`receipts/checkpoint-sizes.md`](receipts/checkpoint-sizes.md).
+ours. Byte-exact sizes for every other variant, and the residency arithmetic, are in
+[`receipts/checkpoint-sizes.md`](receipts/checkpoint-sizes.md) and
+[`receipts/weights.md`](receipts/weights.md).
 
 The pruned FP8-scaled build brings each denoiser to **21.0 GB** and the NVFP4/AWQ conditioner to
 **15.7 GB** — **42.46 GB** for a denoiser, a conditioner and both decoders, which is what actually

@@ -336,20 +336,21 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
         {
             "kind": "card",
             "hold": 13.0,
-            "image": card(
+            "image": table_card(
                 "THE TECHNIQUE",
-                "TRIM — fit the model to the machine, cut the steps, then measure the cut",
+                "TRIM - fit the model, cut the steps, measure the cut",
+                ["TECHNIQUE", "WHAT IT DOES", "MEASURED EFFECT"],
                 [
-                    ("Trim-Residency   pruned FP8 DiT + NVFP4 encoder   42.46 GB, not 123.60 GB", INK),
-                    ("Trim-INT8        the convert path   34.04 GB   no speed number of its own", INK),
-                    ("Trim-NVFP4       the INT4 conditioner, and the download discipline", INK),
-                    ("Trim-Step        turbo LoRAs: 20 sampling steps down to 4   3.16x", INK),
-                    ("Trim-A/B         control and treatment differ only in the acceleration", INK),
-                    ("Trim-Receipts    a claim without a receipt fails the build", INK),
+                    ["Trim-Residency", "pruned FP8 DiT + NVFP4 encoder", "42.46 GB, not 123.60 GB"],
+                    ["Trim-INT8", "the convert path", "34.04 GB - no speed number of its own"],
+                    ["Trim-NVFP4", "the INT4 conditioner, and the download discipline", "caught a corrupt encoder"],
+                    ["Trim-Step", "turbo LoRAs: 20 sampling steps down to 4", "3.16x"],
+                    ["Trim-A/B", "control and treatment differ only in the acceleration", "1.44x at 8 steps, 1.17x at 16"],
+                    ["Trim-Receipts", "a claim without a receipt fails the build", "not a speed effect"],
                 ],
-                "NVIDIA's name is Sol-Attn. Ours is Trim.",
+                row_colours=[INK, INK, INK, INK, INK, INK],
+                footnote="NVIDIA's name is Sol-Attn. Ours is Trim.",
                 accent=AMBER,
-                title_size=50,
             ),
         }
     )
@@ -583,21 +584,22 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
         {
             "kind": "card",
             "hold": 12.0,
-            "image": card(
+            "image": table_card(
                 "WHAT WE MEASURED OURSELVES",
                 "The numbers we can be held to",
+                ["MEASUREMENT", "RESULT"],
                 [
-                    ("pruned FP8 DiT      20,958,205,608 B   sha256 matches the published hash", INK),
-                    ("NVFP4/AWQ encoder   15,687,142,551 B   clean re-download", INK),
-                    ("a real forward pass + video and audio decode    30.02 s", INK),
-                    ("shot renders        710.15 / 710.13 / 710.14 s", INK),
-                    ("", MUTED),
-                    ("acceleration arms vs plain control, 8 steps:  496 s -> 344 s    1.44x", AMBER),
-                    ("the same at 16 steps:  635 s -> 545 s                          1.17x", AMBER),
-                    ("4-step turbo LoRA:  201 s against the 635 s baseline           3.16x", AMBER),
-                    ("Sol-Attn and the batched VAE decode were never installed here", AMBER),
+                    ["pruned FP8 DiT", "20,958,205,608 B - sha256 matches the published hash"],
+                    ["NVFP4/AWQ encoder", "15,687,142,551 B - clean re-download"],
+                    ["forward pass + video and audio decode", "30.02 s"],
+                    ["shot renders", "710.15 / 710.13 / 710.14 s"],
+                    ["acceleration arms vs plain control, 8 steps", "496 s -> 344 s   1.44x"],
+                    ["the same at 16 steps", "635 s -> 545 s   1.17x"],
+                    ["4-step turbo LoRA", "201 s against the 635 s baseline   3.16x"],
+                    ["Sol-Attn and the batched VAE decode", "not installed in this stack"],
                 ],
-                "receipts/bench-matrix.tsv · receipts/our-acceleration-ab.md · receipts/adapter-shelf.md",
+                row_colours=[INK, INK, INK, INK, AMBER, AMBER, AMBER, AMBER],
+                footnote="receipts/bench-matrix.tsv | receipts/our-acceleration-ab.md | receipts/adapter-shelf.md",
                 accent=AMBER,
             ),
         }
