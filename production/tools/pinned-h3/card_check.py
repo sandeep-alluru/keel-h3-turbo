@@ -146,7 +146,13 @@ def check_scene_contract(data):
     if not all(k in shot for shot in shots for k in required):
         raise SystemExit("the card carries the scene fields and its shots do not - "
                          "it was half built")
-    from scene_schema import SceneCard, check_card as _contract
+    try:
+        from scene_schema import SceneCard, check_card as _contract
+    except ImportError as exc:
+        raise SystemExit(
+            "scene_schema.py holds the scene contract and is not in this tree. "
+            "Put the production tree on PYTHONPATH to run this toolset."
+        ) from exc
     _contract(SceneCard.from_json(data))
 
 

@@ -204,7 +204,13 @@ def host_lora_names(host=None):
 # the three clients never drift apart.
 def require_not_halted(entry):
     """Refuse to submit when the production is stopped and nothing lifts this entry point."""
-    from halt_guard import require_not_halted as _check
+    try:
+        from halt_guard import require_not_halted as _check
+    except ImportError as exc:
+        raise RuntimeError(
+            "halt_guard.py holds the production's stop marker and is not in this tree. "
+            "Put the production tree on PYTHONPATH to run this toolset."
+        ) from exc
     return _check(entry)
 
 
