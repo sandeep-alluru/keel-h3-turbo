@@ -51,7 +51,7 @@ and it is the size of a **broken partial download**.
 On the second Spark in the fleet there is a file called
 `minimax_h3_fl2va_bf16.safetensors` that is **35,660,245,251 bytes** on disk. Its own safetensors
 header declares **66,280,487,368 bytes** across 535 tensors (BF16 522, F32 13). The file is
-**30,620,242,117 bytes short**. It cannot load, and nothing on that box can load it.
+**30,620,242,117 bytes short** — **30.6 GB** short. It cannot load, and nothing on that box can load it.
 
 So the sequence was: a download stopped part-way, the partial file sat on disk with the right
 name, `ls -l` was read as the checkpoint size, and 35.7 GB was written down as the size of the
@@ -94,6 +94,17 @@ matter:
 This is also why NVIDIA's own GB10 recipe uses a pruned FP8 DiT and an FP8 Qwen3-VL: on the
 unified-memory side of the machine, precision is not a preference, it is a residency requirement.
 NVIDIA's published GB10 figure (710.6 s → 181.3 s, 3.92×) is a number produced on the FP8 pair.
+
+## The residency totals, in GB
+
+The front page quotes these as GB. They are sums of the byte-exact figures above.
+
+| DiT | Encoder | + VAEs | Total (bytes) | Total (GB) | Fits 121 GB? |
+|---|---|---|---:|---:|---|
+| BF16 66.28 GB | BF16 51.51 GB | 5.81 GB | 123,599,845,928 | **123.60 GB** | **No** |
+| BF16 66.28 GB | NVFP4 15.69 GB | 5.81 GB | 87,780,693,223 | **87.78 GB** | Yes |
+| INT8 ConvRot 34.04 GB | NVFP4 15.69 GB | 5.81 GB | 55,539,098,189 | **55.54 GB** | Yes |
+| **Pruned FP8 20.96 GB** | **NVFP4 15.69 GB** | 5.81 GB | **42,458,411,463** | **42.46 GB** | **Yes — the production pair** |
 
 ## The corrupt encoder, and the fix
 

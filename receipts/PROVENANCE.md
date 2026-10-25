@@ -42,6 +42,20 @@ Upstream host `spark-13b3`. **This team did not re-run this ladder.**
 | `5.52 GB/s` vs `503 GB/s` | Ethernet fabric vs NVLink — why CP=2 across two Sparks is slower | `drowzeys` README, quoted in the Oct-21 session record |
 | `0.225` | Route density quoted from NVIDIA's own measurements | `drowzeys` `RECIPE.md` |
 
+### NVIDIA's and xmarre's published numbers — PUBLISHED (not ours)
+
+Full detail, with the quoted sentences, in `receipts/published-comparisons.md`.
+
+| Number | What it is | Receipt |
+|---|---|---|
+| `710.6 s` → `181.3 s`, `3.92×` | NVIDIA Sol-Engine on DGX Spark, 832×480, 124 frames, 50 steps | `receipts/published-comparisons.md` |
+| `13,428` ms/step vs `13,417` ms/step, `0.08%` | NVIDIA's FP8 baseline against the BF16 model's step cost — FP8 as residency, not as an optimisation | `receipts/published-comparisons.md` |
+| `27.21` → `6.88` s, `3.95×` | NVIDIA Sol-Engine on 8× GB200, 768p@5s | `receipts/published-comparisons.md` |
+| `420.81` → `400.94` s, `1.05×` | xmarre ComfyUI-Sol-H3, SOL on at the default `dense_evaluations=1`, RTX PRO 6000 SM120 | `receipts/published-comparisons.md` |
+| `420.81` → `380.57` s, `1.11×` | xmarre, SOL on in the `dense_evaluations=0` speed mode, same host | `receipts/published-comparisons.md` |
+| `374.84` → `332.56` s | the same xmarre pair, sampler wall only | `receipts/published-comparisons.md` |
+| `312.57` → `298.69` s | xmarre Exact Runtime A/B, 17.18 GB peak VRAM either way | `receipts/published-comparisons.md` |
+
 ### NVIDIA's own published GB10 numbers — PUBLISHED (not ours)
 
 | Number | What it is | Receipt |
@@ -113,5 +127,9 @@ What this repository said before, and what the record actually supports.
 
 * No licence determination. That is the owner's call and it is deferred.
 * No timeline or changelog.
-* No raw model weights, no training data, no base-model fine-tunes.
+* No raw model weights, no training data, no base-model fine-tunes. The complete weight
+  inventory, with every published SHA-256 and what we did to each file, is in
+  `receipts/weights.md`.
 * No claim that the published ladder was reproduced on our hardware.
+* No claim that our 1.44× is comparable to the published 1.54× — different geometry, different
+  step count, different machine.

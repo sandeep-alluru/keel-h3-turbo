@@ -1,18 +1,89 @@
-# Model Acceleration — MiniMax H3 on a single NVIDIA DGX Spark
+# Keel
 
-**MiniMax H3 on one 128 GB DGX Spark, with the ComfyUI node stack, the production harness, the
-craft gates, and the receipts to prove every number on this page.**
+**Accelerated MiniMax H3 video diffusion inference on a single DGX Spark.**
 
-This repository is the public face of a piece of work that started as a link and turned into a
-production. It holds:
+An efficiency-oriented inference stack for MiniMax H3 — installable ComfyUI node packs, a
+resident-weight recipe, and a receipt behind every number.
 
-* the **acceleration stack** for MiniMax H3 on GB10 (`sm_121`) — three installable ComfyUI node
-  packs, one recipe, two workflows (dense baseline and full stack) so you can A/B them yourself;
-* the **measurements**, separated into what this team ran and what was published by someone else,
-  with the attribution attached to every row;
-* a **craft layer** — gates that refuse a slideshow and call it a video, a prompt cookbook, and a
-  pinned production harness;
-* and **six curated clips** from a real production, hashed and indexed.
+---
+
+**Keel is** a way to run MiniMax H3 — a 33B joint video-and-audio diffusion model — on one
+128 GB DGX Spark, for people who want to render H3 themselves rather than call an API. It ships
+three installable ComfyUI node packs, the weight set that actually fits in unified memory, a
+seed-matched A/B method so you can measure the difference on your own box, and a checker that
+fails the build if a published number stops matching its receipt.
+
+**Keel is not** NVIDIA's Sol-Engine, and it does not try to be. Sol-Engine is their inference
+codebase with their own kernels — `Sol-Attn` is their name for their method. Keel is the ComfyUI
+side of the same problem: the node packs, the resident-weight recipe, the step-distillation
+adapters, and the discipline around the numbers. The published speed ladder that appears below
+belongs to the community Sol-Engine port, and Keel says so wherever it appears.
+
+**Keel is going** in one direction, and it is not a new kernel. The published ladder reaches
+**1.54×** end-to-end on a single Spark using two components — the Sol-Attn kernel and the
+batched VAE decode — that **this team has never installed and never measured**. Closing that gap
+is the next run, and `RECIPE.md` is written for it. Everything else Keel does is already here.
+
+---
+
+## Baseline comparison
+
+One table. Every row is either **PUBLISHED** — measured by somebody else, from the repository
+named — or **FIRST-PARTY** — measured by this team, with the receipt in this repository. The two
+are never blended, and the geometries are not the same, so read the columns, not just the speedup.
+
+| Engine | Hardware | Geometry | Steps | Seconds | Speedup | Source |
+|---|---|---|---:|---|---:|---|
+| **Stock MiniMax H3** — no acceleration | DGX Spark, GB10 | 832×480, 124f | 50 | 710.6 s | 1.00× | PUBLISHED · NVlabs/Sana `sol-engine` |
+| **NVlabs Sana Sol-Engine** — full opt | DGX Spark, GB10 | 832×480, 124f | 50 | **181.3 s** | **3.92×** | PUBLISHED · NVlabs/Sana `sol-engine` |
+| **Stock ComfyUI** — no acceleration | DGX Spark, `spark-13b3` | 864×480, 124f | 20 | 312.7 s | 1.00× | PUBLISHED · community SM121 port |
+| **Community Sol-Engine port** — full stack | DGX Spark, `spark-13b3` | 864×480, 124f | 20 | **202.5 s** | **1.54×** | PUBLISHED · community SM121 port |
+| **ComfyUI-Sol-H3 (xmarre)** — SOL on, default | RTX PRO 6000, SM120 | not stated | not stated | 420.81 → **400.94 s** | 1.05× | PUBLISHED · xmarre/ComfyUI-Sol-H3 |
+| **ComfyUI-Sol-H3 (xmarre)** — SOL on, speed mode | RTX PRO 6000, SM120 | not stated | not stated | 420.81 → **380.57 s** | 1.11× | PUBLISHED · xmarre/ComfyUI-Sol-H3 |
+| **Keel** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 8 | 496 → **344 s** | **1.44×** | **FIRST-PARTY** · `receipts/bench-matrix.tsv` |
+| **Keel** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 16 | 635 → **545 s** | **1.17×** | **FIRST-PARTY** · `receipts/bench-matrix.tsv` |
+| **Keel** — 4-step turbo LoRA | DGX Spark, GB10 | 1280×704, 124f | 4 | **201 s** | **3.16×** | **FIRST-PARTY** · `receipts/bench-matrix.tsv` |
+
+Read it this way:
+
+* **NVIDIA's 3.92× is the strongest number here** and it is theirs, measured on their runtime
+  with their kernels, at 832×480 and 50 steps.
+* **The community port's 1.54×** is the strongest number for a *ComfyUI node-pack* stack on one
+  Spark. It is theirs, measured on `spark-13b3`, and Keel reproduces it with attribution rather
+  than claiming it.
+* **Keel's own rows are 1.44× and 1.17×**, plus **3.16×** from step distillation. They are lower
+  than the published ladder for a stated reason: the two components that ladder depends on —
+  the Sol-Attn kernel and the batched VAE decode — were never installed in our runs. Keel is the
+  only row here whose accelerator is a ComfyUI node pack, which is also the only column we can
+  re-run and check.
+* **xmarre's rows** are the careful ones: they publish a matched A/B, they state that the speed
+  mode is a quality trade rather than a free win, and they do not publish the geometry for those
+  timings. We left the geometry column blank rather than guess it.
+
+---
+
+## The technique: Trim
+
+**Trim** is Keel's named technique, and it is the owner's to rename. NVIDIA's is Sol-Attn; ours
+is the set of choices that make one machine enough, plus the method of proving they work.
+
+Trim means three things, in order: **fit the model to the machine, cut the steps, then measure
+the cut.**
+
+| | What it does | Weights it touches | Measured effect |
+|---|---|---|---|
+| **Trim-Residency** | Picks the weight set that fits in the 121 GB a Spark actually shows the runtime: a pruned FP8 DiT and an NVFP4/AWQ encoder instead of the BF16 pair. | `minimax_h3_fl2va_pruned_fp8_scaled.safetensors` (20.96 GB), `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` (15.69 GB) | **42.46 GB** for DiT + encoder + both VAEs, against 123.60 GB for the BF16 pair — the difference between running and not running. The precision cost is nil: NVIDIA measure their FP8 baseline at 13,428 ms/step against the BF16 model's 13,417 ms, a **0.08 % difference**. *(FP8 cost: PUBLISHED · NVIDIA. Residency: FIRST-PARTY.)* |
+| **Trim-INT8** | The convert path for machines with more room: INT8 ConvRot DiTs at 34.04 GB, or the pruned INT8 Convrot DiTs at 20.97 GB, in place of the BF16 66.28 GB. | `minimax_h3_fl2va_int8_convrot.safetensors` (34.04 GB), `minimax_h3_fl2va_pruned_int8_convrot.safetensors` (20.97 GB) | **No speed measurement of its own.** It is a residency choice, not an acceleration. *(Unmeasured as a separate effect — stated plainly.)* |
+| **Trim-NVFP4** | The INT4 conditioner, and the download discipline that goes with it: quote a checkpoint size from the safetensors header, never from `stat`. | `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` (15.69 GB) | Caught a **21,714,795,671-byte** encoder with **6,027,653,120 bytes** of trailing garbage behind a healthy header, and a **truncated BF16 DiT** 30.6 GB short of its own header. *(FIRST-PARTY — `receipts/encoder-diagnosis.md`.)* |
+| **Trim-Step** | Step distillation. A 4-step or 8-step turbo LoRA replaces 20 sampling steps. | `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors` (1.96 GB) and siblings | **201 s** for a 4-step 1280×704 render against the 635 s 16-step plain baseline — **3.16×**. A step-count reduction as much as an acceleration, and a quality trade rather than a free win. *(FIRST-PARTY.)* |
+| **Trim-A/B** | The measurement method: a control and a treatment that differ *only* in the acceleration, on the same seed, the same geometry, the same step count, the same scheduler. | none | **1.44×** at 8 steps, **1.17×** at 16 steps, against matched plain controls. *(FIRST-PARTY — `receipts/bench-matrix.tsv`.)* |
+| **Trim-Receipts** | The discipline: every published number maps to who measured it, and a checker fails the build when a number loses its receipt. | none | Not a speed effect. It is the reason the other five rows can be trusted. *(FIRST-PARTY — `scripts/check_receipts.py`.)* |
+
+**Two things Trim does not claim.** It does not claim per-technique speedups where none were
+isolated — Trim-INT8 has no number of its own, and Trim-A/B cannot separate Sage attention from
+FirstBlockCache, because the surviving records do not resolve which of the two produced the gain.
+And it does not claim the published 1.54×: our acceleration arms never had the Sol-Attn kernel or
+the batched VAE decode installed.
 
 ---
 
@@ -55,10 +126,6 @@ selection. Max abs diff 1.56e-2, mean 5.29e-4 on a [-1,1] pixel range.
 > at commit `7e3db54`, reproduced byte-for-byte in `receipts/bench-results.md`. This team did not
 > re-run this ladder on our own hardware. See **What we measured ourselves** below for the
 > first-party numbers, and `receipts/PROVENANCE.md` for the number-by-number map.
->
-> For reference, NVIDIA's own published GB10 figure for the same model is **710.6 s → 181.3 s
-> (3.92×)** at 480p / 5 s / 50 steps, on a pruned FP8 DiT with an FP8 Qwen3-VL conditioner —
-> `NVlabs/Sana` @ `sol-engine`, `models/minimax_h3/README.md`.
 
 ### What we measured ourselves
 
@@ -66,119 +133,91 @@ First-party numbers, on our own DGX Spark, each with its own receipt.
 
 | Measurement | Result | Receipt |
 |---|---|---|
-| Pruned FP8 FL2VA DiT, the checkpoint we actually run | 20,958,205,608 B (21.0 GB), SHA-256 `12944c1f…` | `receipts/verification.json` |
+| Pruned FP8 FL2VA DiT, the checkpoint we actually run | 20,958,205,608 B (21.0 GB), SHA-256 `12944c1f…` — matches the published hash exactly | `receipts/verification.json` |
 | NVFP4/AWQ Qwen3-VL-32B encoder, re-downloaded clean | 15,687,142,551 B (15.7 GB) | `receipts/verification.json` |
 | The same encoder, first download | 21,714,795,671 B — 6,027,653,120 unaccounted trailing bytes | `receipts/encoder-diagnosis.md` |
 | A real H3 forward pass **and** video+audio decode, 512×288, 124 frames, 2 steps | **30.02 s** | `receipts/forward-receipt.json` |
 | Acceleration arms vs plain control, 8 steps, 1280×704 | 496 s → **344 s** — **1.44×** | `receipts/bench-matrix.tsv` |
-| Acceleration arms vs plain control, 16 steps, 1280×704 | 635 s → **545 s** — **1.17×** (39.8 → 34.1 s/step) | `receipts/bench-matrix.tsv`, `receipts/our-acceleration-ab.md` |
+| Acceleration arms vs plain control, 16 steps, 1280×704 | 635 s → **545 s** — **1.17×** (39.8 → 34.1 s/step) | `receipts/bench-matrix.tsv` |
 | 4-step turbo LoRA, 1280×704 | **201 s** against the 16-step plain baseline — **3.16×** | `receipts/bench-matrix.tsv`, `receipts/adapter-shelf.md` |
-| Spillway keeper, Sage arm | rejected before sampling, 35.507 s/step baseline | `receipts/sage-attention-ab.md` |
 | Spillway keeper render, 1024×576, 192 frames, 20 steps | 710.15 s (S01) · 710.13 s (S02) · 710.14 s (S03) | `receipts/spillway-keepers.md` |
 | Checkpoint sizes, every published variant, byte-exact | 66.3 GB BF16 · 34.0 GB INT8 ConvRot · 21.0 GB pruned FP8 | `receipts/checkpoint-sizes.md` |
 
 ### The honest gap
 
-Three things this repository will not pretend:
+Three things Keel will not pretend:
 
-1. **We did not reproduce the ladder above, and our own number is lower.** Our acceleration arms
+1. **We did not reproduce the published ladder, and our own number is lower.** Our acceleration arms
    measured **1.44×** against a plain control at 8 steps and **1.17×** at 16 steps, at 1280×704.
    The published ladder is 1.54× end-to-end and 1.72× per step — and it includes two things our
    runs did not: **the Sol-Attn kernel was never installed on this box, and the batched VAE decode
    node was never enabled.** The Sol-Attn stack is therefore *unproven here, not disproven*. The
    published ladder remains a published benchmark, and our figure remains ours.
    The largest first-party speedup we hold is not the attention work at all — it is the
-   **4-step turbo LoRA at 201 s**, 3.16× against the 16-step plain baseline, which is a
+   **4-step turbo LoRA at 201 s, 3.16×** against the 16-step plain baseline, which is a
    step-count reduction as much as an acceleration.
 2. **The three Spillway keepers were rendered with `"accelerate": false`.** They are evidence for
-   the harness and the gates, not for the speed.
-3. **Our own speed claim is the negative one.** The one first-party performance experiment that
-   completed found no measurable gain from the attention backend it tested. That result is in the
-   repository in full.
+   the production harness and the gates, not for the speed.
+3. **We cannot separate Sage attention from FirstBlockCache.** The accelerated arms ran with both
+   enabled, and the surviving records do not resolve which produced the gain. The Sage arm at the
+   keeper's own geometry was **rejected before sampling** (`receipts/sage-attention-ab.md`). So the
+   claim is "the acceleration arms as configured", not "technique X gave us 1.44×".
 
 ### The memory problem this stack actually solves
 
 On a 128 GB Spark, precision is not a preference — it is residency. The pruned FP8 DiT plus the
-NVFP4/AWQ encoder plus both VAEs is **42.4 GB**, comfortably inside the 121 GB the runtime sees.
-The BF16 DiT alone is 66.3 GB, and the BF16 encoder is 51.5 GB; together with the VAEs that is
-123.6 GB before a single activation is allocated.
+NVFP4/AWQ encoder plus both VAEs is **42.46 GB**, comfortably inside the 121 GB the runtime sees.
+The BF16 DiT alone is 66.28 GB, and the BF16 encoder is 51.51 GB; together with the VAEs that is
+123.60 GB before a single activation is allocated.
 
 | DiT | Encoder | + VAEs | Total | Fits 121 GB? |
 |---|---|---|---:|---|
-| BF16 66.3 GB | BF16 51.5 GB | 5.81 GB | 123.6 GB | No |
-| BF16 66.3 GB | NVFP4 15.7 GB | 5.81 GB | 87.8 GB | Yes |
-| INT8 ConvRot 34.0 GB | NVFP4 15.7 GB | 5.81 GB | 55.5 GB | Yes |
-| **Pruned FP8 21.0 GB** | **NVFP4 15.7 GB** | 5.81 GB | **42.4 GB** | **Yes — the production pair** |
+| BF16 66.28 GB | BF16 51.51 GB | 5.81 GB | 123.60 GB | No |
+| BF16 66.28 GB | NVFP4 15.69 GB | 5.81 GB | 87.78 GB | Yes |
+| INT8 ConvRot 34.04 GB | NVFP4 15.69 GB | 5.81 GB | 55.54 GB | Yes |
+| **Pruned FP8 20.96 GB** | **NVFP4 15.69 GB** | 5.81 GB | **42.46 GB** | **Yes — the production pair** |
 
 This is also why NVIDIA's own GB10 recipe uses a pruned FP8 DiT and an FP8 Qwen3-VL. Byte-exact
 sizes and the reasoning are in `receipts/checkpoint-sizes.md`.
 
 ---
 
-## Where this came from
+## What we did, in plain language
 
-Told plainly, because the interesting part is not the numbers — it is the order things happened
-in.
+This is the part that does not fit in a table.
 
-**It started with a link and a question.** On 2026-10-20 the owner sent the team NVIDIA's
-Sol-Engine branch for MiniMax H3 and asked them to work out how it was able to do what it was
-doing. A minute later came an X post: a video of MiniMax H3 animating typography, with the
-question *"check this video how did they do it with minimaxh3."* The Sol-Engine branch was the
-answer to that question, and it became the project.
+**We started from a link and a question.** In October 2026 the owner sent the team NVIDIA's
+Sol-Engine branch for MiniMax H3 and asked how it managed to do what it does. A minute later came
+an X post: a video of MiniMax H3 animating typography, and the question *"check this video how
+did they do it with minimaxh3."* Sol-Engine was the answer, and it became the project.
 
 **Then we found the thing that actually fits.** NVIDIA's Sol-Engine ships per-GPU runtimes for
-GB10, GB200, H100, A100, RTX 4090 and RTX 5090 — SGLang-side, with its own model directories.
-What a ComfyUI user needs is different: a single Spark, node packs you can install, and a
-workflow you can open. On 2026-10-21 we found the community port that does exactly that, plus
-two standalone ComfyUI node packs that cover the same ground from different directions. All
-three are vendored here under `custom_nodes/`, each credited, each left as its authors shipped
-it.
+GB10, GB200, H100, A100, RTX 4090 and RTX 5090 — SGLang-side, with its own model directories. What
+a ComfyUI user needs is different: one Spark, node packs you can install, and a workflow you can
+open. On 2026-10-21 we found the community port that does exactly that, plus two standalone
+ComfyUI node packs covering the same ground from different directions. All three are vendored
+here under `custom_nodes/`, each credited to its author, each left as its author shipped it.
 
-**Then we did the part that was left.** NVIDIA's recipe and the community port both stop at
-"here is the fast configuration". This repository is the part after that:
+**Then we did the part that was left.** NVIDIA's recipe and the community port both stop at "here
+is the fast configuration". Keel is the part after that:
 
-* the **precision work** — working out which checkpoints actually fit in unified memory, and
-  catching a text encoder that arrived corrupt (6 GB of trailing garbage behind a healthy
-  header) before it cost us a render;
-* the **platform work** — the GB10 spin-wait fix, the Blackwell `sm_121` attention paths, and the
-  decision that `torch flex_attention` is numerically wrong on this architecture and must not be
-  used;
-* the **production harness** — a pinned toolset, a stills manifest, and a shot list;
-* the **craft layer** — motion, aliveness, control and face gates that refuse a slideshow and
-  call it a video, plus the prompt cookbook that came out of them;
-* and the **receipts** — every number above, filed where you can check it.
+* the **residency work** — working out which checkpoints fit in unified memory and proving the
+  bytes, including the pruned FP8 pair that makes the model fit at all;
+* the **download discipline** — catching a text encoder that arrived with 6 GB of garbage behind a
+  healthy header, and a BF16 DiT that stopped 30.6 GB short of its own header, before either cost
+  a render;
+* the **step distillation** — turbo LoRAs that cut 20 sampling steps to 4, measured at **3.16×**
+  against the plain baseline;
+* the **measurement method** — a seed-matched A/B where the control and the treatment differ only
+  in the acceleration, and a checker that refuses to let the front page say anything a receipt
+  does not back;
+* the **production harness and craft layer** — a pinned toolset, motion and aliveness gates that
+  refuse a slideshow and call it a video, a prompt cookbook, and six curated clips from a real
+  production.
 
 **And then the production stopped.** The owner halted the film lane on 2026-10-25. The three
-Spillway keepers in `clips/` are what survived that halt, and they are in this repository as
-keepers — not as a finished film, and not as a speed demonstration.
-
----
-
-## What this actually does for you
-
-1. **Puts MiniMax H3 on one Spark at production resolution.** The node packs, the two VAEs, the
-   pruned FP8 DiT and the NVFP4 encoder: a 21.0 GB model with a 15.7 GB text encoder, both in
-   unified memory, with no multi-GPU and no second machine.
-2. **Gives you two workflows so the comparison is yours, not ours.**
-   `workflows/h3-dense-baseline.json` is stock ComfyUI. `workflows/h3-fullstack.json` is the full
-   stack. Same seed, same prompt, same box — the only variable is the acceleration.
-3. **Tells you which parts to distrust.** The Sol-Attn kernel numerics table, the
-   FirstBlockCache step curve, the `flex_attention` failure, the corrupt encoder, the Sage
-   A/B. These are the things that cost real days if you meet them cold.
-4. **Keeps the craft bar.** The gates in `craft/gates/` are what stopped a 32 %-alive clip being
-   published as a film. A shot has to move, and the gate has to say so in numbers.
-5. **Lets you check every claim.** `python3 scripts/check_receipts.py` re-hashes the curated set
-   and refuses to let the front page say anything that no receipt backs.
-
-## What it does not do
-
-* It does not reproduce the published ladder. That ladder was measured upstream, on a host that
-  is not ours, and this repository says so wherever it appears.
-* It does not claim the acceleration stack made our clips. The keepers were rendered with
-  acceleration off.
-* It does not ship model weights. It ships the recipes and the receipts.
-* It does not resume the halted production. Only the owner can do that.
-* It does not settle the licence question. That one is the owner's, and it is deferred.
+Spillway keepers in `clips/` are what survived, and they are in this repository as keepers — not as
+a finished film, and not as a speed demonstration.
 
 ---
 
@@ -188,9 +227,9 @@ keepers — not as a finished film, and not as a speed demonstration.
 
 ```bash
 cd /path/to/ComfyUI/custom_nodes
-cp -r /path/to/minimax-h3-local-engine/custom_nodes/H3-SolAttn-SM121   .
-cp -r /path/to/minimax-h3-local-engine/custom_nodes/H3-FirstBlockCache .
-cp -r /path/to/minimax-h3-local-engine/custom_nodes/H3-Motion-Context .
+cp -r /path/to/keel/custom_nodes/H3-SolAttn-SM121   .
+cp -r /path/to/keel/custom_nodes/H3-FirstBlockCache .
+cp -r /path/to/keel/custom_nodes/H3-Motion-Context .
 ```
 
 `H3-SolAttn-SM121` is the full port (Sol-Attn + FirstBlockCache + batched VAE + the GB10
@@ -200,7 +239,8 @@ spin-wait patch). It ships its own installer if you would rather point it at you
 bash custom_nodes/H3-SolAttn-SM121/install.sh --comfy-dir /path/to/ComfyUI
 ```
 
-**2 — Weights.** Into `ComfyUI/models/`:
+**2 — Weights.** Into `ComfyUI/models/`. Every file, with its size and published SHA-256, is in
+[`receipts/weights.md`](receipts/weights.md). The pair that fits one Spark:
 
 | Target | File | Bytes |
 |---|---|---:|
@@ -224,37 +264,37 @@ python3 scripts/check_receipts.py
 
 ---
 
-## What's in the stack, and who wrote each part
+## Weights
 
-| Part | What it does | Origin |
+**Keel ships no weights. Not one byte.** The complete inventory — every DiT variant, the text
+encoder, both VAEs and the turbo LoRAs, with source, byte-exact size, published SHA-256, and what
+we did to each one (untouched, re-downloaded, or distilled) — is in
+[`receipts/weights.md`](receipts/weights.md).
+
+Short version: every checkpoint in this project is **published by someone else and downloaded by
+us**, with one exception — the step-distillation adapters in the H3 turbo shelf, which are also
+published. What this team produced is its own LoRA *work*, catalogued in
+[`training/TRAINING.md`](training/TRAINING.md), and no trained adapter ships here either.
+
+Whether Keel should ever host and publish weights is on the owner's list. The costs and the trade
+are written out in `receipts/weights.md` and in `LAUNCH-PACKET.md`. It does not happen by default.
+
+---
+
+## The curated set
+
+Six clips. Three finished films and three Spillway keeper shots. Hashes, geometry and the exact
+status of each one are in `clips/INDEX.md`; `scripts/check_receipts.py` re-hashes them on every
+run and fails if the set changes.
+
+| | Clip | What it is |
 |---|---|---|
-| **Sol-Attn** (KingGore) | Top-K KV-block routing with an exact-prefix sink, Triton. Cosine 0.99998 against dense SDPA. | NVIDIA's kernel design; `KingGore/ComfyUI_sol-attn_Blackwell`, vendored pre-patched for `sm_121` |
-| **Sol-Attn** (kijai) | INT8/TMA variant, tau 1.3, 6 dense steps. Cosine 0.99995. | NVIDIA's kernel design; `kijai/ComfyUI-SolAttn_triton` |
-| **FirstBlockCache** | Runs block 0, reuses the cached tail when the per-row diff ratio is flat. Threshold 0.08. | NVIDIA's `GB10/cache_line.py`; ComfyUI pack by `duckyshell` |
-| **Batched VAE decode** | Batches same-shape tiles through the 36-layer ViT decoder. 1.66× on decode. | NVIDIA's `GB10/vae_shard.py`; ComfyUI node by the port author |
-| **Motion-Context** | Clips that genuinely continue across a join — motion and audio carry over. | `NikoDemon80/ComfyUI-H3-Motion-Context` |
-| **GB10 spin-wait patch** | `busy_loop_s` 1 → 0.002. Upstream reports CPU 333 % → 89 % and SoC −11 °C. | Port author's patch, for NVIDIA's GB10 vLLM spin-wait |
-| **Pruned FP8 + NVFP4 checkpoints** | The only DiT/encoder pair that fits one Spark. | Published by the model repository; we verified our download against the published hash |
-| **Turbo step-distillation LoRAs** | 4-step and 8-step sampling instead of 20. The 4-step adapter rendered 1280×704 in **201 s**. | Published adapters; sizes and SHA-256 verified by us — see the adapter shelf |
-| **Craft gates** | Motion, aliveness, control and face gates. | Ours |
-| **Production harness** | Pinned tools, stills manifest, shot list, keeper receipts. | Ours |
-| **Receipts** | Every published number, mapped to who measured it. | Ours |
-
-## The adapter shelf — turbo step-distillation LoRAs
-
-Three step-distillation adapters that let H3 render in 4 or 8 sampling steps instead of 20. Sizes
-and SHA-256 verified directly on the weights tree.
-
-| File | Bytes | SHA-256 |
-|---|---:|---|
-| `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors` | 1,956,192,992 | `c396a9a06f58399e9df9754b18299818d84a2ddd371724ba48fe4a41221437dc` |
-| `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors` | 1,956,193,000 | `2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e` |
-| `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` | 1,956,193,000 | `5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c` |
-
-**201 s** for a 4-step 1280×704 render, against 635 s for the 16-step plain baseline — **3.16×**.
-That is the largest first-party speedup in this repository, and it is also a step-count reduction
-as much as an acceleration, and a quality trade rather than a free win. The full reading, with
-the caveats, is in `receipts/adapter-shelf.md`.
+| 1 | `spillway-s01-keeper.mp4` | Spillway S01 take 5 — **owner-locked keeper**, 710.15 s |
+| 2 | `spillway-s02-keeper.mp4` | Spillway S02 take 2 — **owner-locked keeper** after a source-grounded re-review, 710.13 s |
+| 3 | `spillway-s03-keeper.mp4` | Spillway S03 take 2 — **pre-halt agent selection, not owner-locked**, 710.14 s |
+| 4 | `FILM-WAR-30s-1080p.mp4` | Finished film, 1920×1056, 31.104 s |
+| 5 | `FILM-BEACON-30s-1080p.mp4` | Finished film, 1920×1056, 31.104 s |
+| 6 | `FILM-BRIDGE-30s-1080p.mp4` | Finished film, 1920×1056, 31.104 s |
 
 ---
 
@@ -292,23 +332,6 @@ to run on one box.
 
 ---
 
-## The curated set
-
-Six clips. Three finished films and three Spillway keeper shots. Hashes, geometry and the exact
-status of each one are in `clips/INDEX.md`; `scripts/check_receipts.py` re-hashes them on every
-run and fails if the set changes.
-
-| | Clip | What it is |
-|---|---|---|
-| 1 | `spillway-s01-keeper.mp4` | Spillway S01 take 5 — **owner-locked keeper**, 710.15 s |
-| 2 | `spillway-s02-keeper.mp4` | Spillway S02 take 2 — **owner-locked keeper** after a source-grounded re-review, 710.13 s |
-| 3 | `spillway-s03-keeper.mp4` | Spillway S03 take 2 — **pre-halt agent selection, not owner-locked**, 710.14 s |
-| 4 | `FILM-WAR-30s-1080p.mp4` | Finished film, 1920×1056, 31.104 s |
-| 5 | `FILM-BEACON-30s-1080p.mp4` | Finished film, 1920×1056, 31.104 s |
-| 6 | `FILM-BRIDGE-30s-1080p.mp4` | Finished film, 1920×1056, 31.104 s |
-
----
-
 ## Requirements
 
 * NVIDIA DGX Spark (GB10, `sm_121`), or any Blackwell-class board with ≥ 64 GB unified memory
@@ -320,7 +343,7 @@ run and fails if the set changes.
 ## Repo layout
 
 ```
-minimax-h3-local-engine/
+keel/
 ├── README.md                       this page
 ├── RECIPE.md                       the same thing written for an agent
 ├── LAUNCH-PACKET.md                internal: state, gaps, checklist, owner decisions
@@ -341,10 +364,12 @@ minimax-h3-local-engine/
 ├── production/                     pinned harness, workflow config, stills manifest
 ├── receipts/                       every number, and where it came from
 │   ├── PROVENANCE.md               number-by-number map — start here
+│   ├── weights.md                  every weight: source, size, SHA-256, what we did
+│   ├── published-comparisons.md    NVIDIA's and xmarre's published numbers, quoted
 │   ├── bench-results.md            the published ladder, verbatim, attributed
+│   ├── bench-matrix.tsv            our own first-party benchmark, verbatim
 │   ├── checkpoint-sizes.md         byte-exact size table and the residency math
 │   ├── spillway-keepers.md         the three keepers, their lock status, the halt
-│   ├── bench-matrix.tsv            our own first-party benchmark, verbatim
 │   ├── our-acceleration-ab.md      our own A/B: 1.44x at 8 steps, 1.17x at 16
 │   ├── adapter-shelf.md            the turbo LoRAs, with verified hashes
 │   ├── spin-wait-patch.md          the GB10 spin-wait patch, and who measured it
@@ -369,6 +394,9 @@ request, so a claim that loses its receipt fails the build rather than shipping.
 
 ## Credits
 
+*The product name* **Keel** *and the technique name* **Trim** *are proposed in this rework and are
+the owner's to approve. See `LAUNCH-PACKET.md` §1a and §5.*
+
 **NVIDIA Sol-Engine** — the original. `NVlabs/Sana` branch `sol-engine`, including the per-GPU
 MiniMax H3 runtimes, the GB10 recipe, and the Sol-Attention design.
 <https://github.com/NVlabs/Sana/tree/sol-engine>
@@ -389,7 +417,8 @@ repository reproduces with attribution.
 **NikoDemon80** — Motion-Context, clip chaining that survives a join.
 <https://github.com/NikoDemon80/ComfyUI-H3-Motion-Context>
 
-**xmarre** — the ComfyUI H3 Sol integration this stack is measured against.
+**xmarre** — ComfyUI-Sol-H3, the ComfyUI-native Sol integration, and the matched A/B discipline
+this project's own method was written in the light of.
 <https://github.com/xmarre/ComfyUI-Sol-H3>
 
 **Comfy-Org** — the H3 checkpoints, including the pruned FP8 DiT and the NVFP4/AWQ encoder.

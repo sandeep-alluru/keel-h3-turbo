@@ -132,6 +132,58 @@ def card(
     return img
 
 
+def table_card(
+    kicker: str,
+    title: str,
+    columns: list[str],
+    rows: list[list[str]],
+    row_colours: list[tuple] | None = None,
+    footnote: str = "",
+    accent: tuple = GREEN,
+) -> Image.Image:
+    """A wide comparison table, drawn as a card."""
+    img = blank()
+    d = ImageDraw.Draw(img)
+    f_kicker = font(MONO_B, 24)
+    f_title = font(SANS_B, 52)
+    f_note = font(MONO, 20)
+
+    d.rectangle([0, 0, 14, H], fill=accent)
+    text(img, (110, 78), kicker, f_kicker, accent)
+    text(img, (110, 128), title, f_title, INK)
+
+    # Pick the largest font size at which every column still fits, so cells never collide.
+    widths = [max([len(c)] + [len(r[i]) for r in rows]) for i, c in enumerate(columns)]
+    available = W - 240
+    for size in (22, 20, 18, 16, 14):
+        f_head = font(MONO_B, size)
+        f_cell = font(MONO, size)
+        char_w = d.textlength("M", font=f_cell)
+        if sum(widths) * char_w <= available:
+            break
+    col_w = [int(w * char_w) + 18 for w in widths]
+
+    x = 110
+    y = 236
+    for i, c in enumerate(columns):
+        d.text((x, y), c, font=f_head, fill=MUTED)
+        x += col_w[i]
+    y += 36
+    d.line([(110, y - 8), (110 + sum(col_w), y - 8)], fill="#2a2e33", width=2)
+
+    for r, row in enumerate(rows):
+        x = 110
+        colour = (row_colours[r] if row_colours else INK)
+        for i, cell in enumerate(row):
+            d.text((x, y), cell, font=f_cell, fill=colour)
+            x += col_w[i]
+        y += 36
+
+    if footnote:
+        text(img, (110, H - 92), footnote, f_note, MUTED)
+    return img
+
+
 def terminal(title: str, body: str, prompt: str = "$ ", highlight: list[str] | None = None) -> Image.Image:
     """A terminal window with real captured output."""
     img = blank((10, 12, 14))
@@ -206,17 +258,98 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
     scenes.append(
         {
             "kind": "card",
-            "hold": 6.0,
+            "hold": 7.0,
             "image": card(
-                "MODEL ACCELERATION",
-                "MiniMax H3 on a single NVIDIA DGX Spark",
+                "KEEL",
+                "Accelerated MiniMax H3 video diffusion inference on a single DGX Spark.",
                 [
-                    ("the stack  ·  the receipts  ·  the honest gap", MUTED),
+                    ("An efficiency-oriented inference stack for MiniMax H3 —", MUTED),
+                    ("installable ComfyUI node packs, a resident-weight recipe,", MUTED),
+                    ("and a receipt behind every number.", MUTED),
                     ("", MUTED),
                     ("sandeep-alluru/minimax-h3-local-engine", BLUE),
                 ],
                 "private repo · draft release · nothing published yet",
                 accent=GREEN,
+                title_size=54,
+            ),
+        }
+    )
+
+    # -- 1b. direction -----------------------------------------------------------------
+    scenes.append(
+        {
+            "kind": "card",
+            "hold": 12.0,
+            "image": card(
+                "THE DIRECTION",
+                "What this is, what it is not, and where it is going",
+                [
+                    ("is", GREEN),
+                    ("  a way to run MiniMax H3 - a 33B joint video-and-audio model - on one", INK),
+                    ("  128 GB DGX Spark, for people who want to render H3 themselves.", INK),
+                    ("", MUTED),
+                    ("is not", RED),
+                    ("  NVIDIA's Sol-Engine, and it does not try to be. Sol-Attn is their", INK),
+                    ("  name for their method. The published ladder is the community port's.", INK),
+                    ("", MUTED),
+                    ("is going", BLUE),
+                    ("  one way, and it is not a new kernel. The published ladder reaches", INK),
+                    ("  1.54x using two components we have never installed. Closing that gap", INK),
+                    ("  is the next run, and RECIPE.md is written for it.", INK),
+                ],
+                "KEEL  ·  the named technique: TRIM",
+                accent=BLUE,
+                title_size=52,
+            ),
+        }
+    )
+
+    # -- 1c. the baseline comparison table ---------------------------------------------
+    scenes.append(
+        {
+            "kind": "card",
+            "hold": 16.0,
+            "image": table_card(
+                "BASELINE COMPARISON",
+                "Every row is PUBLISHED or FIRST-PARTY. Never blended.",
+                ["ENGINE", "HARDWARE", "GEOMETRY", "STEPS", "SECONDS", "SPEEDUP", "SOURCE"],
+                [
+                    ["Stock MiniMax H3", "DGX Spark", "832x480 124f", "50", "710.6 s", "1.00x", "PUBLISHED  NVIDIA"],
+                    ["NVlabs Sana Sol-Engine", "DGX Spark", "832x480 124f", "50", "181.3 s", "3.92x", "PUBLISHED  NVIDIA"],
+                    ["Stock ComfyUI", "spark-13b3", "864x480 124f", "20", "312.7 s", "1.00x", "PUBLISHED  community"],
+                    ["Community Sol port", "spark-13b3", "864x480 124f", "20", "202.5 s", "1.54x", "PUBLISHED  community"],
+                    ["ComfyUI-Sol-H3 (xmarre)", "RTX PRO 6000", "not stated", "not stated", "400.94 s", "1.05x", "PUBLISHED  xmarre"],
+                    ["KEEL  accel vs control", "DGX Spark", "1280x704 124f", "8", "344 s", "1.44x", "FIRST-PARTY"],
+                    ["KEEL  accel vs control", "DGX Spark", "1280x704 124f", "16", "545 s", "1.17x", "FIRST-PARTY"],
+                    ["KEEL  4-step turbo LoRA", "DGX Spark", "1280x704 124f", "4", "201 s", "3.16x", "FIRST-PARTY"],
+                ],
+                row_colours=[MUTED, GREEN, MUTED, GREEN, MUTED, GREEN, GREEN, GREEN],
+                footnote="NVIDIA's 3.92x is the strongest number here, and it is theirs. Full receipts: receipts/published-comparisons.md",
+                accent=GREEN,
+            ),
+        }
+    )
+
+    # -- 1d. the named technique -------------------------------------------------------
+    scenes.append(
+        {
+            "kind": "card",
+            "hold": 13.0,
+            "image": card(
+                "THE TECHNIQUE",
+                "TRIM — fit the model to the machine, cut the steps, then measure the cut",
+                [
+                    ("Trim-Residency   pruned FP8 DiT + NVFP4 encoder   42.46 GB, not 123.60 GB", INK),
+                    ("Trim-INT8        the convert path   34.04 GB   no speed number of its own", INK),
+                    ("Trim-NVFP4       the INT4 conditioner, and the download discipline", INK),
+                    ("Trim-Step        turbo LoRAs: 20 sampling steps down to 4   3.16x", INK),
+                    ("Trim-A/B         control and treatment differ only in the acceleration", INK),
+                    ("Trim-Receipts    a claim without a receipt fails the build", INK),
+                ],
+                "PROPOSED - the name is the owner's to approve. NVIDIA's name is Sol-Attn.",
+                accent=AMBER,
+                title_size=50,
             ),
         }
     )
@@ -561,21 +694,22 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
             "kind": "card",
             "hold": 11.0,
             "image": card(
-                "WHAT THIS IS, AND WHAT IT IS NOT",
-                "Model Acceleration",
+                "KEEL",
+                "Accelerated MiniMax H3 video diffusion inference on a single DGX Spark.",
                 [
                     ("the stack       three vendored node packs, credited to their authors", INK),
-                    ("the receipts    every published number, mapped to who measured it", INK),
+                    ("the technique   TRIM - residency, the convert path, step distillation,", INK),
+                    ("                a seed-matched A/B, and receipts", INK),
                     ("the craft layer gates, a cookbook, and a curated set of six", INK),
                     ("", MUTED),
-                    ("not ours:      the published ladder. it says so, everywhere.", AMBER),
                     ("ours:          1.44x at 8 steps, 1.17x at 16 steps, 3.16x on the turbo LoRA", INK),
+                    ("not ours:      the published ladder, and NVIDIA's 3.92x. Both say so.", AMBER),
                     ("not done:      the ladder's own two components, never installed here.", AMBER),
-                    ("               RECIPE.md is written for that run.", AMBER),
-                    ("not decided:   the public flip. that is the owner's call alone.", MUTED),
+                    ("not decided:   the public flip, the name, and the weights. The owner's.", MUTED),
                 ],
                 "sandeep-alluru/minimax-h3-local-engine  ·  private  ·  draft",
-                accent=BLUE,
+                accent=GREEN,
+                title_size=50,
             ),
         }
     )

@@ -4,11 +4,94 @@
 > part of the public README and it should be removed or rewritten before any public flip.
 > Every owner decision below is listed as a decision, not as a recommendation.
 
+**Product (PROPOSED):** **Keel** — *accelerated MiniMax H3 video diffusion inference on a single
+DGX Spark*
+**Technique (PROPOSED):** **Trim** — fit the model to the machine, cut the steps, then measure
+the cut
 **Repository:** `sandeep-alluru/minimax-h3-local-engine` — **private**
 **Prepared:** 2026-10-25 · **Working copy:** `/home/clawerdigi2/AgentHub/model-acceleration/minimax-h3-local-engine`
 **Push route:** `samurai1` → `clawer-samurai-1@100.90.129.41:/home/clawer-samurai-1/AgentHub/release-staging/minimax-h3-local-engine` (verified working; `gh` authenticated as `sandeep-alluru`)
 
 ---
+
+## 1a. Product identity — PROPOSED, for the owner to approve
+
+The owner's review was that the repository read like an agent finishing a task rather than a
+product being launched: no product title, no headline, no product direction, and a README that
+opened with a description of a folder.
+
+This rework proposes the following. **Every name here is the owner's to approve.** Nothing ships
+under a name the owner has not chosen.
+
+| | Proposed | Notes |
+|---|---|---|
+| **Product title** | **Keel** | A short, ownable, developer-readable name. One word, so `git clone keel`, `pip install keel` and "I run Keel" all work. |
+| **Headline** | *Accelerated MiniMax H3 video diffusion inference on a single DGX Spark.* | Plain gerund phrase, in the same register as NVIDIA's "accelerated video diffusion inference". |
+| **Description** | *An efficiency-oriented inference stack for MiniMax H3 — installable ComfyUI node packs, a resident-weight recipe, and a receipt behind every number.* | Mirrors the shape of NVIDIA's own one-line description. |
+| **Named technique** | **Trim** | NVIDIA's name is Sol-Attn. Ours covers the choices that make one machine enough plus the method of proving they work: **Trim**-Residency, Trim-INT8, Trim-NVFP4, Trim-Step, Trim-A/B, Trim-Receipts. |
+| **Alternate product name** | *Trim* | If the owner prefers one name rather than two, promoting the technique to the product title is a one-line change. |
+| **Repository name** | `minimax-h3-local-engine` → `keel` | **Not changed.** Renaming the GitHub repository is the owner's call and it changes the public URL. The README's repo layout tree shows `keel/` as the proposed directory name. |
+
+**The direction, stated in the first screen of the README** — what it is, what it is not, and
+where it is going:
+
+* **is** — a way to run MiniMax H3 on one DGX Spark, for people who want to render H3 themselves
+  rather than call an API: node packs, the weight set that fits in unified memory, a seed-matched
+  A/B method, and a checker that fails the build when a number loses its receipt.
+* **is not** — NVIDIA's Sol-Engine, and not trying to be. `Sol-Attn` is NVIDIA's name for their
+  method; the published ladder belongs to the community port and says so wherever it appears.
+* **is going** — in one direction, and it is not a new kernel. The published ladder reaches 1.54×
+  using two components this team has never installed. Closing that gap is the next run, and
+  `RECIPE.md` is written for it.
+
+### The baseline comparison table
+
+This is the table the owner asked for, and it is now the second thing on the front page. Every row
+is labelled PUBLISHED (with the repository it came from) or FIRST-PARTY (with the receipt here).
+The two are never blended, and the geometries differ, so the table is deliberately unblended.
+
+| Engine | Hardware | Geometry | Steps | Seconds | Speedup | Source |
+|---|---|---|---:|---|---:|---|
+| **Stock MiniMax H3** — no acceleration | DGX Spark, GB10 | 832×480, 124f | 50 | 710.6 s | 1.00× | PUBLISHED · NVlabs/Sana `sol-engine` |
+| **NVlabs Sana Sol-Engine** — full opt | DGX Spark, GB10 | 832×480, 124f | 50 | **181.3 s** | **3.92×** | PUBLISHED · NVlabs/Sana `sol-engine` |
+| **Stock ComfyUI** — no acceleration | DGX Spark, `spark-13b3` | 864×480, 124f | 20 | 312.7 s | 1.00× | PUBLISHED · community SM121 port |
+| **Community Sol-Engine port** — full stack | DGX Spark, `spark-13b3` | 864×480, 124f | 20 | **202.5 s** | **1.54×** | PUBLISHED · community SM121 port |
+| **ComfyUI-Sol-H3 (xmarre)** — SOL on, default | RTX PRO 6000, SM120 | not stated | not stated | 420.81 → **400.94 s** | 1.05× | PUBLISHED · xmarre/ComfyUI-Sol-H3 |
+| **ComfyUI-Sol-H3 (xmarre)** — SOL on, speed mode | RTX PRO 6000, SM120 | not stated | not stated | 420.81 → **380.57 s** | 1.11× | PUBLISHED · xmarre/ComfyUI-Sol-H3 |
+| **Keel** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 8 | 496 → **344 s** | **1.44×** | **FIRST-PARTY** · `receipts/bench-matrix.tsv` |
+| **Keel** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 16 | 635 → **545 s** | **1.17×** | **FIRST-PARTY** · `receipts/bench-matrix.tsv` |
+| **Keel** — 4-step turbo LoRA | DGX Spark, GB10 | 1280×704, 124f | 4 | **201 s** | **3.16×** | **FIRST-PARTY** · `receipts/bench-matrix.tsv` |
+
+Three observations the owner should have before the flip:
+
+1. **NVIDIA's 3.92× is the strongest number in the table and it is theirs.** Any comparison that
+   implies otherwise would be dishonest, and the README says so in the first screen.
+2. **The community port's 1.54× is the strongest number for a ComfyUI node-pack stack on one
+   Spark.** Keel reproduces it with attribution rather than claiming it. It is also the number
+   Keel's own 1.44× is *not* comparable to — different geometry, different step count, different
+   machine.
+3. **xmarre's rows are the careful ones.** They publish a matched A/B, they publish the speed mode
+   separately from the default because the speed mode has a documented trajectory destabilisation,
+   and they do not publish the geometry for their timings. Keel leaves that column blank rather
+   than guess it.
+
+Receipt for every published number in this table, with the quoted sentences:
+`receipts/published-comparisons.md`.
+
+### The named technique stack
+
+| Technique | What it does | Weights it touches | Measured effect |
+|---|---|---|---|
+| **Trim-Residency** | Pruned FP8 DiT + NVFP4/AWQ encoder so the whole model fits in 121 GB of unified memory | FP8 DiT 20.96 GB, NVFP4 encoder 15.69 GB | 42.46 GB total vs 123.60 GB for the BF16 pair — the difference between running and not running. FP8's step cost: **0.08 %** (13,428 vs 13,417 ms/step) — *PUBLISHED, NVIDIA* |
+| **Trim-INT8** | The convert path for machines with more room | INT8 ConvRot DiTs 34.04 GB, pruned INT8 Convrot 20.97 GB | **No speed measurement of its own** — a residency choice, not an acceleration. Stated plainly |
+| **Trim-NVFP4** | The INT4 conditioner, and the download discipline that goes with it | NVFP4/AWQ encoder 15.69 GB | Caught a 21,714,795,671 B encoder with 6,027,653,120 B of trailing garbage, and a truncated BF16 DiT 30.6 GB short of its own header |
+| **Trim-Step** | Step distillation: 4-step and 8-step turbo LoRAs instead of 20 steps | turbo LoRAs, 1.96 GB each | **201 s** against the 635 s 16-step plain baseline — **3.16×** |
+| **Trim-A/B** | Control and treatment differ only in the acceleration — same seed, geometry, steps, scheduler | none | **1.44×** at 8 steps, **1.17×** at 16 steps |
+| **Trim-Receipts** | Every published number maps to who measured it; the build fails when one stops matching | none | Not a speed effect. It is why the other five rows can be trusted |
+
+**Not claimed:** per-technique speedups where none were isolated. Trim-INT8 has no number of its
+own, and Trim-A/B cannot separate Sage attention from FirstBlockCache, because the surviving
+records do not resolve which of the two produced the gain.
 
 ## 1. Current state
 
@@ -16,6 +99,10 @@
 
 A **private** repository that packages MiniMax H3 model acceleration for a single NVIDIA DGX Spark
 (GB10, `sm_121`), with the measurement discipline attached.
+
+**Product identity (PROPOSED):** **Keel** — *accelerated MiniMax H3 video diffusion inference on
+a single DGX Spark*. **Named technique (PROPOSED):** **Trim**. Both are the owner's to approve;
+see §1a and §5.
 
 | | |
 |---|---|
@@ -110,6 +197,7 @@ VAE decode) were never installed in our runs. The largest first-party number we 
 | Distillation | 4-step T2V / I2V / Ref2VA paths, learned latent upscaler |
 | Docs | A documentation site, `AGENTS.md`, `QUICKSTART.md`, CI |
 | Release discipline | Config-per-model-per-hardware, news feed, citation file |
+| **Product framing** | A named product, a plain headline, a one-line description, and a models-and-speedups table on the first screen |
 
 **Where we are ahead**
 
@@ -121,6 +209,8 @@ VAE decode) were never installed in our runs. The largest first-party number we 
 | The craft layer | Motion / aliveness / control / face gates, a prompt cookbook, and the evidence that a 32 %-alive clip was caught before publication |
 | The production lane | Pinned harness, stills manifest, shot list, keeper receipts, curation note, and a curated clip set |
 | Negative results | The SageAttention A/B and the isolated FBC result are filed in full. Most repos delete those. |
+| **Product framing** | A product title, a plain headline, a one-line description, a direction in the first screen, and a baseline comparison table that puts other people's numbers above ours with their names on them |
+| **The weights question** | A byte-exact inventory of every published checkpoint with its SHA-256, and the rule that caught a corrupt download and a truncated one: *quote a size from the header, never from `stat`* |
 
 **The gap that matters most:** NVIDIA publishes 3.92×; we publish 1.54× and say whose it is.
 A reader who installs NVIDIA's own recipe gets a better number than our front page shows. We
@@ -153,8 +243,23 @@ ladder ourselves — see §4.
 
 Their repo integrates "Exact Runtime" optimizations with Sana Sol-Attn, rectangular Q/KV
 attention, VDN, Spectrum and untwisted RoPE, and is the closest thing to a ComfyUI-native
-alternative. We did not benchmark against it, and we do not claim to. It is GPL-3.0, so the
-licence question (deferred) would need to consider it if it were vendored. It is not.
+alternative.
+
+**They are ahead of us on published evidence, and we now say so in our own table.** Their matched
+SOL A/B is 420.81 s → **400.94 s** at the default `dense_evaluations=1` (1.05×) and 420.81 s →
+**380.57 s** in the `dense_evaluations=0` speed mode (1.11×), on an RTX PRO 6000 (SM120). Their
+numbers are honest in a way we have tried to match: they publish the control, they publish the
+sampler wall separately from end-to-end, and they publish the speed mode **separately from the
+default** because a controlled same-seed comparison showed SOL-first execution can destabilise
+the opening trajectory.
+
+**Where we are ahead:** our baseline table puts their rows in it *by name and by source*, their
+hardware is SM120 rather than a Spark, and their published timings do not state a resolution or a
+step count — so we leave that column blank rather than guess it. Their Exact Runtime A/B
+(312.57 s → 298.69 s) is published too, and is recorded in `receipts/published-comparisons.md`.
+
+They are GPL-3.0. The licence question (deferred) would need to consider them if they were
+vendored. They are not.
 
 ---
 
@@ -176,6 +281,18 @@ licence question (deferred) would need to consider it if it were vendored. It is
 - [x] Deployment guide arithmetic corrected
 - [x] Six-clip set final and hash-verified
 - [x] `LAUNCH-PACKET.md` written (this file)
+
+### Product rework (owner review, 2026-10-25)
+
+- [x] Product title, plain headline and one-line description — **PROPOSED** in §1a, the owner's to approve
+- [x] Product direction in the first screen: what it is, what it is not, where it is going
+- [x] Baseline comparison table up front — engine, hardware, geometry, steps, seconds, speedup, source, every row PUBLISHED or FIRST-PARTY
+- [x] Our own technique named, **PROPOSED**, and documented technique by technique with receipts
+- [x] Weights section: every weight with source, size, SHA-256 and what we did to it; the publish-weights option laid out as an owner decision
+- [x] "What we did" rewritten in plain language for a developer who has never seen this fleet
+- [x] All honesty corrections from the previous pass kept — provenance, attribution, the corrected numbers
+- [x] Demo re-produced against the new front page
+- [x] Four owner decisions presented as decisions, not prose: product name, technique name, weights publishing, public flip
 
 ### Mechanics
 
@@ -258,16 +375,58 @@ uploaded anywhere**.
 
 ## 5. Decisions that are the owner's alone
 
+**Four decisions. Each is presented as a decision, not a recommendation buried in prose.**
+
+### Decision 1 — the product name
+
+| | |
+|---|---|
+| **Question** | Does the project ship as **Keel**, and under what repository name? |
+| **Proposed** | Product title **Keel**; headline *accelerated MiniMax H3 video diffusion inference on a single DGX Spark*; description *an efficiency-oriented inference stack for MiniMax H3 — installable ComfyUI node packs, a resident-weight recipe, and a receipt behind every number*. |
+| **Alternatives** | Promote the technique name **Trim** to the product title and use one name throughout. Or keep `minimax-h3-local-engine` as the public title, in which case the README's product framing has to be carried entirely by the headline. |
+| **What it costs to change** | The name appears in the README title, headline, the repo layout tree, the technique table, `LAUNCH-PACKET.md` and the demo video title card. Nothing structural depends on it. |
+| **Also implied** | The GitHub repository is still named `minimax-h3-local-engine`. **Not renamed** — it changes the public URL, so it is the owner's call. |
+
+### Decision 2 — the technique name
+
+| | |
+|---|---|
+| **Question** | Does the stack ship under the name **Trim**? |
+| **Proposed** | **Trim** — *fit the model to the machine, cut the steps, then measure the cut* — with six sub-techniques: Trim-Residency, Trim-INT8, Trim-NVFP4, Trim-Step, Trim-A/B, Trim-Receipts. |
+| **Why not something else** | `Sol-Attn` is NVIDIA's name for their method and their word. Ours covers choices (which weights, how many steps) and method (how you measure), so it wants a verb rather than a kernel name. **Trim** is a plain English word that survives being said out loud to another developer, which `Sol-Attn` does not. |
+| **Alternative** | If the owner prefers the technique and the product to share a name, **Trim** can be the product title and the technique becomes simply "the Trim stack". |
+| **What it costs to change** | Names only. The technique table, the six sub-names, the README, the packet and the demo card. |
+
+### Decision 3 — publishing weights
+
+| | |
+|---|---|
+| **Question** | Does Keel ever host and publish the weights it uses? |
+| **Status** | **Keel publishes no weights today, and this repository contains none.** Nothing in the project does this by default. |
+| **What it would take** | ~20.96 GB for the pruned FP8 DiT, ~15.69 GB for the NVFP4 encoder, ~5.82 GB for both VAEs, ~1.96 GB per turbo LoRA. Mirroring the publisher's files byte-for-byte, or re-emitting them, plus somewhere to host them, plus a way to keep the hash table truthful if the mirror diverges from the publisher's copy. |
+| **For** | The corrupt-download failure was real and cost a render. A controlled host removes that failure mode. |
+| **Against** | These files are already published by the model repository. Re-hosting published weights duplicates a large artefact for no accuracy gain, and it is a redistribution decision rather than a technical one. |
+| **Detail** | `receipts/weights.md` |
+| **What this repository does today** | Publishes the recipes, the byte-exact table, the published SHA-256s and the hash-check procedure — and no weights. |
+
+### Decision 4 — the public flip
+
+| | |
+|---|---|
+| **Question** | Does the repository go public, and does `v0.1.0` get published? |
+| **Status** | **Not taken.** The repository is private, the release is a draft, and nothing has been uploaded or published. |
+| **What is ready** | Everything else in this packet is arranged so that the flip is a single decision with nothing left to prepare: the front page is rewritten to product standard, every published number has a receipt and a label, the claim checker passes in CI, and the release body matches the corrected repository. |
+| **What the flip would expose** | That the headline speed ladder is published rather than ours. The README says so in the first screen, and the baseline table puts NVIDIA's 3.92× and the community port's 1.54× above our own 1.44× — visibly, on purpose. That is the honest version of this repository. |
+| **Also the owner's** | Whether `LAUNCH-PACKET.md` ships with it. **Recommendation: it does not** — it names gaps and the un-measured ladder. It is a working document. |
+
+### Also open, lower stakes
+
 | # | Decision | Where it stands |
 |---|---|---|
-| 1 | **The public flip.** Making the repository public. | Not taken. The repository is private and the draft release is unpublished. Everything in this packet is arranged so that the flip is a single decision with nothing else to do first. |
-| 2 | **The licence.** | Explicitly deferred. No licence section, no licence analysis, no recommendation appears anywhere in the repository or in this packet. The owner owns this call and it needs to account for the three vendored trees and the model licence before it is taken. |
-| 3 | **The curated set.** | The owner set six and six is what ships. Flagging, not changing: the record shows a fourth published film, `FILM-DRAGON-30s-1080p-v2.mp4` (64.5 % alive, 7.85/16.87 PASS), which is not in the set. If that was deliberate, nothing to do; if it was an oversight, the set becomes seven and `scripts/check_receipts.py` needs its `EXPECTED_FILM_ASSETS` updated in the same commit. |
-| 4 | **Whether to publish the ladder as the front page.** | Currently yes, labelled as published and attributed. The alternative is to lead with the first-party numbers instead, which is a worse page today and a much better one after §4a. |
-| 5 | **Whether to publish `LAUNCH-PACKET.md`.** | Recommend it does not go out with the flip — it names gaps and the un-measured ladder. The owner's call. |
-| 6 | **The asset filenames.** `FILM-WAR-30s-1080p.mp4` is 1920×1056 and 31.104 s. The names are already attached to the draft release and to the clips index. Renaming means re-uploading the assets; leaving them means the names stay slightly wrong. |
-
----
+| 5 | **The curated set.** | The owner set six and six is what ships. Flagging, not changing: the record shows a fourth published film, `FILM-DRAGON-30s-1080p-v2.mp4` (64.5 % alive, 7.85/16.87 PASS), which is not in the set. If that was deliberate, nothing to do; if it was an oversight, the set becomes seven and `scripts/check_receipts.py` needs its `EXPECTED_FILM_ASSETS` updated in the same commit. |
+| 6 | **Whether to publish the ladder as the front page.** | Currently yes, labelled as published and attributed, with NVIDIA's and the community port's numbers above it in the baseline table. |
+| 7 | **The asset filenames.** `FILM-WAR-30s-1080p.mp4` is 1920×1056 and 31.104 s. The names are already attached to the draft release and to the clips index. Renaming means re-uploading the assets; leaving them means the names stay slightly wrong. |
+| 8 | **The label on the demo video.** | The video now opens with the product title. If the title changes under Decision 1, the video title card changes with it and is rebuilt by `scripts/make_demo.py`. |
 
 ## 6. Launch assets
 
@@ -281,48 +440,56 @@ uploaded anywhere**.
 | | |
 |---|---|
 | **File** | `/home/clawerdigi2/AgentHub/model-acceleration/MODEL-ACCELERATION-DEMO.mp4` |
-| **Size** | 37,702,263 bytes |
-| **SHA-256** | `76d88f9a27cfcdb7f10f38076c0ca69a8cbdc2eab1b695a9a87905eba19a99bc` |
-| **Duration** | **317 s (5 m 17 s)** |
-| **Format** | H.264, 1920×1080, 30 fps, 9,510 frames |
+| **Size** | 38,393,423 bytes |
+| **SHA-256** | `2ebb2665c4b352f797fa89fa3927f60b886d5d032160f5a6f3fa5eabbb7d6453` |
+| **Duration** | **359 s (5 m 59 s)** |
+| **Format** | H.264, 1920×1080, 30 fps, 10,770 frames |
 | **Rebuild** | `python3 scripts/make_demo.py` in the repository — it re-runs every command it shows and re-reads every receipt, so the video cannot drift from the repo |
 | **Published** | **No.** Not uploaded, not linked, not attached to the release. The owner publishes. |
 
-**Coverage, scene by scene (26 scenes, 317 s)**
+**Coverage, scene by scene (29 scenes, 359 s)**
 
 | # | Scene | What it shows |
 |---:|---|---|
-| 1 | Title card | Model Acceleration — MiniMax H3 on a single NVIDIA DGX Spark |
-| 2 | Card | **Two ladders, two owners** — NVIDIA's 710.6 → 181.3 s (3.92×) and the community port's 312.7 → 202.5 s (1.54×), both labelled published |
-| 3 | Terminal | `git log`, `git ls-files` — the repository in front of you |
-| 4 | Card | **Where it started** — the owner's link to NVIDIA's `sol-engine` branch, the X post, and the community port found the next day |
-| 5 | Terminal | The three node packs, listed as they ship |
-| 6 | Terminal | The credits — who wrote each part |
-| 7 | Terminal | The install — three directories and one installer |
-| 8 | Card | **Precision is residency** — 123.60 GB does not fit, 42.46 GB does |
-| 9 | Terminal | The real diff between upstream's two workflows, including the seed mismatch (46 vs 45) |
-| 10 | Terminal | The seed-matched pair, node by node: same DiT, same encoder, same geometry, same seed, same steps |
-| 11 | Chart | End-to-end ladder — 312.7 → 215.7 → 202.5 s, with the provenance line printed on the chart |
-| 12 | Chart | Per-step ladder — 14.40 → 8.39 s/step (1.72×), same provenance line |
-| 13 | Terminal | **Open the receipt** — `receipts/bench-results.md` and its provenance header |
-| 14 | Terminal | `receipts/PROVENANCE.md` — every number and who measured it |
-| 15 | Terminal | `receipts/bench-matrix.tsv` — our own first-party benchmark, verbatim |
-| 16 | Card | **What we measured ourselves** — the byte-exact sizes, the 30.02 s forward pass, the 1.44× / 1.17× / 3.16× |
-| 17 | Card | **The corrupt encoder** — 21,714,795,671 B against 15,687,142,551 B |
-| 18 | Terminal | The craft gates — `motion_gate.py` and its calibrated thresholds |
-| 19 | Clip | Spillway S01 keeper |
-| 20 | Clip | Spillway S02 keeper |
-| 21 | Clip | Spillway S03 keeper |
-| 22 | Clip | FILM-WAR — finished film |
-| 23 | Clip | FILM-BEACON — finished film |
-| 24 | Clip | FILM-BRIDGE — finished film |
-| 25 | Terminal | `python3 scripts/check_receipts.py` — all five checks green, every claim traced |
-| 26 | Card | **What this is, and what it is not** — the stack, the receipts, the craft layer, our own 1.44×/1.17×/3.16×, the two components never installed here, and the flip that is the owner's |
+| 1 | Card | **KEEL** — the product title, the headline and the one-line description |
+| 2 | Card | **The direction** — what it is, what it is not, where it is going |
+| 3 | Card | **The baseline comparison table** — every row PUBLISHED or FIRST-PARTY, with NVIDIA's 3.92× and the community port's 1.54× above our own 1.44×, visibly |
+| 4 | Card | **The technique: TRIM** — the six sub-techniques, and that the name is the owner's to approve |
+| 5 | Card | Two ladders, two owners — 710.6 → 181.3 s (3.92×) and 312.7 → 202.5 s (1.54×), both labelled published |
+| 6 | Terminal | `git log`, `git ls-files` — the repository in front of you |
+| 7 | Card | **Where it started** — the owner's link to NVIDIA's `sol-engine` branch, the X post, and the community port found the next day |
+| 8 | Terminal | The three node packs, listed as they ship |
+| 9 | Terminal | The credits — who wrote each part |
+| 10 | Terminal | The install — three directories and one installer |
+| 11 | Card | **Precision is residency** — 123.60 GB does not fit, 42.46 GB does |
+| 12 | Terminal | The real diff between upstream's two workflows, including the seed mismatch (46 vs 45) |
+| 13 | Terminal | The seed-matched pair, node by node: same DiT, same encoder, same geometry, same seed, same steps |
+| 14 | Chart | End-to-end ladder — 312.7 → 215.7 → 202.5 s, with the provenance line printed on the chart |
+| 15 | Chart | Per-step ladder — 14.40 → 8.39 s/step (1.72×), same provenance line |
+| 16 | Terminal | **Open the receipt** — `receipts/bench-results.md` and its provenance header |
+| 17 | Terminal | `receipts/PROVENANCE.md` — every number and who measured it |
+| 18 | Terminal | `receipts/bench-matrix.tsv` — our own first-party benchmark, verbatim |
+| 19 | Card | **What we measured ourselves** — the byte-exact sizes, the 30.02 s forward pass, the 1.44× / 1.17× / 3.16× |
+| 20 | Card | **The corrupt encoder** — 21,714,795,671 B against 15,687,142,551 B |
+| 21 | Terminal | The craft gates — `motion_gate.py` and its calibrated thresholds |
+| 22 | Clip | Spillway S01 keeper |
+| 23 | Clip | Spillway S02 keeper |
+| 24 | Clip | Spillway S03 keeper |
+| 25 | Clip | FILM-WAR — finished film |
+| 26 | Clip | FILM-BEACON — finished film |
+| 27 | Clip | FILM-BRIDGE — finished film |
+| 28 | Terminal | `python3 scripts/check_receipts.py` — all five checks green, every claim traced |
+| 29 | Card | **KEEL** — the close: the stack, the technique, our own numbers, and the four decisions that are the owner's |
 
-**Every number on screen** is a number that appears in `receipts/`, and the published ladder is
+**Every number on screen** is a number that appears in `receipts/`. The published ladder is
 labelled as published **on screen**, with the upstream host, in the chart captions and on the
-cards. The video is assembled from real captures — real `git` output, real receipt text, the real
-charts, the real clips — and from no generated imagery.
+cards, and the baseline table puts NVIDIA's 3.92× and the community port's 1.54× above Keel's own
+1.44× — visibly, on purpose.
+
+The video is assembled from real captures — real `git` output, real receipt text, the real charts,
+the real clips — and from no generated imagery. `scripts/make_demo.py` re-runs every command it
+shows and re-reads every receipt, so the video cannot drift from the repository, and the product
+title on the title card follows whatever name the owner approves.
 
 ---
 
