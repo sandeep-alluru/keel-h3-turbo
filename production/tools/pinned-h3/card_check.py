@@ -126,7 +126,7 @@ def check_shot(shot, label=None):
 def check_scene_contract(data):
     """The SCENE contract, from scene_schema: one subject, one place, at most three beats.
 
-    R3-M7: the lane had a second card check (scene_schema.check_card) and the card
+    R3-M7: the production had a second card check (scene_schema.check_card) and the card
     builder used it while the RENDER used this one - so a card that broke the scene
     contract could be rendered, and a card that passed the contract could be built.
     The contract is now enforced HERE, at the one entry point every render goes
@@ -159,7 +159,7 @@ def check_card(data):
     # seed". Nine of the thirty clip shots carried no rewritten field at all, so their
     # re-roll silently fell back to the base text.
     #
-    # The discipline is DECLARED, because the lane's other cards (the Level's) have the
+    # The discipline is DECLARED, because the production's other cards (the Level's) have the
     # same shape and are not re-rolled at all. A card that carries a rewritten field on
     # ANY shot declares it too, so a half-built clip card is caught rather than
     # slipping through with the marker missing.

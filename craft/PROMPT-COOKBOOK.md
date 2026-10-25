@@ -124,7 +124,7 @@ Two things to notice, both **[I]**:
 
 **[I]** Both dialects demonstrably ship. Use the **guide dialect** when you want the documented
 control surface (speaker IDs, `<d>`, amplitude/speed modifiers); use the **showcase dialect**
-when you want a single continuous shot with internal beats, which is closer to our 5-second,
+when you want a single continuous shot with beats inside it, which is closer to our 5-second,
 one-pass workflow. `<d>` is a real tokenizer special token [H1], so prefer it over plain quotes
 when the local tokenizer is the shipped one.
 

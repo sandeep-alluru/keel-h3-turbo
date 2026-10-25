@@ -6,8 +6,7 @@ gap between the two is the most interesting thing on the page.
 
 **The artifact of record is `receipts/bench-matrix.tsv`** — 231 bytes, SHA-256
 `4df15affc57556e9444faad08655f156c2cbaded585da6ef0fbd1346721bdace`, copied verbatim from the
-production tree at
-`production/video/mara/a039/bench/bench_matrix.tsv`.
+production tree.
 
 ```
 config	steps	w	h	accel	wall_s
@@ -53,7 +52,7 @@ The accelerated arms ran with the acceleration nodes enabled: Sage attention and
 FirstBlockCache. **The surviving records do not resolve which of the two produced the gain.** The
 session's own assessment at the time was that the Sage patch node may have fallen back silently,
 and `receipts/sage-attention-ab.md` records the Sage arm **rejecting Sage compatibility before
-sampling** at the keeper's own geometry and seed.
+sampling** at the shot's own geometry and seed.
 
 So the honest claim is "the acceleration arms as configured". The attribution between Sage and
 FirstBlockCache inside those arms is unresolved, and this receipt does not resolve it.

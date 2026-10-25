@@ -8,7 +8,7 @@ WHY THIS EXISTS (fix plan group 1)
 ComfyUI never overwrites: a second render of the same shot lands as
 `_00002_`, `_00003_`, ... . The pipeline used to compose `_00001_` by hand in
 half a dozen scripts, so the gate and the publish graded a STALE file while
-the new render sat next to it. The lane's own evidence: `film8/` holds
+the new render sat next to it. The production's own evidence: `film8/` holds
 beacon-S2_00001_ .. _00005_ with the `_00001_` timestamps untouched. The
 overnight engine then made 53 publish attempts, every one of them grading
 the same old file.
@@ -67,9 +67,9 @@ def sha256(path):
 
 
 def normalise_shot(shot):
-    """The shot id in the lane's own form: 'S1' and '1' are the SAME shot.
+    """The shot id in the production's own form: 'S1' and '1' are the SAME shot.
 
-    The lane's loops carry the shot as "S1" and the file is "level-S1.mp4".
+    The production's loops carry the shot as "S1" and the file is "level-S1.mp4".
     Normalising HERE means no caller has to know which form to pass - and the
     chain scripts cannot produce "level-SS1.mp4" by accident.
     """
@@ -233,7 +233,7 @@ def sha256_of(path):
 
     The one implementation of this. It used to be copied into motion_gate.py and
     scene_continuity.py, so three files could drift apart and only one of them would
-    be the one the lane actually runs.
+    be the one the production actually runs.
     """
     h = hashlib.sha256()
     try:

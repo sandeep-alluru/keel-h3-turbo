@@ -16,7 +16,7 @@
 > | Upstream host | `spark-13b3` (not ours) |
 > | Upstream hardware | NVIDIA DGX Spark, GB10, `sm_121`, 128 GB unified |
 > | Re-measured by this team? | **No.** |
-> | Where our own numbers live | `receipts/verification.json`, `receipts/forward-receipt.json`, `receipts/keeper-receipt.json`, `receipts/sage-attention-ab.md`, `receipts/spillway-keepers.md`, `receipts/checkpoint-sizes.md` |
+> | Where our own numbers live | `receipts/verification.json`, `receipts/forward-receipt.json`, `receipts/shot-receipt.json`, `receipts/sage-attention-ab.md`, `receipts/spillway-shots.md`, `receipts/checkpoint-sizes.md` |
 > | Full number-by-number map | `receipts/PROVENANCE.md` |
 >
 > A note on the two "vs dense" columns: this file mixes end-to-end ratios and per-step ratios

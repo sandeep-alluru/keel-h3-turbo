@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""control_metrics.py — choreography fidelity instrument for the H3 lane.
+"""control_metrics.py — choreography fidelity instrument for the H3 production.
 
-Why this exists: the lane's recurring defect is a shot that performs one plausible action and
+Why this exists: the production's recurring defect is a shot that performs one plausible action and
 stops ("the soldier shot the bullet only once; it should show blast action"). A motion-mean
 gate cannot see that — a shot with one trigger and a shot with six distinct events can carry
 the same mean. What differs is the *shape* of motion over time: where the events are.
@@ -232,15 +232,15 @@ def timeline(path, width=320, bucket_s=1.0):
 # a moving body or a pan produce a difference image whose neighbours differ together
 # (lag-1 autocorrelation near 1). Film grain produces white noise (autocorrelation near
 # 0), and the autocorrelation does NOT care how strong the grain is - white noise is
-# white noise at any amplitude. Measured on the lane's own material:
+# white noise at any amplitude. Measured on the production's own material:
 #
 #   the 15-clip delivered library      0.930 - 0.999
-#   the lane's rendered spans          0.901 - 0.985
+#   the production's rendered spans     0.901 - 0.985
 #   the cellular-automaton fixture     0.154
 #   grain (alls=25, temporal)          0.011
 #
 # So the bar is 0.10: an order of magnitude below every real clip, an order of
-# magnitude above white noise, and clear of the lane's own synthetic source.
+# magnitude above white noise, and clear of the production's own synthetic source.
 STRUCTURE_MIN = 0.10
 
 

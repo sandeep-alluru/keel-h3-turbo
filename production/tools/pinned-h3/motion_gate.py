@@ -13,7 +13,7 @@ R3-L2: a FROZEN frame with heavy film grain also has a big frame difference - ev
 pixel differs from its neighbour by a little - so a still with noise=alls=25 measured
 mean 8.23 / p95 8.26 and PASSED this gate. The gate now also asks whether the
 difference is STRUCTURED (a moved edge, a moving body) or white noise (grain). The
-bar is 0.5: the lane's own material measures 0.900-0.999, grain measures 0.02.
+bar is 0.5: the production's own material measures 0.900-0.999, grain measures 0.02.
 
 Usage: motion_gate.py <clip> [<clip> ...]  [--min-mean 1.5] [--min-p95 3.0]
 Exit code 1 if any clip fails.

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""make_charts.py — draw the ladder straight out of the receipt.
+"""make_charts.py — draw the charts straight out of the receipts.
 
-The charts are parsed from `receipts/bench-results.md` rather than hard-coded, so a number that
-changes in the receipt changes in the chart. If the receipt is edited without the chart being
-regenerated, this script says so.
+The charts are parsed from `receipts/bench-results.md` and `receipts/bench-matrix.tsv` rather than
+hard-coded, so a number that changes in a receipt changes in the chart. If a receipt is edited
+without the chart being regenerated, this script says so.
 
 Usage:
-    python3 charts/make_charts.py            # writes charts/end-to-end.png + charts/per-step.png
+    python3 charts/make_charts.py            # writes charts/end-to-end.png, charts/per-step.png, charts/keel-ab.png
 """
 from __future__ import annotations
 
@@ -21,11 +21,14 @@ import matplotlib.pyplot as plt  # noqa: E402
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 RECEIPT = ROOT / "receipts" / "bench-results.md"
+MATRIX = ROOT / "receipts" / "bench-matrix.tsv"
+AB_RECEIPT = ROOT / "receipts" / "our-acceleration-ab.md"
 OUT = ROOT / "charts"
 
 INK = "#e8eaed"
 MUTED = "#9aa0a6"
-ACCENT = "#76b900"
+ACCENT = "#58a6ff"
+CONTROL = "#3a3f45"
 WARN = "#d97706"
 DPI = 150
 
@@ -57,6 +60,28 @@ def parse_table(text: str, header: str) -> list[tuple[str, float]]:
     return rows
 
 
+def parse_matrix() -> dict[str, float]:
+    """The first-party matrix: config -> wall seconds."""
+    rows: dict[str, float] = {}
+    for line in MATRIX.read_text().splitlines()[1:]:
+        cells = line.split("\t")
+        if len(cells) != 6:
+            continue
+        rows[cells[0]] = float(cells[5])
+    if not rows:
+        raise SystemExit(f"no rows parsed from {MATRIX}")
+    return rows
+
+
+def parse_sixteen_step_accel() -> float:
+    """The 16-step accelerated arm, which is corroborated by the per-step figures in the receipt."""
+    text = AB_RECEIPT.read_text()
+    match = re.search(r"\*\*16 steps\*\*,.*?\|\s*[\d.]+\s*s\s*\|\s*\*\*([\d.]+)\s*s\*\*", text)
+    if not match:
+        raise SystemExit(f"could not find the 16-step accelerated arm in {AB_RECEIPT}")
+    return float(match.group(1))
+
+
 def draw(rows, title, subtitle, xlabel, out_path, highlight_last=True):
     labels = [r[0] for r in rows]
     values = [r[1] for r in rows]
@@ -73,7 +98,7 @@ def draw(rows, title, subtitle, xlabel, out_path, highlight_last=True):
         elif highlight_last and value == values[-1]:
             colors.append(ACCENT)
         else:
-            colors.append("#3a3f45")
+            colors.append(CONTROL)
     if highlight_last and len(colors) > 1:
         colors[-1] = ACCENT
 
@@ -145,6 +170,23 @@ def main() -> int:
         provenance,
         "seconds per step",
         OUT / "per-step.png",
+    )
+
+    matrix = parse_matrix()
+    accel16 = parse_sixteen_step_accel()
+    draw(
+        [
+            ("8 steps, plain control", matrix["B1_8s_704_plain"]),
+            ("8 steps, acceleration on", matrix["B4_8s_704_accel"]),
+            ("16 steps, plain control", matrix["BASELINE_16s_704"]),
+            ("16 steps, acceleration on", accel16),
+            ("4 steps, turbo LoRA", matrix["B5_turbo4_704"]),
+        ],
+        "MiniMax H3 · plain control against the accelerated arm",
+        "Measured on one DGX Spark, 1280x704 — wall clock includes the model load.",
+        "wall clock (seconds)",
+        OUT / "keel-ab.png",
+        highlight_last=False,
     )
     return 0
 

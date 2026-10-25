@@ -2,8 +2,9 @@
 """check_receipts.py — fail the build if a published claim stops matching its receipt.
 
 This is the discipline this repo is built on: every number on the front page has to trace to a file
-in `receipts/`, every clip has to hash to what the index says it hashes to, and the curated set has
-to stay exactly what the curation note says it is.
+in `receipts/`, every clip has to hash to what the index says it hashes to, the curated set has to
+stay exactly what the curation note says it is, and every link on the front page has to resolve to
+a file that is actually in the repository.
 
 It is deliberately stdlib-only so it can run anywhere — including in CI, on a laptop, or inside a
 container that has no CUDA. It never touches the network and never touches a GPU.
@@ -22,13 +23,17 @@ import re
 import sys
 from pathlib import Path
 
-# The curated set is final. Six clips: three finished films + three Spillway keeper shots.
-EXPECTED_SPILLWAY_CLIPS = {
-    "spillway-s01-keeper.mp4": "98c964bfa6e183ffff73d2df122e3911c84e43c6a2466a5caa08e6ab06622c29",
-    "spillway-s02-keeper.mp4": "2e836122d14b24195ec41d9fe1cab26e4afca9ca16cebdc8ac817a77c2695857",
-    "spillway-s03-keeper.mp4": "ca41bef4c9e3d75434cef9dd87a6f37dda3afb72bf21c600982fe6d637db29b8",
+# The curated set is final. Six clips: three finished films + three Spillway shots.
+EXPECTED_SHOTS = {
+    "spillway-s01.mp4": "98c964bfa6e183ffff73d2df122e3911c84e43c6a2466a5caa08e6ab06622c29",
+    "spillway-s02.mp4": "2e836122d14b24195ec41d9fe1cab26e4afca9ca16cebdc8ac817a77c2695857",
+    "spillway-s03.mp4": "ca41bef4c9e3d75434cef9dd87a6f37dda3afb72bf21c600982fe6d637db29b8",
 }
-EXPECTED_FILM_ASSETS = ("FILM-WAR-30s-1080p.mp4", "FILM-BEACON-30s-1080p.mp4", "FILM-BRIDGE-30s-1080p.mp4")
+EXPECTED_FILM_ASSETS = (
+    "FILM-WAR-1920x1056.mp4",
+    "FILM-BEACON-1920x1056.mp4",
+    "FILM-BRIDGE-1920x1056.mp4",
+)
 
 # Numbers that are allowed to appear in the README only because receipts/PROVENANCE.md records them.
 # Anything else in the README that looks like a claim has to appear in the receipt corpus directly.
@@ -60,6 +65,11 @@ VERSION_CONTEXT = re.compile(
     re.IGNORECASE,
 )
 
+# Markdown link and image targets on the front page.
+LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+IMAGE_SRC_RE = re.compile(r"<img[^>]+src=\"([^\"]+)\"", re.IGNORECASE)
+VIDEO_SRC_RE = re.compile(r"<video[^>]+src=\"([^\"]+)\"", re.IGNORECASE)
+
 
 class Failure(Exception):
     pass
@@ -90,14 +100,14 @@ def load_receipt_corpus(root: Path) -> str:
 
 
 def check_clips(root: Path) -> list[str]:
-    """The curated set must be exactly the six clips the curation note names."""
+    """The curated set must be exactly the six clips the index names."""
     problems = []
     clips_dir = root / "clips"
     if not clips_dir.is_dir():
         return [f"clips/ directory missing at {clips_dir}"]
 
     present = {p.name for p in clips_dir.glob("*.mp4")}
-    expected = set(EXPECTED_SPILLWAY_CLIPS)
+    expected = set(EXPECTED_SHOTS)
     if present != expected:
         extra = sorted(present - expected)
         missing = sorted(expected - present)
@@ -106,7 +116,7 @@ def check_clips(root: Path) -> list[str]:
         if missing:
             problems.append(f"clips/ is missing {len(missing)} expected clip(s): {', '.join(missing)}")
 
-    for name, digest in sorted(EXPECTED_SPILLWAY_CLIPS.items()):
+    for name, digest in sorted(EXPECTED_SHOTS.items()):
         path = clips_dir / name
         if not path.is_file():
             problems.append(f"clips/{name} missing")
@@ -118,7 +128,7 @@ def check_clips(root: Path) -> list[str]:
     index = (clips_dir / "INDEX.md")
     if index.is_file():
         index_text = index.read_text(errors="replace")
-        for name, digest in sorted(EXPECTED_SPILLWAY_CLIPS.items()):
+        for name, digest in sorted(EXPECTED_SHOTS.items()):
             if name not in index_text:
                 problems.append(f"clips/INDEX.md does not mention {name}")
             if digest not in index_text:
@@ -165,7 +175,7 @@ def check_headline_claims(root: Path) -> list[str]:
 
 
 def check_provenance_index(root: Path) -> list[str]:
-    """Every number that ships must be listed in receipts/PROVENANCE.md with its owner."""
+    """Every number that ships must be listed in receipts/PROVENANCE.md with its source."""
     problems = []
     provenance = root / RECEIPT_DIR / "PROVENANCE.md"
     if not provenance.is_file():
@@ -213,13 +223,48 @@ def check_fp8_claim(root: Path) -> list[str]:
 
 
 def check_no_licence_section(root: Path) -> list[str]:
-    """Licence handling is deferred by the owner — keep the repo out of it."""
+    """This repository states no licence, and the front page must not imply one."""
     problems = []
     readme = root / "README.md"
     if not readme.is_file():
         return problems
     for match in re.finditer(r"^#{1,6}\s*.*licen[cs]e.*$", readme.read_text(errors="replace"), flags=re.M | re.I):
         problems.append(f"README.md has a licence heading: {match.group(0).strip()!r}")
+    return problems
+
+
+def check_front_page_links(root: Path) -> list[str]:
+    """Every relative link on the front page has to resolve to a file in this repository.
+
+    This is what stops the front page from pointing at a document that is not shipped with it.
+    Absolute URLs — release downloads, upstream projects — are left alone.
+    """
+    problems = []
+    readme = root / "README.md"
+    if not readme.is_file():
+        return ["README.md missing"]
+
+    text = readme.read_text(errors="replace")
+    targets = set(LINK_RE.findall(text))
+    targets.update(IMAGE_SRC_RE.findall(text))
+    targets.update(VIDEO_SRC_RE.findall(text))
+
+    for target in sorted(targets):
+        if not target or target.startswith("#"):
+            continue
+        if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target):
+            continue  # absolute URL
+        clean = target.split("#", 1)[0].split("?", 1)[0]
+        if not clean:
+            continue
+        resolved = (root / clean).resolve()
+        try:
+            resolved.relative_to(root.resolve())
+        except ValueError:
+            problems.append(f"README.md links outside the repository: {target}")
+            continue
+        if not resolved.exists():
+            problems.append(f"README.md links to a file that is not in the repository: {target}")
     return problems
 
 
@@ -234,7 +279,8 @@ def main() -> int:
         ("front-page claims", check_headline_claims),
         ("provenance index", check_provenance_index),
         ("FP8 footprint", check_fp8_claim),
-        ("deferred licence scope", check_no_licence_section),
+        ("licence section", check_no_licence_section),
+        ("front-page links", check_front_page_links),
     ]
 
     failures = 0

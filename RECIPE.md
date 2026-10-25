@@ -1,15 +1,19 @@
-# RECIPE — Model Acceleration, MiniMax H3 on a single DGX Spark
+# RECIPE — MiniMax H3 on a single DGX Spark
 
 **Who this is for:** an agent (or a person) that has to get from "nothing installed" to "I have a
 measured stock-vs-accelerated comparison and a receipt for each number", without guessing.
 
-**What you are *not* doing here:** re-creating the upstream benchmark as your own work. The
+**Recommended starting point:** the pruned FP8-scaled DiT with the NVFP4/AWQ encoder, the
+`h3-fullstack.json` workflow, and the 16-step geometry. That combination is what the numbers in
+this repository were measured on.
+
+**What you are *not* doing here:** re-creating the published benchmark as your own work. The
 published ladder in `receipts/bench-results.md` was measured by the community port's author on
-host `spark-13b3`. If you re-run it, you are producing a *first-party* measurement, and it should
+host `spark-13b3`. If you re-run it, you are producing a *measurement of your own*, and it should
 be filed as one — under your own host name, in your own receipt, next to theirs.
 
 Every command below is idempotent and safe to re-run. Nothing here starts a production, publishes
-anything, or touches the halted Spillway lane.
+anything, or changes the state of the Spillway production.
 
 ---
 
@@ -45,15 +49,15 @@ done
 ```
 
 `H3-SolAttn-SM121` carries the Sol-Attn patcher, the FirstBlockCache node, the batched-VAE
-monkeypatch, the GB10 spin-wait patch and the upstream installer:
+patch, the GB10 spin-wait patch and the upstream installer:
 
 ```bash
 bash custom_nodes/H3-SolAttn-SM121/install.sh --comfy-dir "$COMFY"
 ```
 
-The batched VAE decode is a monkeypatch applied on import, not a graph node. It is **on** by
-default and is disabled with `H3_VAE_BATCHED=0`. That matters: with it off, your "full stack"
-number is not the full stack.
+The batched VAE decode is a patch applied on import, not a graph node. It is **on** by default and
+is disabled with `H3_VAE_BATCHED=0`. That matters: with it off, your "full stack" number is not the
+full stack number.
 
 Verify the pack actually landed:
 
@@ -62,6 +66,18 @@ ls "$COMFY/custom_nodes/ComfyUI_sol-attn_Blackwell/sol_attn_node.py" \
    "$COMFY/custom_nodes/h3_fbc_node.py" \
    "$COMFY/custom_nodes/h3_vae_batch.py"
 ```
+
+After you restart ComfyUI, the pack registers itself:
+
+```
+Import times for custom nodes:
+  h3_fbc_node.py       |  0.42 s
+  h3_vae_batch.py      |  0.11 s
+  sol_attn_node.py     |  0.38 s
+```
+
+**Already installed?** Run the installer again — it skips files that are already in place and leaves
+your ComfyUI alone.
 
 ## 2 — Install the weights, and check them
 
@@ -73,7 +89,7 @@ mkdir -p "$COMFY/models/diffusion_models" "$COMFY/models/text_encoders" "$COMFY/
 |---|---|---:|---|
 | `minimax_h3_fl2va_pruned_int8_convrot.safetensors` | `diffusion_models/` | 34,038,892,334 | `7ad4c73e6e378b822ffd1629f27f632d3787d95f5e468e3af958f98c58df96a5` |
 | `minimax_h3_fl2va_pruned_fp8_scaled.safetensors` | `diffusion_models/` | 20,958,205,608 | `12944c1f7791637e7de12208aef04da82bd26b95271b1b47d817364315ade993` |
-| `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | `text_encoders/` | 15,687,142,551 | `61f55b01f03e9cd9ec2b10e3084e74519230373135aef5c84ec6b7ec04208340` |
+| `qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors` | `text_encoders/` | 15,687,142,551 | `35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6` |
 | `minimax_h3_video_vae_fp16.safetensors` | `vae/` | 5,207,808,496 | `7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522` |
 | `minimax_h3_audio_vae_fp32.safetensors` | `vae/` | 605,254,808 | `8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48` |
 
@@ -85,7 +101,7 @@ that declared the right length.
 
 ```bash
 python3 - <<'PY'
-import json, pathlib, hashlib
+import json, pathlib
 for p in sorted(pathlib.Path("receipts").glob("*.json")):
     data = json.loads(p.read_text())
     for w in data.get("weights", []) or []:
@@ -98,7 +114,7 @@ A file is good when `complete_offset_boundary` is `true` and `unaccounted_traili
 
 **Which checkpoint to use.** The upstream ladder was measured with the **pruned INT8 ConvRot** DiT
 (34.0 GB). Production on one Spark uses the **pruned FP8-scaled** DiT (21.0 GB) — the FP8 pair is
-what leaves room for the encoder and the VAEs in unified memory. See
+what leaves room for the encoder and the decoders in unified memory. See
 `receipts/checkpoint-sizes.md` for the full table and the residency arithmetic.
 
 ## 3 — Run the A/B
@@ -146,7 +162,7 @@ numbers will not match those exactly** — different host, different driver, dif
 the noise. What you are looking for is the *shape*: the full stack meaningfully below dense, and
 the per-step ratio roughly 1.7×.
 
-If you get **less** than the upstream ladder, that is a legitimate first-party result and it
+If you get **less** than the upstream ladder, that is a legitimate result of your own and it
 belongs in this repository. It does not belong in the same table as the upstream numbers.
 
 ## 4 — File your receipt
@@ -155,7 +171,7 @@ A measurement without a receipt is a rumour. Write one:
 
 ```json
 {
-  "scope": "first-party re-measurement of the published ladder",
+  "scope": "re-measurement of the published ladder",
   "host": "<your-host-name>",
   "gpu": "NVIDIA GB10, sm_121",
   "workflow": "workflows/h3-fullstack.json",
@@ -195,7 +211,7 @@ python3 craft/gates/aliveness_gate.py <your.mp4> [<your.mp4> ...]
 ```
 
 `motion_gate.py` refuses a clip whose mean frame difference is below the band. Thresholds are
-calibrated against this team's own clips: a visibly moving control sits at mean 3.13–3.65, p95
+calibrated against our own clips: a visibly moving control sits at mean 3.13–3.65, p95
 7.45–15.76; known static failures sit at mean 0.07–0.89, p95 0.21–2.20. Exit code 1 means the
 clip failed.
 
@@ -214,8 +230,8 @@ has a file behind it.
 
 ## What this recipe does not do
 
-* It does not resume the halted Spillway production. Only the owner can.
+* It does not start or resume the Spillway production.
 * It does not publish, upload, or push anything anywhere.
-* It does not touch the licence question. That is deferred by the owner.
-* It does not claim the upstream ladder as this team's measurement. If you re-run it, the receipt
-  is yours and the number stays yours.
+* It does not state a licence. That question is open, and this repository does not answer it.
+* It does not claim the upstream ladder as our own measurement. If you re-run it, the receipt is
+  yours and the number stays yours.

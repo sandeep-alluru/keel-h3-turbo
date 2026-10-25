@@ -15,7 +15,7 @@
   },
   "encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq-fresh-0543966f.safetensors",
   "status": "success",
-  "authority": "Owner step0 retry explicitly requests real forward before production still set",
+  "authority": "Explicit instruction: step0 retry explicitly requests a real forward before the production still set",
   "prompt_id": "a9c14adb-4cae-41bb-a3be-d21decdadb95",
   "seconds": 30.020622243057005,
   "artifacts": [

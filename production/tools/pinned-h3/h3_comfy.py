@@ -29,7 +29,7 @@ import urllib.request
 import uuid
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-LANE = os.path.dirname(HERE)
+PRODUCTION = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 
 # R2-M13: the host and the output root are CONFIGURED, not typed here. project.env
@@ -68,7 +68,7 @@ def check_hard_facts(width, height, frames, first_path, last_path):
 
     R2-L8: the renderer accepted 1281x700, 130 frames, the same still as first and
     last keyframe, and a None image in chain mode. Every one of those is a shot the
-    lane has already paid for. The check happens BEFORE the graph is built, so a
+    production has already paid for. The check happens BEFORE the graph is built, so a
     refusal costs no GPU time.
     """
     if width % 32 or height % 32:
@@ -194,16 +194,16 @@ def host_lora_names(host=None):
     return list(combo) if isinstance(combo, list) else None
 
 
-# ---- the ONE halt check (R3-H1)
+# ---- the ONE stop check (R3-H1)
 #
 # The guard used to live only in the shell wrappers named in H3_RUN_PATH, so every GPU
-# client - the thing that actually POSTs /prompt - bypassed it. The lane's halt marker
+# client - the thing that actually POSTs /prompt - bypassed it. The production's stop marker
 # was on disk and the clip renders ran anyway. There is now ONE check, at the choke
-# point every client goes through, and the owner's lift is an explicit marker that
+# point every client goes through, and the lift is an explicit marker that
 # NAMES the entry points allowed to run. The check itself lives in halt_guard.py, so
 # the three clients cannot drift apart.
 def require_not_halted(entry):
-    """Refuse to submit when the lane is halted and nothing lifts this entry point."""
+    """Refuse to submit when the production is stopped and nothing lifts this entry point."""
     from halt_guard import require_not_halted as _check
     return _check(entry)
 
@@ -269,7 +269,7 @@ def _install_exit_handlers():
 def fetch(meta, dest_dir):
     """Download a ComfyUI output file to the local output tree (works for remote hosts too).
 
-    ComfyUI's output directory is often root-owned (it writes as root inside its container), so a direct
+    ComfyUI's output directory is usually created by root (it writes as root inside its container), so a direct
     write can fail with EACCES. Stage in a PRIVATE temp directory (R2-M8: /tmp/<filename> collides
     across machines and across two runs of the same file) and copy into place.
 
@@ -288,7 +288,7 @@ def fetch(meta, dest_dir):
         try:
             os.replace(staged, dest)
         except OSError:
-            # root-owned output dir: copy it in, and CHECK the copy.
+            # output directory belongs to root: copy it in, and CHECK the copy.
             import subprocess
             cp = subprocess.run(["sudo", "cp", staged, dest], check=False)
             if cp.returncode != 0:
@@ -305,9 +305,9 @@ def fetch(meta, dest_dir):
 
 
 def run(graph, label, timeout=3600):
-    # RC-H1: the halt check is HERE, in the function every submitter reaches. It used
+    # RC-H1: the stop check is HERE, in the function every submitter reaches. It used
     # to be in main() only - so h3_comfy_ctrl.py, which calls run() directly, submitted
-    # its jobs with NO check at all while the lane's halt marker was on disk. The name
+    # its jobs with NO check at all while the production's stop marker was on disk. The name
     # looked up is the one the caller passes; the environment is only a fallback.
     require_not_halted(os.environ.get("H3_ENTRY_POINT") or "h3_comfy.py")
     # RC-M2: the exit handlers are installed HERE, in the function every submitter
@@ -507,10 +507,10 @@ def main():
     ap.add_argument("--lora-strength", type=float, default=1.0)
     args = ap.parse_args()
 
-    # R3-H1: the ONE check, before anything is uploaded or submitted. The lane's halt
-    # marker is the owner's; a LIFT marker names the entry points allowed to run anyway.
+    # R3-H1: the ONE check, before anything is uploaded or submitted. The production's stop
+    # marker is set by the project lead; a LIFT marker names the entry points allowed to run anyway.
     _install_exit_handlers()
-    # RC-H1: the name looked up is the ENTRY POINT THE OWNER INVOKED - the caller
+    # RC-H1: the name looked up is the ENTRY POINT THAT WAS INVOKED - the caller
     # passes it down in H3_ENTRY_POINT - and this client's own name is only the
     # fallback. It used to pass its own name, which worked only because the guard
     # preferred the environment; with the explicit argument winning, the clip path's

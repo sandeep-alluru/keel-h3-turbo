@@ -4,7 +4,7 @@ Two sources agree on the bytes that matter here, and both are filed:
 
 1. **The model repository's own manifest** — the `siblings` listing for `Comfy-Org/MiniMax-H3`
    at revision `0543966fbdce5ba05709a8f2031c94bdba629b4a`, captured as
-   `source-listing.json` in the launch lane's runtime record.
+   `source-listing.json` in the production's runtime record.
 2. **Our own download**, hashed on our own box — `receipts/verification.json`.
 
 For the pruned FP8 DiT the two agree exactly: the manifest's LFS SHA-256 is
@@ -114,7 +114,7 @@ accounted for only 15,687,142,551 bytes of it, and `complete_offset_boundary` wa
 header was fine; the payload behind it was not. Details and the log line are in
 `receipts/encoder-diagnosis.md` and `receipts/text-encoder-load.log`.
 
-The re-download landed at the exact expected size and hashes clean. The keeper and forward
+The re-download landed at the exact expected size and hashes clean. The shot and forward
 receipts both reference the clean file by name
 (`qwen3vl_32b_minimax_h3_nvfp4_awq-fresh-0543966f.safetensors`).
 

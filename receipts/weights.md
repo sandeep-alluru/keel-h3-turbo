@@ -101,10 +101,10 @@ repository either.
 * the hash-check procedure that catches a bad download before it costs you a render,
 * and receipts for every number Keel claims.
 
-## The publish-the-weights option — an owner decision, not a plan
+## The publish-the-weights option — an open question, not a plan
 
-**Keel does not publish weights and this repository does not contain any.** If the owner ever
-wants that to change, here is what it would actually take, so the decision can be made on facts:
+**Keel does not publish weights and this repository does not contain any.** If that ever changes,
+here is what it would actually take, so the decision can be made on facts:
 
 | | What it would involve |
 |---|---|
@@ -114,4 +114,4 @@ wants that to change, here is what it would actually take, so the decision can b
 | **Why it might not** | These files are already published by the model repository. Re-hosting published weights duplicates a large artefact for no accuracy gain, and it is a redistribution decision rather than a technical one. |
 | **What we would need to settle first** | Whether to mirror the published files byte-for-byte or re-emit them; where they would live; how the hash table stays truthful if the mirror diverges from the publisher's copy. |
 
-This is on the owner's list. It is not scheduled here, and nothing in this repository does it.
+This is not settled here. It is not scheduled, and nothing in this repository does it.

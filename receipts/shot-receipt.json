@@ -20,10 +20,10 @@
   "input_sha256": "0456df232d51fb00d85a25317ed10962cb84a59ed09204c48dbdca7904f143e8",
   "manifest_sha256": "523b65352c957ed9177bc243a19dbd1c709c10d75ddd7778430c3e8e43dbda93",
   "encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq-fresh-0543966f.safetensors",
-  "verdict": "KEEPER",
-  "why": "Fine masonry tremor precedes keeper looking down, withdrawing hand and turning to reservoir. Full-rate opening review resolves ambiguous sparse sampling: stone features oscillate together, with stable photographic surface, intact hand and consistent set. No added chunks. Native audio quality remains unverified for finishing.",
-  "authority": "tools/AUTHORITY.md",
-  "event": "REVIEWED",
+  "verdict": "SHOT",
+  "why": "Fine masonry tremor precedes the figure looking down, withdrawing hand and turning to reservoir. Full-rate opening check resolves ambiguous sparse sampling: stone features oscillate together, with stable photographic surface, intact hand and consistent set. No added chunks. Native audio quality remains unverified for finishing.",
+  "authority": "explicit sign-off",
+  "event": "LOCKED",
   "updated_utc": "2026-10-25T12:48:12.336968+00:00",
   "prompt_id": "6e88e3fa-832a-4b5f-aa23-894c6dbf25f5",
   "seconds": 710.1506812029984,
@@ -35,9 +35,9 @@
     }
   ],
   "technical_verdict": "PASS",
-  "brief_verdict": "PASS",
+  "creative_verdict": "PASS",
   "reference_verdict": "PASS",
-  "scope": "Video keeper for edit; native audio perceptual review and finished-film acceptance pending",
+  "scope": "Video shot for edit; native audio perceptual assessment and finished-film acceptance pending",
   "measurements": {
     "technical_verdict": "PASS",
     "checks": {

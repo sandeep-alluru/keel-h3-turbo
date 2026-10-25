@@ -28,4 +28,4 @@ A fresh download of the exact Comfy-Org / MiniMax-H3 encoder, pinned to the orig
 
 ## The proof it worked
 
-A real H3 forward pass on the fresh encoder (124 frames, 512×288, 24 fps, 2 Euler steps, CFG 1, seed 20261025): **succeeded in 30.02 s** — video 558,700 bytes, SHA-256 `dac049a47ac5e6db0450ffa6eaa17898f250190d087663aab87a7d538991d1e3`, full media decode clean, 32 kHz audio present. Receipt: [`forward-receipt.json`](forward-receipt.json); clip: [`../clips/forward-proof.mp4`](../clips/forward-proof.mp4). Runtime qualification only — not a production take.
+A real H3 forward pass on the fresh encoder (124 frames, 512×288, 24 fps, 2 Euler steps, CFG 1, seed 20261025): **succeeded in 30.02 s** — video 558,700 bytes, SHA-256 `dac049a47ac5e6db0450ffa6eaa17898f250190d087663aab87a7d538991d1e3`, full media decode clean, 32 kHz audio present. Receipt: [`forward-receipt.json`](forward-receipt.json); the clip `forward-proof.mp4` was removed from git in the best-clips curation — see [`CURATION-NOTE.md`](CURATION-NOTE.md). Runtime qualification only — not a production take.

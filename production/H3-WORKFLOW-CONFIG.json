@@ -6,5 +6,5 @@
   "video_vae": "minimax_h3_video_vae_fp16.safetensors",
   "audio_vae": "minimax_h3_audio_vae_fp32.safetensors",
   "forward_proof": "runtime/retry-001/forward-receipt.json",
-  "production_admission": "Still set and manifest required; runtime qualification is not a keeper"
+  "production_admission": "Still set and manifest required; runtime qualification is not a final shot"
 }

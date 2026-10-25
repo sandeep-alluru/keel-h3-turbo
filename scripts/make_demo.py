@@ -269,7 +269,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("", MUTED),
                     ("sandeep-alluru/minimax-h3-local-engine", BLUE),
                 ],
-                "private repo · draft release · nothing published yet",
+                "comfyui node packs  ·  resident weights  ·  checked numbers",
                 accent=GREEN,
                 title_size=54,
             ),
@@ -282,8 +282,8 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
             "kind": "card",
             "hold": 12.0,
             "image": card(
-                "THE DIRECTION",
-                "What this is, what it is not, and where it is going",
+                "WHAT KEEL IS",
+                "What it is, and what it is not",
                 [
                     ("is", GREEN),
                     ("  a way to run MiniMax H3 - a 33B joint video-and-audio model - on one", INK),
@@ -293,10 +293,10 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("  NVIDIA's Sol-Engine, and it does not try to be. Sol-Attn is their", INK),
                     ("  name for their method. The published ladder is the community port's.", INK),
                     ("", MUTED),
-                    ("is going", BLUE),
-                    ("  one way, and it is not a new kernel. The published ladder reaches", INK),
-                    ("  1.54x using two components we have never installed. Closing that gap", INK),
-                    ("  is the next run, and RECIPE.md is written for it.", INK),
+                    ("does not claim", AMBER),
+                    ("  the published 1.54x. The Sol-Attn kernel and the batched VAE", INK),
+                    ("  decode were never installed here, so that ladder is unproven", INK),
+                    ("  on this stack, not disproven.", INK),
                 ],
                 "KEEL  ·  the named technique: TRIM",
                 accent=BLUE,
@@ -312,17 +312,17 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
             "hold": 16.0,
             "image": table_card(
                 "BASELINE COMPARISON",
-                "Every row is PUBLISHED or FIRST-PARTY. Never blended.",
+                "Every row is published or measured here. Never blended.",
                 ["ENGINE", "HARDWARE", "GEOMETRY", "STEPS", "SECONDS", "SPEEDUP", "SOURCE"],
                 [
-                    ["Stock MiniMax H3", "DGX Spark", "832x480 124f", "50", "710.6 s", "1.00x", "PUBLISHED  NVIDIA"],
-                    ["NVlabs Sana Sol-Engine", "DGX Spark", "832x480 124f", "50", "181.3 s", "3.92x", "PUBLISHED  NVIDIA"],
-                    ["Stock ComfyUI", "spark-13b3", "864x480 124f", "20", "312.7 s", "1.00x", "PUBLISHED  community"],
-                    ["Community Sol port", "spark-13b3", "864x480 124f", "20", "202.5 s", "1.54x", "PUBLISHED  community"],
-                    ["ComfyUI-Sol-H3 (xmarre)", "RTX PRO 6000", "not stated", "not stated", "400.94 s", "1.05x", "PUBLISHED  xmarre"],
-                    ["KEEL  accel vs control", "DGX Spark", "1280x704 124f", "8", "344 s", "1.44x", "FIRST-PARTY"],
-                    ["KEEL  accel vs control", "DGX Spark", "1280x704 124f", "16", "545 s", "1.17x", "FIRST-PARTY"],
-                    ["KEEL  4-step turbo LoRA", "DGX Spark", "1280x704 124f", "4", "201 s", "3.16x", "FIRST-PARTY"],
+                    ["Stock MiniMax H3", "DGX Spark", "832x480 124f", "50", "710.6 s", "1.00x", "published  NVIDIA"],
+                    ["NVlabs Sana Sol-Engine", "DGX Spark", "832x480 124f", "50", "181.3 s", "3.92x", "published  NVIDIA"],
+                    ["Stock ComfyUI", "spark-13b3", "864x480 124f", "20", "312.7 s", "1.00x", "published  community"],
+                    ["Community Sol port", "spark-13b3", "864x480 124f", "20", "202.5 s", "1.54x", "published  community"],
+                    ["ComfyUI-Sol-H3 (xmarre)", "RTX PRO 6000", "not stated", "not stated", "400.94 s", "1.05x", "published  xmarre"],
+                    ["KEEL  accel vs control", "DGX Spark", "1280x704 124f", "8", "344 s", "1.44x", "measured here"],
+                    ["KEEL  accel vs control", "DGX Spark", "1280x704 124f", "16", "545 s", "1.17x", "measured here"],
+                    ["KEEL  4-step turbo LoRA", "DGX Spark", "1280x704 124f", "4", "201 s", "3.16x", "measured here"],
                 ],
                 row_colours=[MUTED, GREEN, MUTED, GREEN, MUTED, GREEN, GREEN, GREEN],
                 footnote="NVIDIA's 3.92x is the strongest number here, and it is theirs. Full receipts: receipts/published-comparisons.md",
@@ -347,20 +347,20 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("Trim-A/B         control and treatment differ only in the acceleration", INK),
                     ("Trim-Receipts    a claim without a receipt fails the build", INK),
                 ],
-                "PROPOSED - the name is the owner's to approve. NVIDIA's name is Sol-Attn.",
+                "NVIDIA's name is Sol-Attn. Ours is Trim.",
                 accent=AMBER,
                 title_size=50,
             ),
         }
     )
 
-    # -- 2. two ladders, two owners ----------------------------------------------------
+    # -- 2. two ladders, two sources ---------------------------------------------------
     scenes.append(
         {
             "kind": "card",
             "hold": 9.0,
             "image": card(
-                "TWO LADDERS, TWO OWNERS",
+                "TWO LADDERS, TWO SOURCES",
                 "Before anything else: who measured what",
                 [
                     ("NVIDIA Sol-Engine, GB10, 480p@5s / 50 steps", MUTED),
@@ -390,28 +390,18 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
         }
     )
 
-    # -- 4. where it started -----------------------------------------------------------
-    scenes.append(
-        {
-            "kind": "card",
-            "hold": 10.0,
-            "image": card(
-                "WHERE IT STARTED",
-                "A link, a video, and a question",
-                [
-                    ("2026-10-20  the owner sends us NVIDIA's Sol-Engine branch for MiniMax H3", INK),
-                    ("           and asks how it manages to do what it does", INK),
-                    ("", MUTED),
-                    ("one minute later, an X post: MiniMax H3 animating typography", MUTED),
-                    ("           \"check this video how did they do it with minimaxh3\"", MUTED),
-                    ("", MUTED),
-                    ("2026-10-21  we find the community port that runs it in ComfyUI on one Spark", AMBER),
-                ],
-                "we downloaded it. then we did the part that was left.",
-                accent=BLUE,
-            ),
-        }
-    )
+    # -- 4. it moves --------------------------------------------------------------------
+    opening_film = assets / "FILM-BEACON-1920x1056.mp4"
+    if opening_film.is_file():
+        scenes.append(
+            {
+                "kind": "clip",
+                "path": opening_film,
+                "duration": 8.0,
+                "start": 4.0,
+                "label": "MiniMax H3  ·  rendered on one DGX Spark  ·  1920x1056",
+            }
+        )
 
     # -- 5. the three packs ------------------------------------------------------------
     packs = run(
@@ -560,7 +550,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
             "hold": 18.0,
             "title": "open the receipt",
             "body": f"$ sed -n '1,30p' receipts/bench-results.md\n{receipt}",
-            "highlight": ["Provenance", "spark-13b3", "drowzeys", "Re-measured by this team"],
+            "highlight": ["spark-13b3", "drowzeys", "7e3db54"],
         }
     )
 
@@ -572,7 +562,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
             "hold": 16.0,
             "title": "receipts/PROVENANCE.md — every number, and who measured it",
             "body": f"$ head -26 receipts/PROVENANCE.md\n{prov}",
-            "highlight": ["PUBLISHED", "OURS", "CORRECTED"],
+            "highlight": ["spark-13b3", "12944c1f"],
         }
     )
 
@@ -595,12 +585,12 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
             "hold": 12.0,
             "image": card(
                 "WHAT WE MEASURED OURSELVES",
-                "The numbers this team can be held to",
+                "The numbers we can be held to",
                 [
                     ("pruned FP8 DiT      20,958,205,608 B   sha256 matches the published hash", INK),
                     ("NVFP4/AWQ encoder   15,687,142,551 B   clean re-download", INK),
                     ("a real forward pass + video and audio decode    30.02 s", INK),
-                    ("keeper renders      710.15 / 710.13 / 710.14 s", INK),
+                    ("shot renders        710.15 / 710.13 / 710.14 s", INK),
                     ("", MUTED),
                     ("acceleration arms vs plain control, 8 steps:  496 s -> 344 s    1.44x", AMBER),
                     ("the same at 16 steps:  635 s -> 545 s                          1.17x", AMBER),
@@ -652,23 +642,23 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
 
     # -- 15. the curated set ------------------------------------------------------------
     clip_dir = ROOT / "clips"
-    keepers = sorted(clip_dir.glob("*.mp4"))
-    for keeper in keepers:
-        shot = keeper.stem.replace("spillway-", "Spillway ").replace("-keeper", "")
+    shots = sorted(clip_dir.glob("*.mp4"))
+    for clip in shots:
+        shot = "Spillway " + clip.stem.split("-")[-1].upper()
         scenes.append(
             {
                 "kind": "clip",
-                "path": keeper,
+                "path": clip,
                 "duration": 7.0,
                 "start": 1.0,
-                "label": f"{shot}  ·  keeper shot  ·  from the halted production",
+                "label": f"{shot}  ·  1024x576  ·  8.0 s",
             }
         )
 
     for name, label in (
-        ("FILM-WAR-30s-1080p.mp4", "FILM-WAR  ·  finished film"),
-        ("FILM-BEACON-30s-1080p.mp4", "FILM-BEACON  ·  finished film"),
-        ("FILM-BRIDGE-30s-1080p.mp4", "FILM-BRIDGE  ·  finished film"),
+        ("FILM-WAR-1920x1056.mp4", "FILM-WAR  ·  finished film  ·  1920x1056"),
+        ("FILM-BEACON-1920x1056.mp4", "FILM-BEACON  ·  finished film  ·  1920x1056"),
+        ("FILM-BRIDGE-1920x1056.mp4", "FILM-BRIDGE  ·  finished film  ·  1920x1056"),
     ):
         path = assets / name
         if path.is_file():
@@ -705,9 +695,8 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("ours:          1.44x at 8 steps, 1.17x at 16 steps, 3.16x on the turbo LoRA", INK),
                     ("not ours:      the published ladder, and NVIDIA's 3.92x. Both say so.", AMBER),
                     ("not done:      the ladder's own two components, never installed here.", AMBER),
-                    ("not decided:   the public flip, the name, and the weights. The owner's.", MUTED),
                 ],
-                "sandeep-alluru/minimax-h3-local-engine  ·  private  ·  draft",
+                "sandeep-alluru/minimax-h3-local-engine  ·  docs, recipes, receipts and clips",
                 accent=GREEN,
                 title_size=50,
             ),
