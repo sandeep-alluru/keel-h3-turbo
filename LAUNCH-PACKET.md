@@ -245,11 +245,44 @@ uploaded anywhere**.
 
 | | |
 |---|---|
-| **File** | `MODEL-ACCELERATION-DEMO.mp4` |
-| **Duration** | see the file's own metadata; the length is fixed by the script in `scripts/make_demo.py` |
-| **Coverage** | The acceleration story end to end: the origin and the link; what the three node packs are and who wrote them; the install; the recipe; the stock-vs-accelerated workflow pair; the published ladder on screen with its provenance; what we measured ourselves and the 1.17×; the corrupt encoder; the craft gates; the curated set; the checker; and where the gaps are. |
-| **Numbers on screen** | Only numbers verified against a receipt in `receipts/`. The published ladder is labelled as published on screen, with the upstream host. |
-| **Published** | **No.** Not uploaded, not linked. The owner publishes. |
+| **File** | `/home/clawerdigi2/AgentHub/model-acceleration/MODEL-ACCELERATION-DEMO.mp4` |
+| **Size** | 37,476,209 bytes |
+| **SHA-256** | `2fd17c1abca0fdbac30d6b83f50fd353772cd6bd06f128c0af2ddc940288a58c` |
+| **Duration** | **302 s (5 m 02 s)** |
+| **Format** | H.264, 1920×1080, 30 fps, 9,060 frames, ~993 kbit/s |
+| **Rebuild** | `python3 scripts/make_demo.py` in the repository — it re-runs every command it shows and re-reads every receipt, so the video cannot drift from the repo |
+| **Published** | **No.** Not uploaded, not linked, not attached to the release. The owner publishes. |
+
+**Coverage, scene by scene (25 scenes, 302 s)**
+
+| # | Scene | What it shows |
+|---:|---|---|
+| 1 | Title card | Model Acceleration — MiniMax H3 on a single NVIDIA DGX Spark |
+| 2 | Card | **Two ladders, two owners** — NVIDIA's 710.6 → 181.3 s (3.92×) and the community port's 312.7 → 202.5 s (1.54×), both labelled published |
+| 3 | Terminal | `git log`, `git ls-files` — the repository in front of you |
+| 4 | Card | **Where it started** — the owner's link to NVIDIA's `sol-engine` branch, the X post, and the community port found the next day |
+| 5 | Terminal | The three node packs, listed as they ship |
+| 6 | Terminal | The credits — who wrote each part |
+| 7 | Terminal | The install — three directories and one installer |
+| 8 | Card | **Precision is residency** — 123.60 GB does not fit, 42.46 GB does |
+| 9 | Terminal | The real diff between upstream's two workflows, including the seed mismatch (46 vs 45) |
+| 10 | Terminal | The seed-matched pair, node by node: same DiT, same encoder, same geometry, same seed, same steps |
+| 11 | Chart | End-to-end ladder — 312.7 → 215.7 → 202.5 s, with the provenance line printed on the chart |
+| 12 | Chart | Per-step ladder — 14.40 → 8.39 s/step (1.72×), same provenance line |
+| 13 | Terminal | **Open the receipt** — `receipts/bench-results.md` and its provenance header |
+| 14 | Terminal | `receipts/PROVENANCE.md` — every number and who measured it |
+| 15 | Card | **What we measured ourselves** — the byte-exact sizes, the 30.02 s forward pass, the 1.17× and the ~1.0× |
+| 16 | Card | **The corrupt encoder** — 21,714,795,671 B against 15,687,142,551 B |
+| 17 | Terminal | The craft gates — `motion_gate.py` and its calibrated thresholds |
+| 18–20 | Clips | The three Spillway keeper shots, in sequence, labelled |
+| 21–23 | Clips | The three finished films, in sequence, labelled |
+| 24 | Terminal | `python3 scripts/check_receipts.py` — all five checks green, every claim traced |
+| 25 | Card | **What this is, and what it is not** — the stack, the receipts, the craft layer, the ladder that is not ours, the run still to do, the flip that is the owner's |
+
+**Every number on screen** is a number that appears in `receipts/`, and the published ladder is
+labelled as published **on screen**, with the upstream host, in the chart captions and on the
+cards. The video is assembled from real captures — real `git` output, real receipt text, the real
+charts, the real clips — and from no generated imagery.
 
 ---
 
