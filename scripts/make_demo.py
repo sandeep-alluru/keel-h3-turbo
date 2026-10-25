@@ -267,7 +267,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("installable ComfyUI node packs, a resident-weight recipe,", MUTED),
                     ("and a receipt behind every number.", MUTED),
                     ("", MUTED),
-                    ("sandeep-alluru/minimax-h3-local-engine", BLUE),
+                    ("sandeep-alluru/keel", BLUE),
                 ],
                 "comfyui node packs  ·  resident weights  ·  checked numbers",
                 accent=GREEN,
@@ -385,7 +385,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
         {
             "kind": "terminal",
             "hold": 16.0,
-            "title": "model-acceleration/minimax-h3-local-engine",
+            "title": "sandeep-alluru/keel",
             "body": f"$ git log --oneline -5\n{log}\n\n$ git ls-files | grep -v '^custom_nodes/'\n{tree}",
             "highlight": ["receipts/", "workflows/", "charts/"],
         }
@@ -699,7 +699,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("not ours:      the published ladder, and NVIDIA's 3.92x. Both say so.", AMBER),
                     ("next:          the published 1.54x ladder, on this stack, both components active.", AMBER),
                 ],
-                "sandeep-alluru/minimax-h3-local-engine  ·  docs, recipes, receipts and clips",
+                "sandeep-alluru/keel  ·  docs, recipes, receipts and clips",
                 accent=GREEN,
                 title_size=50,
             ),

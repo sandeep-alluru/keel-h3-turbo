@@ -220,21 +220,21 @@ shots, plus the demo video.
 
 | | Film | Geometry | Length |
 |---|---|---|---|
-| ![Beacon — a woman carrying a lit pot through a burning street](assets/posters/film-beacon.png) | [Beacon](https://github.com/sandeep-alluru/minimax-h3-local-engine/releases/download/v0.1.0/FILM-BEACON-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
-| ![War — a soldier behind a ruined wall](assets/posters/film-war.png) | [War](https://github.com/sandeep-alluru/minimax-h3-local-engine/releases/download/v0.1.0/FILM-WAR-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
-| ![Bridge — a rifle against a broken bridge](assets/posters/film-bridge.png) | [Bridge](https://github.com/sandeep-alluru/minimax-h3-local-engine/releases/download/v0.1.0/FILM-BRIDGE-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
+| ![Beacon — a woman carrying a lit pot through a burning street](assets/posters/film-beacon.png) | [Beacon](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BEACON-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
+| ![War — a soldier behind a ruined wall](assets/posters/film-war.png) | [War](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-WAR-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
+| ![Bridge — a rifle against a broken bridge](assets/posters/film-bridge.png) | [Bridge](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BRIDGE-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
 
 ### Spillway shots
 
 | | Shot | Geometry | Length |
 |---|---|---|---|
-| ![Spillway S01](assets/posters/shot-s01.png) | [S01](https://github.com/sandeep-alluru/minimax-h3-local-engine/releases/download/v0.1.0/spillway-s01.mp4) | 1024×576, 24 fps | 8.0 s |
-| ![Spillway S02](assets/posters/shot-s02.png) | [S02](https://github.com/sandeep-alluru/minimax-h3-local-engine/releases/download/v0.1.0/spillway-s02.mp4) | 1024×576, 24 fps | 8.0 s |
-| ![Spillway S03](assets/posters/shot-s03.png) | [S03](https://github.com/sandeep-alluru/minimax-h3-local-engine/releases/download/v0.1.0/spillway-s03.mp4) | 1024×576, 24 fps | 8.0 s |
+| ![Spillway S01](assets/posters/shot-s01.png) | [S01](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/spillway-s01.mp4) | 1024×576, 24 fps | 8.0 s |
+| ![Spillway S02](assets/posters/shot-s02.png) | [S02](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/spillway-s02.mp4) | 1024×576, 24 fps | 8.0 s |
+| ![Spillway S03](assets/posters/shot-s03.png) | [S03](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/spillway-s03.mp4) | 1024×576, 24 fps | 8.0 s |
 
 ### Demo
 
-[▶ The full demo video](https://github.com/sandeep-alluru/minimax-h3-local-engine/releases/download/v0.1.0/keel-demo.mp4)
+[▶ The full demo video](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/keel-demo.mp4)
 — the acceleration story end to end, from real captures. Rebuilt from the repository by
 `scripts/make_demo.py`.
 
@@ -374,7 +374,7 @@ Their respective upstream licences and attribution notices apply.
 ```bibtex
 @misc{keel,
   title        = {Keel: accelerated video diffusion interface on a single DGX Spark},
-  howpublished = {\url{https://github.com/sandeep-alluru/minimax-h3-local-engine}},
+  howpublished = {\url{https://github.com/sandeep-alluru/keel}},
   note         = {ComfyUI node packs, resident weight set, and receipt-backed measurements.
                  MiniMax H3 is the first model it runs.}
 }

@@ -39,8 +39,8 @@ different experiment — the upstream bench excludes contended runs and says so.
 ## 1 — Install the node packs
 
 ```bash
-git clone <this-repo> minimax-h3-local-engine
-cd minimax-h3-local-engine
+git clone <this-repo> keel
+cd keel
 
 COMFY=/path/to/ComfyUI
 for pack in H3-SolAttn-SM121 H3-FirstBlockCache H3-Motion-Context; do
