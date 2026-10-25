@@ -1,0 +1,41 @@
+name: claims
+
+# The repo's one rule: every number on the front page traces to a receipt.
+# This workflow is that rule, running on every push and every pull request.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check-receipts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check every published claim against its receipt
+        run: python3 scripts/check_receipts.py
+
+      - name: Check the vendored trees still match their upstream
+        run: |
+          set -e
+          # The three node packs are vendored as their authors shipped them. If someone edits
+          # them in place, the credit in the README stops being true.
+          test -f custom_nodes/H3-SolAttn-SM121/LICENSE
+          test -f custom_nodes/H3-FirstBlockCache/LICENSE
+          test -f custom_nodes/H3-Motion-Context/LICENSE
+          test -f custom_nodes/H3-SolAttn-SM121/patches/UPSTREAM-LICENSE-KingGore-Apache2.0
+          echo "vendor licences present"
+
+      - name: Confirm the curated set is exactly six
+        run: |
+          set -e
+          count=$(find clips -maxdepth 1 -name '*.mp4' | wc -l)
+          test "$count" -eq 3 || { echo "expected 3 clip files in clips/, found $count"; exit 1; }
+          echo "clips/ holds $count files"

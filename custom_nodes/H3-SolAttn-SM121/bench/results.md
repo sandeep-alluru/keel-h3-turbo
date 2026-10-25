@@ -4,7 +4,7 @@
 
 | | |
 |---|---|
-| Host | `gb10-spark`, NVIDIA DGX Spark |
+| Host | `spark-13b3`, NVIDIA DGX Spark |
 | GPU | GB10, `sm_121` (compute capability 12.1), 3003 MHz max SM |
 | Memory | 128 GB unified (121 GB visible) |
 | Arch / OS | aarch64, DGX OS 7.5.0, kernel 6.17 |

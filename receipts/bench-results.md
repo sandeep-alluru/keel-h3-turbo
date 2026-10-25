@@ -1,10 +1,38 @@
+# Speed ladder — published benchmark, reproduced verbatim
+
+> **Provenance — read this first.**
+>
+> Every table below was measured by the author of the community Sol-Engine port for a single
+> DGX Spark, on **their** host `spark-13b3`, and published in their repository. That port is
+> vendored here unchanged under `custom_nodes/H3-SolAttn-SM121/`; this file reproduces their
+> published benchmark **as the published benchmark it is** — it is not a measurement this team
+> took, and it is not presented as one anywhere in this repository.
+>
+> | | |
+> |---|---|
+> | Source repository | `drowzeys/keys-SM121-Optimized-MiniMax-H3-Nvidia-Sol-Engine-Kijai-SolAttn_Triton-Single-DGX-Spark` |
+> | Source file | `bench/results.md` |
+> | Source commit | `7e3db54a0ecf7fa524ee3b01ea9ef7092b0e3318` (2026-08-16) |
+> | Upstream host | `spark-13b3` (not ours) |
+> | Upstream hardware | NVIDIA DGX Spark, GB10, `sm_121`, 128 GB unified |
+> | Re-measured by this team? | **No.** |
+> | Where our own numbers live | `receipts/verification.json`, `receipts/forward-receipt.json`, `receipts/keeper-receipt.json`, `receipts/sage-attention-ab.md`, `receipts/spillway-keepers.md`, `receipts/checkpoint-sizes.md` |
+> | Full number-by-number map | `receipts/PROVENANCE.md` |
+>
+> A note on the two "vs dense" columns: this file mixes end-to-end ratios and per-step ratios
+> in one column. `14.40 / 9.72 = 1.48×` is a per-step ratio; `312.7 / 215.7 = 1.45×` is an
+> end-to-end ratio for a different arm. The upstream table prints `1.45×` on the FirstBlockCache
+> end-to-end row and `1.48×` on the FirstBlockCache per-step row; both are right for their own
+> column. We keep the file byte-identical to upstream below rather than "fixing" a third
+> party's table.
+
 # Raw benchmark data
 
 ## Machine
 
 | | |
 |---|---|
-| Host | `gb10-spark`, NVIDIA DGX Spark |
+| Host | `spark-13b3`, NVIDIA DGX Spark |
 | GPU | GB10, `sm_121` (compute capability 12.1), 3003 MHz max SM |
 | Memory | 128 GB unified (121 GB visible) |
 | Arch / OS | aarch64, DGX OS 7.5.0, kernel 6.17 |

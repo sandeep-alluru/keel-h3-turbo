@@ -6,7 +6,21 @@ Self-hosted **MiniMax H3**: omni-modal **video + native stereo audio**, 4–15 s
 
 - Joint video/audio diffusion. Two DiTs share one encoder + VAEs: **FL2VA** (`t2va` / `fl2va`) and **Ref2VA** (`ref2va`).
 - Open weights = **H3-Base at ~768p**. H3-Context-IR (prompt orchestration) and H3-Regenerate-2K are hosted APIs, not part of the open dump.
-- A full checkout of both partitions is ~270 GiB; one partition is ~135 GiB BF16. The pruned FP8-scaled build this repo runs brings each DiT to 21.0 GB (see the main README).
+- **Sizes, byte-exact** (full table in [`../receipts/checkpoint-sizes.md`](../receipts/checkpoint-sizes.md)):
+
+  | What | Bytes | GB |
+  |---|---:|---:|
+  | BF16 FL2VA DiT | 66,280,487,368 | 66.28 |
+  | BF16 Ref2VA DiT | 66,280,487,368 | 66.28 |
+  | BF16 Qwen3-VL-32B encoder | 51,506,295,256 | 51.51 |
+  | Video VAE fp16 + audio VAE fp32 | 5,813,063,304 | 5.81 |
+  | **Full BF16 checkout (both DiTs + encoder + VAEs)** | **189,880,333,296** | **189.88** |
+  | **One BF16 partition (one DiT + both VAEs)** | **72,093,550,672** | **72.09** |
+
+  The pruned FP8-scaled build this repo runs brings each DiT to **21.0 GB** and the NVFP4/AWQ
+  encoder to **15.7 GB** — 42.4 GB for a DiT, an encoder and both VAEs, which is what actually
+  fits in a Spark's 121 GB visible unified memory. An earlier revision of this guide said "one
+  partition is ~135 GiB BF16"; that figure was wrong and has been corrected.
 - Weights: [MiniMaxAI/MiniMax-H3](https://huggingface.co/MiniMaxAI/MiniMax-H3) (gated). Serve via the vLLM-Omni recipe, SGLang, Diffusers — or ComfyUI with this repo's node packages.
 
 ## Do not start with a single 3090 and hope

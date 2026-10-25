@@ -1,12 +1,12 @@
 #!/bin/bash
-# Deploy the tuned MiniMax H3 stack to node3 (gx10-5185, fabric <node3-ip>).
+# Deploy the tuned MiniMax H3 stack to node3 (gx10-5185, fabric 10.100.10.1).
 # Mirrors the head node's setup: ComfyUI v0.30.1 + Sol-Attn (kijai + KingGore/sm_121 patches)
 # + ported FirstBlockCache + batched VAE decode. Weights are rsynced over the 200G fabric.
 #
 # Prereq: node3 must have its GPU free (stop dsv4f-v026-opt first).
 # Usage: ~/comfy/deploy-h3-node3.sh
 set -euo pipefail
-N3=<node3-ip>
+N3=10.100.10.1
 say() { echo -e "\n=== $* ==="; }
 
 say "1/5 preflight"
@@ -50,4 +50,4 @@ say "5/5 launch + verify"
 ssh keyspark@$N3 'cd ~/comfy && nohup ./h3-comfy-launch.sh > ~/comfy/comfyui.log 2>&1 & sleep 30
   grep -E "H3-VAE|Sol-Attn nodes|To see the GUI" ~/comfy/comfyui.log | tail -3'
 echo
-echo "node3 ComfyUI: http://<node3-ip>:8188  (mgmt: http://<mgmt-ip>:8188)"
+echo "node3 ComfyUI: http://10.100.10.1:8188  (mgmt: http://192.168.0.120:8188)"
