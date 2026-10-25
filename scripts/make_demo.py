@@ -414,7 +414,7 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
         {
             "kind": "terminal",
             "hold": 15.0,
-            "title": "three ComfyUI node packs — vendored as their authors shipped them",
+            "title": "three ComfyUI node packs — upstream credit and our changes, both stated",
             "body": f"$ ls custom_nodes/\n{packs}",
             "highlight": ["H3-SolAttn-SM121", "H3-FirstBlockCache", "H3-Motion-Context"],
         }

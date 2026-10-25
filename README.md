@@ -383,8 +383,14 @@ this method was written in the light of.
 **MiniMax** — H3 itself.
 <https://huggingface.co/MiniMaxAI/MiniMax-H3>
 
-The three node packs under `custom_nodes/` are third-party works redistributed exactly as their
-authors published them, under their own licences. Their upstream files are unmodified.
+The three node packs under `custom_nodes/` are third-party works, redistributed under their own
+licences. Two of them — Motion-Context and FirstBlockCache — are byte for byte as their authors
+published them.
+
+The SM121 Sol-Attn pack carries our changes in three of its files: the installer, the
+batched-VAE node, and the launcher script. Every other file in it is as its author published it,
+including the vendored kijai/KingGore tree, whose own changes are recorded in that tree's
+`NOTICE` and in the patch file beside it.
 
 Their respective upstream licences and attribution notices apply.
 

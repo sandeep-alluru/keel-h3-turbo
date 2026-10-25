@@ -35,7 +35,7 @@ say() { printf "\n\033[1;32m==>\033[0m %s\n" "$*"; }
 die() { printf "\n\033[1;31mERROR:\033[0m %s\n" "$*"; exit 1; }
 
 say "0/7 preflight"
-python3 - <<'PY' || die "preflight failed — see the requirement printed above"
+python3 - <<'PY' || die "preflight did not pass — see the requirement printed above"
 import sys, torch
 cap = torch.cuda.get_device_capability()
 print(f"  python {sys.version.split()[0]} | torch {torch.__version__} | device {torch.cuda.get_device_name(0)} sm_{cap[0]}{cap[1]}")

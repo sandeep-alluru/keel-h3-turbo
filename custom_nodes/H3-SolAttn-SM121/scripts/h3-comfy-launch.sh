@@ -5,7 +5,7 @@
 #
 # --disable-comfy-compiler turns off ComfyUI's model compiler and its CUDA-graph
 # subfeature. ComfyUI 0.41.0 plans the H3 model's allocations up front, and on a
-# Spark that is running other work the plan does not fit the memory that is left;
+# Spark that is running other work the plan needs more memory than is left;
 # the sampler then stops with "aimdo memory compile error". Everything else in
 # the stack is unaffected.
 export PATH=/usr/local/cuda-13.0/bin:$PATH
