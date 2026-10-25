@@ -48,15 +48,22 @@ What this team actually measured, and can be held to:
 | NVFP4/AWQ encoder, clean re-download | 15,687,142,551 B |
 | The corrupt first encoder | 21,714,795,671 B, 6,027,653,120 unaccounted trailing bytes |
 | A real H3 forward pass + video and audio decode | 30.02 s at 512×288, 124 frames, 2 steps |
-| Sage + FirstBlockCache vs baseline | **1.17×** (39.8 → 34.1 s/step) |
-| The same two isolated | **~1.0×** (347 s → 344 s) |
+| Acceleration arms vs plain control, 8 steps, 1280×704 | **1.44×** (496 s → 344 s) |
+| Acceleration arms vs plain control, 16 steps, 1280×704 | **1.17×** (635 s → 545 s; 39.8 → 34.1 s/step) |
+| 4-step turbo LoRA vs the 16-step plain baseline | **3.16×** (201 s) |
 | Three keeper renders | 710.15 s / 710.13 s / 710.14 s |
 | Every published checkpoint size | byte-exact, in `receipts/checkpoint-sizes.md` |
+| Turbo LoRA sizes and SHA-256 | verified directly on the weights tree, in `receipts/adapter-shelf.md` |
 
 **This is the honest position and it is a defensible one**: the acceleration *stack* is
-third-party and the *speed claim* is third-party, but the residency work, the corruption
-diagnosis, the production harness, the craft gates, the curation, and the receipts are ours.
-The repository now says exactly that, everywhere.
+third-party and the *published speed ladder* is third-party, but the first-party A/B, the
+residency work, the corruption diagnosis, the production harness, the craft gates, the curation,
+and the receipts are ours. The repository now says exactly that, everywhere.
+
+**Our own A/B is 1.44× at 8 steps and 1.17× at 16 steps** — lower than the published 1.54×,
+because the two components the published ladder depends on (the Sol-Attn kernel and the batched
+VAE decode) were never installed in our runs. The largest first-party number we hold is the
+**4-step turbo LoRA at 201 s, 3.16×** against the 16-step plain baseline.
 
 ### Corrections made this pass
 
@@ -70,6 +77,10 @@ The repository now says exactly that, everywhere.
 | "One partition is ~135 GiB BF16" | 72.09 GB per partition, 189.88 GB full checkout | Arithmetic on the byte-exact table. |
 | "35.7 GB … it fits" | The FP8 pair (42.4 GB) is what fits | 66.3 + 51.5 + 5.81 = 123.6 GB does not fit in 121 GB. |
 | Seed 46 vs 45 in the shipped A/B workflows | Both at seed 46, in a root `workflows/` pair | A different seed is not an A/B. Upstream's own bench says "same prompt and seed 46". |
+| The isolated A/B quoted as "347 s → 344 s, ~1.0×" | **496 s → 344 s = 1.44×** at 8 steps, and 635 s → 545 s = 1.17× at 16 steps | 347 appears nowhere in `bench_matrix.tsv`; the matrix's B1 is 496 s. The session's prose summary mis-stated the control arm, and every conclusion drawn from it ("FirstBlockCache ~0×") was wrong. The artifact of record wins. |
+| The adapter shelf dropped from the README, with a 63-character LoRA hash | Restored, all three adapters' sizes and SHA-256 verified on the weights tree | A 63-hex-character string is not a SHA-256, and `training/TRAINING.md` still linked to the section that had been dropped. |
+| The "35.7 GB BF16" claim | 66.3 GB — and the reason is now on file | 35,660,245,251 B is the size of a **truncated download** whose own header declares 66,280,487,368 B. It is 30.6 GB short and cannot load. |
+| The Spillway keepers, the Sage arm, and the 347 s figure filed under one receipt | Separated into `keeper-receipt.json`, `sage-attention-ab.md` and `our-acceleration-ab.md` | `sage-attention-ab.md` records the Sage arm **rejected before sampling**, with no speedup claimed. Filing the 347 s figure against it was wrong. |
 
 ### Not changed, deliberately
 
@@ -188,6 +199,25 @@ licence question (deferred) would need to consider it if it were vendored. It is
 
 ---
 
+## 3b. Operational hazards found on the other Spark (`spark-8cf2`)
+
+Found while mining the fleet. **Nothing in this repository is affected, and nothing was changed on
+that box** — but the owner should know, because both items are live.
+
+1. **The corrupt text encoder is still installed there.** The 21,714,795,671-byte copy — the one
+   with 6,027,653,120 bytes of trailing garbage — is still in that ComfyUI's `models/text_encoders/`
+   and is still what its live `CLIPLoader` resolves. The clean 15,687,142,551-byte encoder lives
+   at a different path under `production/video/mara/a025/checkpoints/Comfy-MiniMax-H3/`. **The
+   encoder fix is not wired into that box.**
+2. **A truncated BF16 DiT is still there**, at 35,660,245,251 bytes against a header that declares
+   66,280,487,368. Nothing on that box can load it. It should be deleted or re-downloaded.
+3. That box also has the H3 **node packs absent** — its `custom_nodes/` holds only
+   `comfyui-krea2edit` and `KJNodes`, and ComfyUI itself ships native H3 support. So the
+   acceleration stack has never been installed there, which is consistent with the ladder
+   receipts living elsewhere.
+4. Its live ComfyUI was **holding 40,611 MiB with another CUDA process active** while we looked.
+   Any timing taken on that box under those conditions is not comparable to anything.
+
 ## 4. What remains
 
 ### 4a. The first-party ladder — the one thing that would change the front page
@@ -200,6 +230,11 @@ Run the corrected `workflows/` pair on a Spark and file the result as a first-pa
 * **Where the weights are:** the launch lane's local Spark has the encoder at
   `~/.local/share/film-lane-b/models/`; the DiT and VAEs are the missing pieces. The local box
   does not currently have a ComfyUI tree with H3 weights installed.
+* **What is already known:** our own matrix gives 1.44× at 8 steps and 1.17× at 16 steps at
+  1280×704, and the turbo LoRA gives 3.16× at 4 steps — see `receipts/bench-matrix.tsv`. What the
+  run would add is the two components our runs never installed: the **Sol-Attn kernel** and the
+  **batched VAE decode**. Until they are in, our number and the published ladder are not
+  comparable.
 * **Blocker to check first:** the Spillway production is halted. A benchmark render in the
   acceleration lane is not film production, but **do not run anything that touches the Spillway
   lane, the halt, or the keeper receipts.** The owner lifts the halt; nothing here does.
@@ -246,14 +281,14 @@ uploaded anywhere**.
 | | |
 |---|---|
 | **File** | `/home/clawerdigi2/AgentHub/model-acceleration/MODEL-ACCELERATION-DEMO.mp4` |
-| **Size** | 37,476,209 bytes |
-| **SHA-256** | `2fd17c1abca0fdbac30d6b83f50fd353772cd6bd06f128c0af2ddc940288a58c` |
-| **Duration** | **302 s (5 m 02 s)** |
-| **Format** | H.264, 1920×1080, 30 fps, 9,060 frames, ~993 kbit/s |
+| **Size** | 37,702,263 bytes |
+| **SHA-256** | `76d88f9a27cfcdb7f10f38076c0ca69a8cbdc2eab1b695a9a87905eba19a99bc` |
+| **Duration** | **317 s (5 m 17 s)** |
+| **Format** | H.264, 1920×1080, 30 fps, 9,510 frames |
 | **Rebuild** | `python3 scripts/make_demo.py` in the repository — it re-runs every command it shows and re-reads every receipt, so the video cannot drift from the repo |
 | **Published** | **No.** Not uploaded, not linked, not attached to the release. The owner publishes. |
 
-**Coverage, scene by scene (25 scenes, 302 s)**
+**Coverage, scene by scene (26 scenes, 317 s)**
 
 | # | Scene | What it shows |
 |---:|---|---|
@@ -271,13 +306,18 @@ uploaded anywhere**.
 | 12 | Chart | Per-step ladder — 14.40 → 8.39 s/step (1.72×), same provenance line |
 | 13 | Terminal | **Open the receipt** — `receipts/bench-results.md` and its provenance header |
 | 14 | Terminal | `receipts/PROVENANCE.md` — every number and who measured it |
-| 15 | Card | **What we measured ourselves** — the byte-exact sizes, the 30.02 s forward pass, the 1.17× and the ~1.0× |
-| 16 | Card | **The corrupt encoder** — 21,714,795,671 B against 15,687,142,551 B |
-| 17 | Terminal | The craft gates — `motion_gate.py` and its calibrated thresholds |
-| 18–20 | Clips | The three Spillway keeper shots, in sequence, labelled |
-| 21–23 | Clips | The three finished films, in sequence, labelled |
-| 24 | Terminal | `python3 scripts/check_receipts.py` — all five checks green, every claim traced |
-| 25 | Card | **What this is, and what it is not** — the stack, the receipts, the craft layer, the ladder that is not ours, the run still to do, the flip that is the owner's |
+| 15 | Terminal | `receipts/bench-matrix.tsv` — our own first-party benchmark, verbatim |
+| 16 | Card | **What we measured ourselves** — the byte-exact sizes, the 30.02 s forward pass, the 1.44× / 1.17× / 3.16× |
+| 17 | Card | **The corrupt encoder** — 21,714,795,671 B against 15,687,142,551 B |
+| 18 | Terminal | The craft gates — `motion_gate.py` and its calibrated thresholds |
+| 19 | Clip | Spillway S01 keeper |
+| 20 | Clip | Spillway S02 keeper |
+| 21 | Clip | Spillway S03 keeper |
+| 22 | Clip | FILM-WAR — finished film |
+| 23 | Clip | FILM-BEACON — finished film |
+| 24 | Clip | FILM-BRIDGE — finished film |
+| 25 | Terminal | `python3 scripts/check_receipts.py` — all five checks green, every claim traced |
+| 26 | Card | **What this is, and what it is not** — the stack, the receipts, the craft layer, our own 1.44×/1.17×/3.16×, the two components never installed here, and the flip that is the owner's |
 
 **Every number on screen** is a number that appears in `receipts/`, and the published ladder is
 labelled as published **on screen**, with the upstream host, in the chart captions and on the

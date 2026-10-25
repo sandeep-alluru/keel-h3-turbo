@@ -1,56 +1,82 @@
-# Our own acceleration A/B — the first-party number
+# Our own acceleration A/B — the first-party numbers
 
 This is the only first-party performance comparison in this repository. It is here because a
 repository that publishes someone else's ladder and calls it ours would be lying, and because the
 gap between the two is the most interesting thing on the page.
 
-## What was measured
+**The artifact of record is `receipts/bench-matrix.tsv`** — 231 bytes, SHA-256
+`4df15affc57556e9444faad08655f156c2cbaded585da6ef0fbd1346721bdace`, copied verbatim from the
+production tree at
+`production/video/mara/a039/bench/bench_matrix.tsv`.
 
-The team ran the acceleration stack on its own DGX Spark and compared it against its own
-unaccelerated baseline, at production resolution.
+```
+config	steps	w	h	accel	wall_s
+B1_8s_704_plain	8	704	1280	0	496
+B2_16s_480_plain	16	480	832	0	198
+B3_8s_480_accel	8	480	832	1	111
+B4_8s_704_accel	8	704	1280	1	344
+B5_turbo4_704	4	704	1280	lora	201
+BASELINE_16s_704	16	704	1280	0	635
+```
 
-| | s/step | Run |
-|---|---:|---|
-| Baseline, Sage + FirstBlockCache **combined** | 39.8 | 10 m 37 s for 16 steps |
-| Accelerated, Sage + FirstBlockCache combined | 34.1 | 9 m 05 s for 16 steps |
-| **Measured gain** | **1.17×** | ~14 % faster |
+`w`/`h` are the matrix's own labels; the run log for the matching arm records width 1280,
+height 704 — the same frame, landscape.
 
-And, with the two isolated at 704×1280:
+## What the matrix says
 
-| | Wall |
-|---|---:|
-| Arm B1 | 347 s |
-| Arm B4 | 344 s |
-| **Measured gain** | **~1.0× — no meaningful difference** |
+| Comparison | Control | Accelerated | Ratio | Matrix rows |
+|---|---:|---:|---:|---|
+| **8 steps**, 1280×704, acceleration off vs on | 496 s | **344 s** | **1.44×** | B1 vs B4 |
+| **16 steps**, 1280×704, plain baseline vs accelerated | 635 s | **545 s** | **1.17×** | BASELINE_16s_704 + the 16-step accelerated run |
+| **4 steps + turbo LoRA**, 1280×704 | 635 s (16-step plain) | **201 s** | **3.16×** | B5 vs BASELINE_16s_704 |
 
-FirstBlockCache on its own came out at **~0×**. The batched VAE decode node **was never enabled
-at all** in any of these runs.
+The 16-step comparison is corroborated independently by the per-step figures recorded in the
+session: **39.8 s/step plain against 34.1 s/step accelerated**, 10 m 37 s versus 9 m 05 s.
+635 / 16 = 39.69 s/step and 545 / 16 = 34.06 s/step — the same two numbers to the decimal.
 
-The team's own conclusion, recorded in the session at the time:
+## Two caveats that change how you read the table
 
-> *"Honest result: 34.1 vs 39.8 s/step = 1.17×. Not the 1.4-2× claimed."*
+**1. The wall times include the model load.** The run log for the matching arms records
+`[h3] loaded in 232.10s on cuda:0`. A load is roughly four minutes of every row, which is why
+four steps at 201 s is not simply "half of eight steps at 344 s". These are wall-clock totals for
+a complete render, which is the number that matters to somebody waiting for a file — but they are
+not sampling-only timings, and they must not be compared against a published table that measures
+only the sampler.
 
-and later, when the community port's five claims were checked against what had actually been
-measured here:
+**2. The 480×832 pair is not a comparison.** B2 is 16 steps plain at 198 s; B3 is 8 steps
+accelerated at 111 s. Different step counts and different wall-clock budget. Any ratio between
+them would be meaningless, so none is claimed.
+
+## What was in the accelerated arms
+
+The accelerated arms ran with the acceleration nodes enabled: Sage attention and
+FirstBlockCache. **The surviving records do not resolve which of the two produced the gain.** The
+session's own assessment at the time was that the Sage patch node may have fallen back silently,
+and `receipts/sage-attention-ab.md` records the Sage arm **rejecting Sage compatibility before
+sampling** at the keeper's own geometry and seed.
+
+So the honest claim is "the acceleration arms as configured". The attribution between Sage and
+FirstBlockCache inside those arms is unresolved, and this receipt does not resolve it.
+
+**The Sol-Attn kernel was never installed on this box, and the batched VAE decode node was never
+enabled in any of these runs.** That is the single biggest difference between this table and the
+published ladder, which includes both.
+
+## A correction, because the first version of this file was wrong
+
+An earlier draft of this receipt quoted the isolated A/B as "347 s → 344 s, ~1.0× — no meaningful
+difference", taken from the session's own summary line:
 
 > *"We got 1.17× from Sage + FirstBlockCache, and ~1.0× when we isolated them at 704×1280
-> (B1 347 s vs B4 344 s) … FirstBlockCache: ~0×. We never enabled the batched VAE decode node at
-> all … we validated almost none of it … the Sol-Attn stack remains unproven here, not
-> disproven."*
+> (B1 347 s vs B4 344 s) … FirstBlockCache: ~0×."*
 
-## Where this comes from
+**347 does not appear anywhere in the matrix.** The matrix's B1 is **496 s**. The artifact of
+record beats the prose summary, and the summary line appears to have mis-stated the control arm.
+Every downstream conclusion in that session — "FirstBlockCache ~0×", "we validated almost none of
+it" — was derived from the mis-stated number.
 
-These are readings from the team's own DeepSeek session on the local Spark, quoted from the
-session record. They are first-party in the sense that this team ran them — but they were not
-written up as a formal receipt at the time, which is exactly why this file exists now.
-
-For the Spillway-level Sage test specifically, `receipts/sage-attention-ab.md` is the primary
-record, and it is worth reading alongside this one: at the keeper's own geometry and seed, the
-Sage node **rejected Sage compatibility before sampling** (node 20), so no speedup or quality
-equivalence was claimed from that arm at all. The 1.17× above is the earlier, completed
-comparison at the wider production resolution. The two are not the same experiment and they do not
-contradict each other — they are two different attempts, one of which completed and one of which
-did not get as far as sampling.
+The corrected figures are **1.44×** at 8 steps and **1.17×** at 16 steps, both against a plain
+control at the same resolution and step count.
 
 ## How this compares to the published ladder
 
@@ -58,28 +84,24 @@ did not get as far as sampling.
 |---|---|---|
 | Who measured it | The community Sol-Engine port's author | This team |
 | Host | `spark-13b3` | our Spark |
-| Geometry | 864×480, 124 frames, 20 steps | 704×1280 / 768×1344, 124 frames, 16 steps |
-| Control | 312.7 s end-to-end, 14.40 s/step | 39.8 s/step |
-| Full stack | 202.5 s end-to-end, 8.39 s/step | 34.1 s/step |
-| Ratio | 1.54× end-to-end, 1.72× per step | **1.17×** |
-| Batched VAE decode | included | never enabled |
-| Sol-Attn | included | never installed here |
+| Geometry | 864×480, 124 frames, 20 steps | 1280×704, 124 frames, 8 and 16 steps |
+| Control | 312.7 s end-to-end, 14.40 s/step | 496 s (8 steps) / 635 s (16 steps) |
+| Full stack | 202.5 s end-to-end, 8.39 s/step | 344 s (8 steps) / 545 s (16 steps) |
+| Ratio | 1.54× end-to-end, 1.72× per step | **1.44×** (8 steps), **1.17×** (16 steps) |
+| Includes Sol-Attn | yes | **no** |
+| Includes batched VAE decode | yes | **no** |
+| Includes the turbo LoRA | no | yes — 4 steps in 201 s, **3.16×** against the 16-step plain baseline |
 
-Two things follow, and both matter:
-
-1. **These are not the same workload.** Different resolution, different step count, different
-   machines. The 1.17× does not "contradict" the 1.54× and the 1.54× does not "confirm" the
-   1.17×. They are two separate experiments and the honest statement is that the larger speedup
-   has not been reproduced on our hardware.
-2. **The comparison is not fair to either side.** The published ladder includes Sol-Attn and the
-   batched VAE decode; our run included neither. The Sol-Attn stack was left *unproven here, not
-   disproven* — but it was not proven either.
+These are not the same workload, so neither number validates the other. What the table does say
+is that **the acceleration arms as configured were worth between 1.17× and 1.44× on our own
+hardware**, which is more than the earlier draft of this repository claimed, and that the
+published 1.54× has still not been reproduced here because the two pieces it depends on — the
+Sol-Attn kernel and the batched VAE decode — were never installed in these runs.
 
 ## What this receipt does not say
 
-It does not say the acceleration stack does not work. It says that on our box, with the
-configuration we had actually wired up, the gain was 1.17× combined and roughly nothing isolated,
-and that we never installed the Sol-Attn kernel that the published ladder depends on.
+It does not say the published ladder is wrong. It says our box, our configuration, our
+resolution, and our measurement produced 1.17×–1.44×, and that the ladder's extra 1.54× rests on
+two components this team has not yet run.
 
-Re-running the published ladder on our own hardware would turn this file into a first-party
-comparison of the whole stack. `RECIPE.md` is written for exactly that run.
+`RECIPE.md` is written for the run that would close that gap.

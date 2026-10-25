@@ -43,6 +43,41 @@ the file we actually downloaded. That is the check that makes the rest of the ta
 
 ---
 
+## Where "35.7 GB" came from — and why it is not the BF16 size
+
+An earlier revision of this repository claimed the BF16 DiT was **35.7 GB**. That number is real,
+and it is the size of a **broken partial download**.
+
+On the second Spark in the fleet there is a file called
+`minimax_h3_fl2va_bf16.safetensors` that is **35,660,245,251 bytes** on disk. Its own safetensors
+header declares **66,280,487,368 bytes** across 535 tensors (BF16 522, F32 13). The file is
+**30,620,242,117 bytes short**. It cannot load, and nothing on that box can load it.
+
+So the sequence was: a download stopped part-way, the partial file sat on disk with the right
+name, `ls -l` was read as the checkpoint size, and 35.7 GB was written down as the size of the
+BF16 model. It is not. The BF16 DiT is 66.28 GB, and the pruned FP8 build cuts it to 20.96 GB —
+a **68 % reduction**, not the 41 % that "35.7 → 21.0" implies.
+
+**The rule this establishes: quote a checkpoint size from the safetensors header, never from
+`stat`.** The header is what the file promises to be; the file size on disk is only what
+survived the download. The check is the same one that caught the corrupt encoder:
+
+```python
+import json, struct, pathlib
+
+p = pathlib.Path("minimax_h3_fl2va_bf16.safetensors")
+with p.open("rb") as fh:
+    n = struct.unpack("<Q", fh.read(8))[0]
+    header = json.loads(fh.read(n))
+declared = header.get("__metadata__", {}).get("total_size") or max(
+    (v["data_offsets"][1] for k, v in header.items() if k != "__metadata__"), default=0
+)
+print(f"on disk {p.stat().st_size:,}  header declares {declared:,}  "
+      f"{'COMPLETE' if p.stat().st_size >= declared else 'TRUNCATED'}")
+```
+
+---
+
 ## Why the pruned FP8 pair is the one that fits
 
 A DGX Spark shows 121 GB of its 128 GB unified memory to the runtime. The combinations that

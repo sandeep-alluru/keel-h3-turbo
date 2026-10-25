@@ -70,8 +70,9 @@ First-party numbers, on our own DGX Spark, each with its own receipt.
 | NVFP4/AWQ Qwen3-VL-32B encoder, re-downloaded clean | 15,687,142,551 B (15.7 GB) | `receipts/verification.json` |
 | The same encoder, first download | 21,714,795,671 B — 6,027,653,120 unaccounted trailing bytes | `receipts/encoder-diagnosis.md` |
 | A real H3 forward pass **and** video+audio decode, 512×288, 124 frames, 2 steps | **30.02 s** | `receipts/forward-receipt.json` |
-| Sage + FirstBlockCache combined vs baseline | 39.8 → 34.1 s/step — **1.17×** | `receipts/our-acceleration-ab.md` |
-| The same two isolated | 347 s → 344 s — **~1.0×** | `receipts/our-acceleration-ab.md` |
+| Acceleration arms vs plain control, 8 steps, 1280×704 | 496 s → **344 s** — **1.44×** | `receipts/bench-matrix.tsv` |
+| Acceleration arms vs plain control, 16 steps, 1280×704 | 635 s → **545 s** — **1.17×** (39.8 → 34.1 s/step) | `receipts/bench-matrix.tsv`, `receipts/our-acceleration-ab.md` |
+| 4-step turbo LoRA, 1280×704 | **201 s** against the 16-step plain baseline — **3.16×** | `receipts/bench-matrix.tsv`, `receipts/adapter-shelf.md` |
 | Spillway keeper, Sage arm | rejected before sampling, 35.507 s/step baseline | `receipts/sage-attention-ab.md` |
 | Spillway keeper render, 1024×576, 192 frames, 20 steps | 710.15 s (S01) · 710.13 s (S02) · 710.14 s (S03) | `receipts/spillway-keepers.md` |
 | Checkpoint sizes, every published variant, byte-exact | 66.3 GB BF16 · 34.0 GB INT8 ConvRot · 21.0 GB pruned FP8 | `receipts/checkpoint-sizes.md` |
@@ -80,11 +81,15 @@ First-party numbers, on our own DGX Spark, each with its own receipt.
 
 Three things this repository will not pretend:
 
-1. **We did not reproduce the ladder above.** When this team A/B'd the stack on its own box it
-   measured **1.17×** from Sage + FirstBlockCache combined and **~1.0×** when the two were
-   isolated, with FirstBlockCache alone at roughly zero, and the batched VAE node was never
-   enabled at all. The Sol-Attn stack was left *unproven here, not disproven* — but it was not
-   proven either. The published ladder remains a published benchmark.
+1. **We did not reproduce the ladder above, and our own number is lower.** Our acceleration arms
+   measured **1.44×** against a plain control at 8 steps and **1.17×** at 16 steps, at 1280×704.
+   The published ladder is 1.54× end-to-end and 1.72× per step — and it includes two things our
+   runs did not: **the Sol-Attn kernel was never installed on this box, and the batched VAE decode
+   node was never enabled.** The Sol-Attn stack is therefore *unproven here, not disproven*. The
+   published ladder remains a published benchmark, and our figure remains ours.
+   The largest first-party speedup we hold is not the attention work at all — it is the
+   **4-step turbo LoRA at 201 s**, 3.16× against the 16-step plain baseline, which is a
+   step-count reduction as much as an acceleration.
 2. **The three Spillway keepers were rendered with `"accelerate": false`.** They are evidence for
    the harness and the gates, not for the speed.
 3. **Our own speed claim is the negative one.** The one first-party performance experiment that
@@ -230,9 +235,26 @@ python3 scripts/check_receipts.py
 | **Motion-Context** | Clips that genuinely continue across a join — motion and audio carry over. | `NikoDemon80/ComfyUI-H3-Motion-Context` |
 | **GB10 spin-wait patch** | `busy_loop_s` 1 → 0.002. Upstream reports CPU 333 % → 89 % and SoC −11 °C. | Port author's patch, for NVIDIA's GB10 vLLM spin-wait |
 | **Pruned FP8 + NVFP4 checkpoints** | The only DiT/encoder pair that fits one Spark. | Published by the model repository; we verified our download against the published hash |
+| **Turbo step-distillation LoRAs** | 4-step and 8-step sampling instead of 20. The 4-step adapter rendered 1280×704 in **201 s**. | Published adapters; sizes and SHA-256 verified by us — see the adapter shelf |
 | **Craft gates** | Motion, aliveness, control and face gates. | Ours |
 | **Production harness** | Pinned tools, stills manifest, shot list, keeper receipts. | Ours |
 | **Receipts** | Every published number, mapped to who measured it. | Ours |
+
+## The adapter shelf — turbo step-distillation LoRAs
+
+Three step-distillation adapters that let H3 render in 4 or 8 sampling steps instead of 20. Sizes
+and SHA-256 verified directly on the weights tree.
+
+| File | Bytes | SHA-256 |
+|---|---:|---|
+| `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors` | 1,956,192,992 | `c396a9a06f58399e9df9754b18299818d84a2ddd371724ba48fe4a41221437dc` |
+| `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors` | 1,956,193,000 | `2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e` |
+| `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors` | 1,956,193,000 | `5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c` |
+
+**201 s** for a 4-step 1280×704 render, against 635 s for the 16-step plain baseline — **3.16×**.
+That is the largest first-party speedup in this repository, and it is also a step-count reduction
+as much as an acceleration, and a quality trade rather than a free win. The full reading, with
+the caveats, is in `receipts/adapter-shelf.md`.
 
 ---
 
@@ -243,11 +265,19 @@ Cosine similarity against dense SDPA is **0.9167 at S=1536** and **0.9688 at S=4
 compounds across 50 blocks × 20 steps into visible noise. The working alternatives measure
 0.99995–0.99998. Do not reach for `flex_attention` on `sm_121`.
 
-**2 — the text encoder can arrive corrupt and still look healthy.** The safetensors header
-declared the right length; the payload behind it was 6,027,653,120 bytes of garbage. It shows up
-as an encoder that loads and then produces nothing useful. Check
-`complete_offset_boundary` and the trailing byte count before you trust a download — that is what
-`receipts/encoder-diagnosis.md` is for.
+**2 — a download can be broken and still look right.** Twice, on this project, and both times the
+file had the right name.
+
+The text encoder arrived at 21,714,795,671 bytes with a header declaring the right length and
+6,027,653,120 bytes of garbage behind it. It loads. It produces nothing. It does not error.
+
+The BF16 DiT arrived at 35,660,245,251 bytes with a header declaring **66,280,487,368**. It is
+30,620,242,117 bytes short and cannot load at all. That truncated file's size is where this
+repository's old "35.7 GB BF16" claim came from — it was `ls -l` output read as a model size.
+
+**Quote a checkpoint size from the safetensors header, never from `stat`.** The header is what
+the file promises to be; the size on disk is only what survived the download.
+`receipts/encoder-diagnosis.md` and `receipts/checkpoint-sizes.md` have both cases and the check.
 
 **3 — FirstBlockCache's step curve is U-shaped, not monotone.** The per-row diff ratio falls from
 .179 at step 1 to a minimum around step 10 and climbs back to .249 by step 19. With the guards
@@ -314,7 +344,9 @@ minimax-h3-local-engine/
 │   ├── bench-results.md            the published ladder, verbatim, attributed
 │   ├── checkpoint-sizes.md         byte-exact size table and the residency math
 │   ├── spillway-keepers.md         the three keepers, their lock status, the halt
-│   ├── our-acceleration-ab.md      our own A/B: 1.17x combined, ~1.0x isolated
+│   ├── bench-matrix.tsv            our own first-party benchmark, verbatim
+│   ├── our-acceleration-ab.md      our own A/B: 1.44x at 8 steps, 1.17x at 16
+│   ├── adapter-shelf.md            the turbo LoRAs, with verified hashes
 │   ├── spin-wait-patch.md          the GB10 spin-wait patch, and who measured it
 │   ├── verification.json           model-file hashes and tensor dtype counts
 │   ├── forward-receipt.json        a real forward pass and decode

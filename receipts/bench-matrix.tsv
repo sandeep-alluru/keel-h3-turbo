@@ -1,0 +1,7 @@
+config	steps	w	h	accel	wall_s
+B1_8s_704_plain	8	704	1280	0	496
+B2_16s_480_plain	16	480	832	0	198
+B3_8s_480_accel	8	480	832	1	111
+B4_8s_704_accel	8	704	1280	1	344
+B5_turbo4_704	4	704	1280	lora	201
+BASELINE_16s_704	16	704	1280	0	635

@@ -149,7 +149,7 @@ def terminal(title: str, body: str, prompt: str = "$ ", highlight: list[str] | N
     y = 86
     f_body = font(MONO, 23)
     max_chars = int((W - 140) / d.textlength("M", font=f_body))
-    for raw in body.split("\n"):
+    for raw in body.replace("\t", "  ").split("\n"):
         line = raw
         colour = INK
         if line.startswith("$ "):
@@ -443,6 +443,18 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
         }
     )
 
+    # -- 11b. our own bench matrix -------------------------------------------------------
+    matrix = run("cat receipts/bench-matrix.tsv")
+    scenes.append(
+        {
+            "kind": "terminal",
+            "hold": 15.0,
+            "title": "receipts/bench-matrix.tsv — our own first-party benchmark, verbatim",
+            "body": f"$ cat receipts/bench-matrix.tsv\n{matrix}",
+            "highlight": ["B1_", "B4_", "B5_", "BASELINE"],
+        }
+    )
+
     # -- 12. what we measured ourselves -------------------------------------------------
     scenes.append(
         {
@@ -457,11 +469,12 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("a real forward pass + video and audio decode    30.02 s", INK),
                     ("keeper renders      710.15 / 710.13 / 710.14 s", INK),
                     ("", MUTED),
-                    ("our own A/B:  39.8  ->  34.1 s/step     1.17x", AMBER),
-                    ("the same two isolated:  347 s  ->  344 s   ~1.0x", AMBER),
-                    ("the batched VAE decode was never enabled at all", AMBER),
+                    ("acceleration arms vs plain control, 8 steps:  496 s -> 344 s    1.44x", AMBER),
+                    ("the same at 16 steps:  635 s -> 545 s                          1.17x", AMBER),
+                    ("4-step turbo LoRA:  201 s against the 635 s baseline           3.16x", AMBER),
+                    ("Sol-Attn and the batched VAE decode were never installed here", AMBER),
                 ],
-                "receipts/our-acceleration-ab.md · receipts/forward-receipt.json · receipts/verification.json",
+                "receipts/bench-matrix.tsv · receipts/our-acceleration-ab.md · receipts/adapter-shelf.md",
                 accent=AMBER,
             ),
         }
@@ -555,8 +568,10 @@ def build_storyboard(assets: pathlib.Path) -> list[dict]:
                     ("the receipts    every published number, mapped to who measured it", INK),
                     ("the craft layer gates, a cookbook, and a curated set of six", INK),
                     ("", MUTED),
-                    ("not ours:      the speed ladder. it is published, and it says so.", AMBER),
-                    ("not done:      re-running the ladder ourselves. RECIPE.md is written for it.", AMBER),
+                    ("not ours:      the published ladder. it says so, everywhere.", AMBER),
+                    ("ours:          1.44x at 8 steps, 1.17x at 16 steps, 3.16x on the turbo LoRA", INK),
+                    ("not done:      the ladder's own two components, never installed here.", AMBER),
+                    ("               RECIPE.md is written for that run.", AMBER),
                     ("not decided:   the public flip. that is the owner's call alone.", MUTED),
                 ],
                 "sandeep-alluru/minimax-h3-local-engine  ·  private  ·  draft",

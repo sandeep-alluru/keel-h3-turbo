@@ -63,7 +63,11 @@ Measured by this team on our own DGX Spark (`sm_121`). Hashes and byte counts ar
 | `21,714,795,671` bytes | The corrupt encoder file: `6,027,653,120` unaccounted trailing bytes | `receipts/verification.json`, `receipts/encoder-diagnosis.md` |
 | `5,207,808,496` / `605,254,808` bytes | Video VAE fp16 / audio VAE fp32, both complete, zero trailing bytes | `receipts/verification.json` |
 | `30.02 s` | A real H3 forward pass **and** video+audio decode, 512×288, 124 frames, 2 steps | `receipts/forward-receipt.json` |
-| `347 s` → `344 s` | SageAttention A/B on a keeper take — `35.507 s/step`, **~0 % gain** | `receipts/sage-attention-ab.md` |
+| `496 s` → `344 s`, **1.44×** | Acceleration arms vs plain control, 8 steps, 1280×704 | `receipts/bench-matrix.tsv` |
+| `635 s` → `545 s`, **1.17×** | Acceleration arms vs plain control, 16 steps, 1280×704 (39.8 → 34.1 s/step) | `receipts/bench-matrix.tsv`, `receipts/our-acceleration-ab.md` |
+| `201 s`, **3.16×** | 4-step turbo LoRA vs the 16-step plain baseline, 1280×704 | `receipts/bench-matrix.tsv`, `receipts/adapter-shelf.md` |
+| `1,956,192,992` / `1,956,193,000` | Turbo LoRA sizes, SHA-256 verified on the weights tree | `receipts/adapter-shelf.md` |
+| `35.507 s/step` | Spillway keeper, 710.142 s over 20 steps — an actual-time signal, not a kernel timing | `receipts/sage-attention-ab.md` |
 | `710.1506812029984 s` | Spillway **S01** keeper, take 5 — 1024×576, 192 frames, 20 steps | `receipts/keeper-receipt.json` |
 | `710.13236 s` / `710.14137 s` | Spillway **S02** keeper (take 2) / **S03** keeper (take 2) | `receipts/spillway-keepers.md` |
 | `4.372` motion mean, `8.809` p95, `0.863` structure | Motion metrics on the S01 keeper | `receipts/keeper-receipt.json` |
@@ -92,7 +96,7 @@ What this repository said before, and what the record actually supports.
 
 | Was | Record says | Now |
 |---|---|---|
-| `35.7 GB` BF16 DiT → `21.0 GB` FP8 | The BF16 FL2VA and Ref2VA DiTs are **66,280,487,368 bytes (66.3 GB)**. The nearest real figure is the INT8 ConvRot checkpoint at `34.0 GB`. `35.7 GB` matches no published checkpoint. | `66.3 GB` BF16 → `21.0 GB` pruned FP8, and `34.0 GB` INT8 ConvRot → `21.0 GB` pruned INT8 ConvRot. Both byte-exact in `receipts/checkpoint-sizes.md`. |
+| `35.7 GB` BF16 DiT → `21.0 GB` FP8 | The BF16 FL2VA and Ref2VA DiTs are **66,280,487,368 bytes (66.3 GB)**. The nearest real figure is the INT8 ConvRot checkpoint at `34.0 GB`. `35.7 GB` matches no published checkpoint — **it is the size of a truncated download** that sat on disk under the right name, with a header declaring 66.3 GB. | `66.3 GB` BF16 → `21.0 GB` pruned FP8, and `34.0 GB` INT8 ConvRot → `21.0 GB` pruned INT8 ConvRot. Both byte-exact in `receipts/checkpoint-sizes.md`, which now also carries the truncation and the header check that catches it. |
 | "3 of 15 shots locked as keepers" | The owner's halt record locks **two** keepers (S01 take 5, S02 take 2). S03 take 2 is a **pre-halt agent selection** and is explicitly *not* owner-locked. | "Two owner-locked keepers and one pre-halt selection", spelled out per clip in `clips/INDEX.md` and `receipts/spillway-keepers.md`. |
 | Films described as "30 s, 1080p" | Measured: **1920×1056**, 744 frames, **31.104 s** at 24 fps, H.264 + 32 kHz stereo AAC. | Measured geometry in `clips/INDEX.md`. The release asset filenames keep the owner's working names; the packet flags the mismatch. |
 | Bench receipt on host `gb10-spark` | The ladder was measured upstream on host `spark-13b3`. | Host restored, provenance header added, upstream credited. |
@@ -100,6 +104,8 @@ What this repository said before, and what the record actually supports.
 | Node packages described as "ported and packaged by us" | All three `custom_nodes/` trees are unmodified upstream repositories (see Credits in the README). | Credits section names each author and links each source. |
 | "The BF16 checkpoint is 35.7 GB … it fits" | 66.3 GB BF16 does not share a 121 GB unified pool with a 51.5 GB BF16 encoder and the VAEs. | The FP8/NVFP4 row is the one that fits, and the guide says which. |
 | Spillway keepers presented as accelerated output | Every keeper receipt records `"accelerate": false`. | Stated plainly wherever the keepers appear. |
+| "347 s → 344 s, ~0 % gain" | The session's prose summary quoted a B1 of 347 s. **347 appears nowhere in the matrix** — the matrix's B1 is **496 s**. Every conclusion drawn from the mis-stated number ("FirstBlockCache ~0×", "we validated almost none of it") was wrong, and the 347 s figure was also filed against `sage-attention-ab.md`, which actually records the Sage arm **rejected before sampling** with no speedup claimed. | Corrected to **496 s → 344 s = 1.44×** at 8 steps and **635 s → 545 s = 1.17×** at 16 steps, from the artifact of record. `receipts/our-acceleration-ab.md` names the correction explicitly. |
+| The adapter shelf dropped from the README, and its 8-step LoRA hash wrong | The 8-step LoRA hash in the old README was **63 hex characters** — not a valid SHA-256. The real value is `2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e`. | Adapter shelf restored, all three adapters' sizes and hashes verified directly on the weights tree. `receipts/adapter-shelf.md`. |
 
 ---
 
