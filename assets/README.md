@@ -13,6 +13,7 @@ Brand and media for the README.
 | `hero-poster.png` | the hero still, 1280×704 — the teaser's own geometry, so nothing shifts when the video starts |
 | `keel-teaser.mp4` | a 12-second teaser cut from the strongest clip |
 | `posters/` | one poster per clip, 1280×720 |
+| `posters/demo.png` | the demo's poster — a frame from the demo video at 3 s, 1280×720 |
 
 ## How they are made
 
@@ -39,3 +40,6 @@ ffmpeg -ss 3.5 -t 12.0 -i FILM-BEACON-1920x1056.mp4 \
 
 No process screenshots are used here, and no footage that is not a rendered output. Every image
 in this directory is cut from a real render.
+
+`posters/demo.png` is the one file the script above leaves out: its source is the demo video,
+which is built by `scripts/make_demo.py` rather than cut from a film.

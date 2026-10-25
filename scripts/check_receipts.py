@@ -44,7 +44,7 @@ FRONT_PAGE_FILES = ("README.md",)
 # clever: the point is to catch a number that was edited in the README and never edited back.
 CLAIM_RE = re.compile(
     r"(?<![\w.])"          # not mid-word
-    r"(\d{1,3}(?:,\d{3})*(?:\.\d+)?)"  # 312.7 / 1,234 / 21.0
+    r"(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)"  # 312.7 / 1,234 / 21.0 / 20,958,205,608
     r"\s*(?:GB|MB|B\b)?"   # optional unit
     r"(?:\s*[×x]\s*(\d+(?:\.\d+)?))?"  # optional multiplier
 )
@@ -155,6 +155,9 @@ def check_headline_claims(root: Path) -> list[str]:
         # Drop fenced code blocks and markdown link targets so file paths do not masquerade as claims.
         text = re.sub(r"```.*?```", " ", text, flags=re.S)
         text = re.sub(r"\]\([^)]*\)", "] ", text)
+        # Drop HTML tags for the same reason: a URL in a src attribute is an address, not a
+        # measurement, and a UUID carries digits that read like one.
+        text = re.sub(r"<[^>]*>", " ", text)
         for match in CLAIM_RE.finditer(text):
             number = normalise(match.group(1))
             if number in IGNORE_TOKENS:

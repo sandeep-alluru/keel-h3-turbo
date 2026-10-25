@@ -14,11 +14,11 @@
 </p>
 
 <p align="center">
-  <video src="assets/keel-teaser.mp4" poster="assets/hero-poster.png" width="880" muted loop playsinline controls preload="metadata"></video>
+  <video src="https://github.com/user-attachments/assets/227ffe69-9189-45d0-86c5-2ef2cec104b8" poster="assets/hero-poster.png" width="880" muted loop playsinline controls preload="metadata"></video>
 </p>
 
 <p align="center">
-  <a href="assets/keel-teaser.mp4"><b>▶ Watch the teaser</b></a> ·
+  <a href="https://github.com/user-attachments/assets/227ffe69-9189-45d0-86c5-2ef2cec104b8"><b>▶ Watch the teaser</b></a> ·
   <a href="#watch">Every clip →</a>
 </p>
 
@@ -213,29 +213,50 @@ when you want a draft and you keep twenty when you want the quality. And when yo
 ## Watch
 
 Nine pieces of real output, all rendered with this stack. Three finished films and three Spillway
-shots, plus the demo video.
+shots, plus the demo video. Every one of them plays on this page.
 
 ### Finished films
 
-| | Film | Geometry | Length |
-|---|---|---|---|
-| ![Beacon — a woman carrying a lit pot through a burning street](assets/posters/film-beacon.png) | [Beacon](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BEACON-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
-| ![War — a soldier behind a ruined wall](assets/posters/film-war.png) | [War](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-WAR-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
-| ![Bridge — a rifle against a broken bridge](assets/posters/film-bridge.png) | [Bridge](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BRIDGE-1920x1056.mp4) | 1920×1056, 24 fps | 31.104 s |
+<p align="center">
+  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BEACON-1920x1056.mp4" poster="assets/posters/film-beacon.png" width="880" muted loop playsinline controls preload="metadata"></video>
+</p>
+<p align="center"><b>Beacon</b> — a woman carrying a lit pot through a burning street · 1920×1056, 24 fps · 31.104 s</p>
+
+<p align="center">
+  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-WAR-1920x1056.mp4" poster="assets/posters/film-war.png" width="880" muted loop playsinline controls preload="metadata"></video>
+</p>
+<p align="center"><b>War</b> — a soldier behind a ruined wall · 1920×1056, 24 fps · 31.104 s</p>
+
+<p align="center">
+  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BRIDGE-1920x1056.mp4" poster="assets/posters/film-bridge.png" width="880" muted loop playsinline controls preload="metadata"></video>
+</p>
+<p align="center"><b>Bridge</b> — a rifle against a broken bridge · 1920×1056, 24 fps · 31.104 s</p>
 
 ### Spillway shots
 
-| | Shot | Geometry | Length |
-|---|---|---|---|
-| ![Spillway S01](assets/posters/shot-s01.png) | [S01](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/spillway-s01.mp4) | 1024×576, 24 fps | 8.0 s |
-| ![Spillway S02](assets/posters/shot-s02.png) | [S02](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/spillway-s02.mp4) | 1024×576, 24 fps | 8.0 s |
-| ![Spillway S03](assets/posters/shot-s03.png) | [S03](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/spillway-s03.mp4) | 1024×576, 24 fps | 8.0 s |
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/180fd966-4ef8-462c-99ca-0d987961d264" poster="assets/posters/shot-s01.png" width="880" muted loop playsinline controls preload="metadata"></video>
+</p>
+<p align="center"><b>S01</b> · 1024×576, 24 fps · 8.0 s</p>
+
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/97218a32-2d88-463d-b461-a6b92fbb7dac" poster="assets/posters/shot-s02.png" width="880" muted loop playsinline controls preload="metadata"></video>
+</p>
+<p align="center"><b>S02</b> · 1024×576, 24 fps · 8.0 s</p>
+
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/b40122ae-e52f-404f-9ab9-9f8fa824c8e2" poster="assets/posters/shot-s03.png" width="880" muted loop playsinline controls preload="metadata"></video>
+</p>
+<p align="center"><b>S03</b> · 1024×576, 24 fps · 8.0 s</p>
 
 ### Demo
 
-[▶ The full demo video](https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/keel-demo.mp4)
-— the acceleration story end to end, from real captures. Rebuilt from the repository by
-`scripts/make_demo.py`.
+<p align="center">
+  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/keel-demo.mp4" poster="assets/posters/demo.png" width="880" muted loop playsinline controls preload="metadata"></video>
+</p>
+
+<p align="center">The acceleration story end to end, from real captures. Rebuilt from the repository by
+`scripts/make_demo.py`.</p>
 
 Every file above is hashed. Geometry, wall time and digest for each one are in
 [`clips/INDEX.md`](clips/INDEX.md), and the checker re-hashes them on every run.
