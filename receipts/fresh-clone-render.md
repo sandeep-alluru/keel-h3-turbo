@@ -17,6 +17,11 @@ workflow rendering a complete clip.
 | Tracked files | 150 |
 | Claim checker | `python3 scripts/check_receipts.py` → six groups `ok`, exit 0 |
 
+The render was repeated against `a1d0cb0` — "the fresh-clone render, filed as a receipt", 151
+tracked files, checker green — and produced the same output file and the same six skipped steps.
+The two commits differ in the README's wording, the clip index and this receipt; the workflow file,
+the installer and the node packs are identical between them.
+
 ## 2 — The install
 
 The installer the repository ships, run against a ComfyUI tree that did not exist beforehand:
@@ -95,11 +100,22 @@ stack, at the same seed, as the run that produced the published ladder.
 An earlier run of the same workflow at the same settings, against the same weights, produced a
 **byte-identical** file — the same SHA-256. The render is reproducible on this stack.
 
+## 5b — Three runs, one file
+
+| Run | Commit | Prompt execution | Output SHA-256 |
+|---|---|---:|---|
+| 1 | `3a24293` | 204.78 s | `5d4ac708…` |
+| 2 | `a1d0cb0` | 198.32 s | `5d4ac708…` |
+| 3 | `3a24293`, repeated | 230.87 s | `5d4ac708…` |
+
+Three runs, three wall times, one file. The wall time moves with the machine's load; the output
+holds still.
+
 ## 6 — The wall time, and the conditions it was taken under
 
 | | |
 |---|---|
-| Prompt execution | 204.78 s |
+| Prompt execution | 198.32 s on the `a1d0cb0` clone; 204.78 s and 230.87 s on two earlier runs |
 | Wall clock, including the queue | 210 s |
 | GPU | NVIDIA GB10, 0 % utilisation at the start, 49 °C, SM clock 2405 MHz |
 | RAM | 121 GB total, 64 GB available |
