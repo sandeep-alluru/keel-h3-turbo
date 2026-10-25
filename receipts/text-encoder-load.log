@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+safetensors_rust.SafetensorError: Error while deserializing header: incomplete metadata, file not fully covered
+/comfy/models/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors

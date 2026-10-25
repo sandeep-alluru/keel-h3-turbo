@@ -1,0 +1,10 @@
+# Never commit weights, checkpoints or credentials — hashes live in the README instead.
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.bin
+.env
+.env.*
+__pycache__/
+*.pyc

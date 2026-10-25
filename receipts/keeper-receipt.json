@@ -1,0 +1,62 @@
+{
+  "shot": "S01",
+  "take": 5,
+  "seed": 2026102605,
+  "settings": {
+    "width": 1024,
+    "height": 576,
+    "frames": 192,
+    "fps": 24,
+    "steps": 20,
+    "seed": 2026102605,
+    "cfg": 1,
+    "sampler": "euler",
+    "scheduler": "simple",
+    "shift_video": 12,
+    "shift_audio": 3,
+    "first_only": true,
+    "accelerate": false
+  },
+  "input_sha256": "0456df232d51fb00d85a25317ed10962cb84a59ed09204c48dbdca7904f143e8",
+  "manifest_sha256": "523b65352c957ed9177bc243a19dbd1c709c10d75ddd7778430c3e8e43dbda93",
+  "encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq-fresh-0543966f.safetensors",
+  "verdict": "KEEPER",
+  "why": "Fine masonry tremor precedes keeper looking down, withdrawing hand and turning to reservoir. Full-rate opening review resolves ambiguous sparse sampling: stone features oscillate together, with stable photographic surface, intact hand and consistent set. No added chunks. Native audio quality remains unverified for finishing.",
+  "authority": "tools/AUTHORITY.md",
+  "event": "REVIEWED",
+  "updated_utc": "2026-10-25T12:48:12.336968+00:00",
+  "prompt_id": "6e88e3fa-832a-4b5f-aa23-894c6dbf25f5",
+  "seconds": 710.1506812029984,
+  "artifacts": [
+    {
+      "path": "takes/S01/take-005/artifact/take-005_00001_.mp4",
+      "sha256": "98c964bfa6e183ffff73d2df122e3911c84e43c6a2466a5caa08e6ab06622c29",
+      "bytes": 4421601
+    }
+  ],
+  "technical_verdict": "PASS",
+  "brief_verdict": "PASS",
+  "reference_verdict": "PASS",
+  "scope": "Video keeper for edit; native audio perceptual review and finished-film acceptance pending",
+  "measurements": {
+    "technical_verdict": "PASS",
+    "checks": {
+      "decode": true,
+      "frames": true,
+      "duration": true,
+      "dimensions": true,
+      "motion_mean": true,
+      "motion_p95": true,
+      "motion_structure": true,
+      "audio_present": true
+    },
+    "frames": 192,
+    "motion_mean": 4.372125938300687,
+    "motion_p95": 8.808566570281982,
+    "motion_structure": 0.8633906825318217,
+    "duration": 8.0,
+    "sha256": "98c964bfa6e183ffff73d2df122e3911c84e43c6a2466a5caa08e6ab06622c29",
+    "visual_verdict": "UNVERIFIED",
+    "audio_perceptual_verdict": "UNVERIFIED"
+  }
+}

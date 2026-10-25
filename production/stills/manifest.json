@@ -1,0 +1,571 @@
+{
+  "title": "Spillway",
+  "schema_version": 2,
+  "set_status": "LOCKED_STILLS_ONLY",
+  "production_video_authorized": true,
+  "required_shots": 15,
+  "present_shots": 15,
+  "locked_shots": 15,
+  "failed_shots": 0,
+  "reference_sheets": [
+    {
+      "path": "stills/references/dragon.png",
+      "sha256": "cd457b26d1dde0702a30b93fcb418943b4ebc34a6823cd64ea17b747f27bb177",
+      "dimensions": [
+        1672,
+        941
+      ]
+    },
+    {
+      "path": "stills/references/keeper.png",
+      "sha256": "544daed74ba5d34155b15abf4762dda7fe4be8f2f1269dab70b1d7b9c69806f2",
+      "dimensions": [
+        1672,
+        941
+      ]
+    },
+    {
+      "path": "stills/references/location.png",
+      "sha256": "4b75bfa5833327a5a8e320f97a466e86ed7792dbb4fd710eca930f61f7daf30e",
+      "dimensions": [
+        1536,
+        1024
+      ]
+    }
+  ],
+  "shots": [
+    {
+      "shot": "S01",
+      "beat": "B01",
+      "path": "stills/locked/S01.png",
+      "sha256": "0456df232d51fb00d85a25317ed10962cb84a59ed09204c48dbdca7904f143e8",
+      "bytes": 2599397,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Skin pores, beard, coat weave and hand/stone contact read photographically; gaze establishes reservoir threat. No dragon required.",
+      "prompt": "stills/prompts/S01.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S01-v1",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/arrival-t019.jpg"
+    },
+    {
+      "shot": "S02",
+      "beat": "B02",
+      "path": "stills/locked/S02.png",
+      "sha256": "038075c605bf4450191f36d7cdf8c00e8610729b85a492f18f098b8b52de9b8f",
+      "bytes": 2884888,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Corrected dragon scale fits tower/keeper depth relationship; full body in shared daylight, wings and airborne separation readable.",
+      "prompt": "stills/prompts/S02.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S02-v1",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/troll-t016.jpg"
+    },
+    {
+      "shot": "S03",
+      "beat": "B03",
+      "path": "stills/locked/S03.png",
+      "sha256": "bb864fa460e4a117bbdd0b6b50a4856661b25e9fff2f98acfbcaeccab5902ecc",
+      "bytes": 2749062,
+      "dimensions": [
+        1673,
+        940
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Keeper remains on platform behind pier; dragon/fire and keeper occupy legible separated space; fire illumination on stone agrees with source direction.",
+      "prompt": "stills/prompts/S03.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S03-v2",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/duel-t005.jpg"
+    },
+    {
+      "shot": "S04",
+      "beat": "B04",
+      "path": "stills/locked/S04.png",
+      "sha256": "f4b77d4f2665957eaad203f646bbe11c6beb3d00e4646f72cb0cf63b61f319ab",
+      "bytes": 2578630,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Bare hands on lever, braced stance and natural face/cloth; no premature landed dragon; wheel remains right of lever.",
+      "prompt": "stills/prompts/S04.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S04-v2",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/arrival-t019.jpg"
+    },
+    {
+      "shot": "S05",
+      "beat": "B05",
+      "path": "stills/locked/S05.png",
+      "sha256": "40700587cdcf12a7e04f3118f7280f70c9f9339e7a8eb648ad43d1d8e31da976",
+      "bytes": 2888231,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Claws visibly meet tower, loose masonry marks contact consequence, keeper remains platform-side. Actual momentum remains a video gate.",
+      "prompt": "stills/prompts/S05.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S05-v1",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/facility-t023.jpg"
+    },
+    {
+      "shot": "S06",
+      "beat": "B06",
+      "path": "stills/locked/S06.png",
+      "sha256": "f66c63849f13e392823c382ebd574797db88fcf17b307db5c0124a0e1f84e472",
+      "bytes": 2708010,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Recoil posture and losing grip readable, mechanism stays platform-side; recovery is required in motion, not inferred from still.",
+      "prompt": "stills/prompts/S06.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S06-v1",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/duel-t005.jpg"
+    },
+    {
+      "shot": "S07",
+      "beat": "B07",
+      "path": "stills/locked/S07.png",
+      "sha256": "f9ddd70d20e42502d2f7619d1f1a730cec7e4e6acd4d474d219a63c7c504cbd2",
+      "bytes": 2830952,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Keeper starts at platform end toward tower; bridge intact and direction consistent with S06. Clothes/stone share daylight.",
+      "prompt": "stills/prompts/S07.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S07-v2",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/facility-t023.jpg"
+    },
+    {
+      "shot": "S08",
+      "beat": "B08",
+      "path": "stills/locked/S08.png",
+      "sha256": "9aa7c9a581200135341d57e1805b14bb3b0e30e3edeb70c6ed8e79c3c39c546c",
+      "bytes": 3293008,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Wing sweep and keeper share scale, perspective and spray. Motion must show turn back before S09; still cannot prove this turn.",
+      "prompt": "stills/prompts/S08.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S08-v1",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/duel-t005.jpg"
+    },
+    {
+      "shot": "S09",
+      "beat": "B09",
+      "path": "stills/locked/S09.png",
+      "sha256": "96becca02533b80f18c6c2df2415c8cdf69e5863ef1ceba1ee3f6f0611cefeed",
+      "bytes": 2824548,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Breaking final span and short landing gap readable; keeper aims toward platform. No impossible distant landing implied.",
+      "prompt": "stills/prompts/S09.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S09-v1",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/facility-t023.jpg"
+    },
+    {
+      "shot": "S10",
+      "beat": "B10",
+      "path": "stills/locked/S10.png",
+      "sha256": "0ee9928d5dd27e3dc05e1af207710e02dba0a0d87745255c5d39be00aa523b25",
+      "bytes": 2993427,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Over-shoulder gaze connects keeper/dragon to low nest on tower-left; broken bridge remains, nest not moved to shore.",
+      "prompt": "stills/prompts/S10.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S10-v2",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/arrival-t019.jpg"
+    },
+    {
+      "shot": "S11",
+      "beat": "B11",
+      "path": "stills/locked/S11.png",
+      "sha256": "8a7ac4a4e39482f5432f03de34308537f29c7de000ce6034d6e2bdcb9bdf3df2",
+      "bytes": 2712123,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "S14-derived mechanism: wheel right, lever left, keeper grips wheel, cold pin, main gate closed. Cloth/skin remain photographic.",
+      "prompt": "stills/repair-002/S11-v2.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S11-v2",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/arrival-t019.jpg"
+    },
+    {
+      "shot": "S12",
+      "beat": "B12",
+      "path": "stills/locked/S12.png",
+      "sha256": "744d2b3ed2989e4856a14f28ea53a9d7ce035f4919dac37a12c1a8d86e65684a",
+      "bytes": 2699111,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Dragon braces actual tower ledge without new ground; small impact chips, nest low-left and broken span retained. Original-source rebuild restores irregular material detail compared with rejected v4/v5.",
+      "prompt": "stills/repair-002/S12-v6.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S12-v6",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/troll-t016.jpg"
+    },
+    {
+      "shot": "S13",
+      "beat": "B13",
+      "path": "stills/locked/S13.png",
+      "sha256": "9cc66333c785fac9d880e037b9e56d51c884c65110f9293aa3d26a65f5e6b004",
+      "bytes": 2809868,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "S14-derived camera/mechanism: narrow flame reaches exact supported pin, wheel stays right, keeper sheltered left, main gate closed. Fire light falls on target and wet stone.",
+      "prompt": "stills/repair-002/S13-v3.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S13-v3",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/duel-t005.jpg"
+    },
+    {
+      "shot": "S14",
+      "beat": "B14",
+      "path": "stills/locked/S14.png",
+      "sha256": "5552eac99e184b401bc5aef3616d7e56a156ff62997ae9058043e9cc5a563e5b",
+      "bytes": 2898983,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Same pin now heated, keeper pulls same lever, wheel right; open-channel water establishes release state. Video must show causal gate movement rather than static torrent.",
+      "prompt": "stills/prompts/S14.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S14-v1",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/facility-t023.jpg"
+    },
+    {
+      "shot": "S15",
+      "beat": "B15",
+      "path": "stills/locked/S15.png",
+      "sha256": "e48f25ed7b41ffa699f08859421ca0fb5d0898af9f77bcb8abb873cd98c9836a",
+      "bytes": 2645103,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "status": "LOCKED",
+      "locked": true,
+      "review": "Nest/eggs still resting on original low tower-left ledge, claws ready to lift; no invented elevated shelf. Existing dry doorway-level masonry is destination. Realistic scale and shared overcast light retained.",
+      "prompt": "stills/repair-002/S15-v5.txt",
+      "photoreal_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "reference_quality_verdict": "PASS_STILL_VISUAL_REVIEW",
+      "generator": "native image_gen",
+      "ronin_supply": false,
+      "selected_candidate": "S15-v5",
+      "technical_verdict": "PASS",
+      "brief_verdict": "PASS_STILL_SETUP",
+      "motion_verdict": "UNVERIFIED",
+      "owner_verdict": "PENDING",
+      "reference_anchor": "films/spillway/research/evidence/troll-t016.jpg"
+    }
+  ],
+  "notes": "Still-stage lock only. Visual realism/continuity judgments by agent against retained owner references; no owner approval inferred. Motion, choreography, native audio and final-film quality remain UNVERIFIED. No production video submitted in repair002.",
+  "candidate_history": [
+    {
+      "candidate": "S11-v2",
+      "shot": "S11",
+      "path": "stills/candidates/S11-v2.png",
+      "sha256": "8a7ac4a4e39482f5432f03de34308537f29c7de000ce6034d6e2bdcb9bdf3df2",
+      "bytes": 2712123,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S11-v2.txt",
+      "verdict": "PASS_TARGETED_REPAIR",
+      "reason": "Wheel right, lever left, cold pin and closed main gate match earlier state.",
+      "sources": [
+        "stills/candidates/S14-v1.png"
+      ]
+    },
+    {
+      "candidate": "S13-v3",
+      "shot": "S13",
+      "path": "stills/candidates/S13-v3.png",
+      "sha256": "9cc66333c785fac9d880e037b9e56d51c884c65110f9293aa3d26a65f5e6b004",
+      "bytes": 2809868,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S13-v3.txt",
+      "verdict": "PASS_TARGETED_REPAIR",
+      "reason": "Flame reaches same supported horizontal pin as S14. Shared mechanism/camera retained.",
+      "sources": [
+        "stills/candidates/S14-v1.png"
+      ]
+    },
+    {
+      "candidate": "S12-v3",
+      "shot": "S12",
+      "path": "stills/candidates/S12-v3.png",
+      "sha256": "a894772abab0db43b68cee120848f82ae329e573316c0ce640e112f7c68addba",
+      "bytes": 2905325,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S12-v3.txt",
+      "verdict": "REJECT",
+      "reason": "Island removed but damage scar exaggerated compared with earlier impact and later tower views.",
+      "sources": [
+        "stills/candidates/S12-v2.png"
+      ]
+    },
+    {
+      "candidate": "S15-v3",
+      "shot": "S15",
+      "path": "stills/candidates/S15-v3.png",
+      "sha256": "1d6e67f88782494f7c04dc0f35a1b6c1e0ec11b60af460c50fafd84efc9b0c60",
+      "bytes": 2734680,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S15-v3.txt",
+      "verdict": "REJECT",
+      "reason": "Nest starting state improved but tower shifted, right platform lost shoreline and became isolated pillar; geography fails.",
+      "sources": [
+        "stills/candidates/S12-v2.png"
+      ]
+    },
+    {
+      "candidate": "S12-v4",
+      "shot": "S12",
+      "path": "stills/candidates/S12-v4.png",
+      "sha256": "45fd103bd801440952d028fa13e144aea05e6aa5e6652f0e5e81ed531e1389a1",
+      "bytes": 2806744,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S12-v4.txt",
+      "verdict": "REJECT_PHOTOREAL",
+      "reason": "Geometry repaired but repeated edits soften stone into waxy curved texture; reference photoreal quality not passed.",
+      "sources": [
+        "stills/candidates/S12-v3.png"
+      ]
+    },
+    {
+      "candidate": "S15-v4",
+      "shot": "S15",
+      "path": "stills/candidates/S15-v4.png",
+      "sha256": "11df554a071c3e3df6b8b229563b1fcce145c51e7dda0dfaa92415f6b2decc5f",
+      "bytes": 2688756,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S15-v4.txt",
+      "verdict": "REJECT_PHOTOREAL",
+      "reason": "Low nest state and shoreline preserved, but dragon shrunk and stone/water exhibit painterly repetitive texture; photoreal bar fails.",
+      "sources": [
+        "stills/candidates/S12-v4.png"
+      ]
+    },
+    {
+      "candidate": "S12-v5",
+      "shot": "S12",
+      "path": "stills/candidates/S12-v5.png",
+      "sha256": "871f01c98a769e82b3db4b7be43be5cd6ec6376afc70f7681aa4d7b3338f9228",
+      "bytes": 3029787,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S12-v5.txt",
+      "sources": [
+        "stills/candidates/S12-v4.png",
+        "stills/candidates/S05-v1.png"
+      ],
+      "verdict": "REJECT_PHOTOREAL",
+      "reason": "Adding a material reference did not remove accumulated stylized texture; rebuilt from original S05 instead."
+    },
+    {
+      "candidate": "S12-v6",
+      "shot": "S12",
+      "path": "stills/candidates/S12-v6.png",
+      "sha256": "744d2b3ed2989e4856a14f28ea53a9d7ce035f4919dac37a12c1a8d86e65684a",
+      "bytes": 2699111,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S12-v6.txt",
+      "sources": [
+        "stills/candidates/S05-v1.png"
+      ],
+      "verdict": "PASS_STILL",
+      "reason": "Original S05 rebuild retains narrow masonry foundation; rear claws grip existing ledge, impact chips remain near contacts, nest stays tower-left. Broken platform-end span persists."
+    },
+    {
+      "candidate": "S15-v5",
+      "shot": "S15",
+      "path": "stills/candidates/S15-v5.png",
+      "sha256": "e48f25ed7b41ffa699f08859421ca0fb5d0898af9f77bcb8abb873cd98c9836a",
+      "bytes": 2645103,
+      "dimensions": [
+        1672,
+        941
+      ],
+      "prompt": "stills/repair-002/S15-v5.txt",
+      "sources": [
+        "stills/candidates/S12-v6.png"
+      ],
+      "verdict": "PASS_STILL",
+      "reason": "Derived from S12-v6: nest stays on original low left ledge, foreclaws reach opposite sides, rear claws brace masonry; wings retain scale, no invented island/shelf, shore stays attached."
+    }
+  ],
+  "gate_review": "stills/repair-002/set-review.json"
+}

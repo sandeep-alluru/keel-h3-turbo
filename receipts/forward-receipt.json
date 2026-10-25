@@ -1,0 +1,28 @@
+{
+  "scope": "Actual H3 forward and video/audio decode, not quality or production proof",
+  "input_sha256": "76b3c7fd7630bc6bf3a2b28e22a9769e80254fb1f61c0eed16ffd23b61651a86",
+  "settings": {
+    "width": 512,
+    "height": 288,
+    "frames": 124,
+    "steps": 2,
+    "seed": 20261025,
+    "cfg": 1,
+    "sampler": "euler",
+    "scheduler": "simple",
+    "shift_video": 12,
+    "shift_audio": 3
+  },
+  "encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq-fresh-0543966f.safetensors",
+  "status": "success",
+  "authority": "Owner step0 retry explicitly requests real forward before production still set",
+  "prompt_id": "a9c14adb-4cae-41bb-a3be-d21decdadb95",
+  "seconds": 30.020622243057005,
+  "artifacts": [
+    {
+      "path": "artifact/forward_00001_.mp4",
+      "bytes": 558700,
+      "sha256": "dac049a47ac5e6db0450ffa6eaa17898f250190d087663aab87a7d538991d1e3"
+    }
+  ]
+}

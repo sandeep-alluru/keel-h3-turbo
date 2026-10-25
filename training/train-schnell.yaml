@@ -1,0 +1,65 @@
+---
+# Image LoRA pilot — FLUX.1-schnell, DGX Spark (GB10)
+# Spec: rank 16/alpha 16, 500 steps, lr 5e-5, standard AdamW, bf16, 1024x576.
+# NO adamw8bit / quantize / gradient_checkpointing / ema / caption-dropout
+# (no parent issue on 128GB unified; kept minimal per approved spec).
+# Captions already contain the trigger `zunmotion` -> no trigger_word set.
+# NOTE: base weights are gated — set name_or_path to a local
+# FLUX.1-schnell download. Paths below are relative to the project root.
+job: extension
+config:
+  name: "image-lora-schnell-pilot-v1"
+  process:
+    - type: 'sd_trainer'
+      training_folder: "output"
+      device: cuda:0
+      network:
+        type: "lora"
+        linear: 16
+        linear_alpha: 16
+      save:
+        dtype: bf16
+        save_every: 250
+        max_step_saves_to_keep: 4
+        push_to_hub: false
+      datasets:
+        - folder_path: "dataset"
+          caption_ext: "txt"
+          caption_dropout_rate: 0.0
+          shuffle_tokens: false
+          cache_latents_to_disk: true
+          resolution: [ 1024 ]
+      train:
+        batch_size: 1
+        steps: 500
+        gradient_accumulation_steps: 1
+        train_unet: true
+        train_text_encoder: false
+        gradient_checkpointing: false
+        noise_scheduler: "flowmatch"
+        optimizer: "adamw"
+        lr: 5.0e-5
+        dtype: bf16
+      model:
+        name_or_path: "models/flux1-schnell"
+        assistant_lora_path: "ostris/FLUX.1-schnell-training-adapter"
+        is_flux: true
+        quantize: false
+      sample:
+        sampler: "flowmatch"
+        sample_every: 250
+        sample_start_step: 0
+        width: 1024
+        height: 576
+        prompts:
+          - "zunmotion, glowing gold line chart with gradient area fill on a dark navy background, drifting gold particles, fintech motion graphic frame"
+          - "zunmotion, dark navy blue background with soft golden radial glow and drifting gold particles, minimal abstract composition, fintech motion graphic frame"
+          - "zunmotion, dark navy dashboard background with gold accent lines and soft glow, wide centered composition, fintech motion graphic frame"
+        neg: ""
+        seed: 42
+        walk_seed: true
+        guidance_scale: 1
+        sample_steps: 4
+meta:
+  name: "[name]"
+  version: '1.0'
