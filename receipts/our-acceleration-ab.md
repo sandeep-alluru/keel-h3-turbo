@@ -57,9 +57,12 @@ sampling** at the shot's own geometry and seed.
 So the honest claim is "the acceleration arms as configured". The attribution between Sage and
 FirstBlockCache inside those arms is unresolved, and this receipt leaves it unresolved.
 
-**The Sol-Attn kernel was never installed on this box, and the batched VAE decode node was never
-enabled in any of these runs.** That is the single biggest difference between this table and the
-published ladder, which includes both.
+**The Sol-Attn kernel was not in place for any of these runs, and the batched VAE decode node was
+never enabled in them.** That is the single biggest difference between this table and the
+published ladder, which includes both. Both components ship in the stack now, and both are active
+in the shipped workflow — `receipts/fresh-clone-render.md` records a run with the Sol-Attn kernel
+serving a sparse tau-1.3 int8 TMA forward and the batched tile decode installed. The table below
+is the A/B as it was taken, and it is what the ladder has yet to be measured against.
 
 ## A correction, because the first version of this file was wrong
 
@@ -94,13 +97,13 @@ control at the same resolution and step count.
 These are not the same workload, so neither number validates the other. What the table does say
 is that **the acceleration arms as configured were worth between 1.17× and 1.44× on our own
 hardware**, which is more than the earlier draft of this repository claimed, and that the
-published 1.54× has still not been reproduced here because the two pieces it depends on — the
-Sol-Attn kernel and the batched VAE decode — were never installed in these runs.
+published 1.54× still has no run on this hardware behind it — the two pieces it depends on, the
+Sol-Attn kernel and the batched VAE decode, were out of these runs.
 
 ## What this receipt leaves out
 
 It never says the published ladder is wrong. It says our box, our configuration, our
 resolution, and our measurement produced 1.17×–1.44×, and that the ladder's extra 1.54× rests on
-two components we have yet to run.
+two components that were out of these runs.
 
 `RECIPE.md` is written for the run that would close that gap.

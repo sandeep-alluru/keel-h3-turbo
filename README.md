@@ -2,9 +2,9 @@
   <img src="assets/keel-logo.svg" width="420" alt="Keel" />
 </p>
 
-<p align="center"><b>Accelerated MiniMax H3 video diffusion inference on a single DGX Spark.</b></p>
+<p align="center"><b>Accelerated video diffusion interface on a single DGX Spark.</b></p>
 
-<p align="center">For people who render MiniMax H3 themselves on one 128 GB box: installable ComfyUI node packs, a weight set that fits in unified memory, and a receipt behind every number.</p>
+<p align="center">For people who run video diffusion on one 128 GB box: installable ComfyUI node packs, a weight set that fits in unified memory, and a receipt behind every number — with MiniMax H3 as the first model it runs.</p>
 
 <p align="center">
   <a href="docs/deployment-guide.md">Docs</a> ·
@@ -64,10 +64,11 @@ figures, the ComfyUI-Sol-H3 A/B, and the byte-exact residency ladder — is in
 
 ## What Keel is
 
-**Keel is** a way to run MiniMax H3 — a 33B joint video-and-audio diffusion model — on one 128 GB
-DGX Spark. It ships three installable ComfyUI node packs, the weight set that actually fits in
-unified memory, a seed-matched A/B method so you can measure the difference on your own box, and
-a checker that stops the build if a published number stops matching its receipt.
+**Keel is** an interface for accelerated video diffusion on one 128 GB DGX Spark. MiniMax H3 — a 33B
+joint video-and-audio diffusion model — is the first model it runs. It ships three installable
+ComfyUI node packs, the weight set that actually fits in unified memory, a seed-matched A/B method
+so you can measure the difference on your own box, and a checker that stops the build if a
+published number stops matching its receipt.
 
 Keel is the ComfyUI side of the same problem NVIDIA's Sol-Engine solves. Sol-Engine is their
 inference codebase with their own kernels, and `Sol-Attn` is their name for their method. Keel is
@@ -76,8 +77,9 @@ the step-distillation adapters, and the discipline around the numbers. The publi
 quoted above belongs to the community Sol-Engine port, and it is attributed wherever it appears.
 
 The largest first-party speedup below comes from the 4-step turbo LoRA: a step-count reduction as
-much as an acceleration. Bringing the Sol-Attn kernel and the batched VAE decode into this stack
-is the next run, and those two components are what the published 1.54× ladder depends on.
+much as an acceleration. The Sol-Attn kernel and the batched VAE decode are installed in this
+stack and active in the shipped workflow, and running the published 1.54× ladder here — with both
+of them in — is the next run.
 
 ---
 
@@ -103,6 +105,10 @@ is the next run, and those two components are what the published 1.54× ladder d
 ---
 
 ## Install
+
+This is the MiniMax H3 model coverage — the first model the interface runs. The node packs, the
+resident-weight recipe and the measurement method are the model's, so a second model is a weight
+set and a workflow away from the same stack.
 
 **Requirements**
 
@@ -197,8 +203,8 @@ when you want a draft and you keep twenty when you want the quality. And when yo
 
 ### What's next
 
-* **Install the Sol-Attn kernel and the batched VAE decode**, then run the published 1.54× ladder
-  on this stack and file the receipt beside theirs.
+* **Run the published 1.54× ladder on this stack**, with the Sol-Attn kernel and the batched VAE
+  decode active, and file the receipt beside theirs.
 * **Separate Sage attention from FirstBlockCache** inside the accelerated arms, so each technique
   in the table carries its own number rather than sharing one.
 * **Give Trim-INT8 its own timing**, so all six techniques have a measured effect.
@@ -367,8 +373,9 @@ Their respective upstream licences and attribution notices apply.
 
 ```bibtex
 @misc{keel,
-  title        = {Keel: accelerated MiniMax H3 video diffusion inference on a single DGX Spark},
+  title        = {Keel: accelerated video diffusion interface on a single DGX Spark},
   howpublished = {\url{https://github.com/sandeep-alluru/minimax-h3-local-engine}},
-  note         = {ComfyUI node packs, resident weight set, and receipt-backed measurements}
+  note         = {ComfyUI node packs, resident weight set, and receipt-backed measurements.
+                 MiniMax H3 is the first model it runs.}
 }
 ```

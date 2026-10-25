@@ -44,7 +44,7 @@ SANS = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 MONO = "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf"
 
 WORDMARK = "keel"
-HEADLINE = "Accelerated MiniMax H3 video diffusion inference on a single DGX Spark."
+HEADLINE = "Accelerated video diffusion interface on a single DGX Spark."
 
 # The mark: a hull meeting a keel. Two swept strokes for the hull, one straight stroke for the
 # spine below the vertex. Drawn in a 120-unit box and scaled wherever it is placed.
@@ -190,7 +190,7 @@ def make_social_preview(path: pathlib.Path, strip: list[pathlib.Path] | None) ->
     head_f = font(SANS, 34)
     y = rule_y + 46
     for line in (
-        "Accelerated MiniMax H3 video diffusion inference",
+        "Accelerated video diffusion interface",
         "on a single DGX Spark.",
     ):
         draw.text((72, y), line, font=head_f, fill=PAPER)
