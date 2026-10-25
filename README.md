@@ -1,6 +1,6 @@
-# minimax-h3-local-engine
+# Model Acceleration — MiniMax H3 on a single DGX Spark
 
-**MiniMax H3, made fast on one DGX Spark.** A 5-second H3 clip (864×480, 124 frames, video + native stereo audio) renders in **312.7 s stock** on a single NVIDIA GB10. With this stack: **202.5 s — 1.54× end-to-end, 1.72× per denoising step (14.40 s → 8.39 s/step)**. Every number on this page traces to a receipt in [`receipts/`](receipts/).
+**Model Acceleration** is the discipline: attention optimization, caching, quantization, and platform fixes — applied until a model's measured wall-clock falls. This repository is the discipline's record for **MiniMax H3**. A 5-second H3 clip (864×480, 124 frames, video + native stereo audio) renders in **312.7 s stock** on a single NVIDIA GB10. With this stack: **202.5 s — 1.54× end-to-end, 1.72× per denoising step (14.40 s → 8.39 s/step)**. Every number on this page traces to a receipt in [`receipts/`](receipts/).
 
 H3 packs text, audio and video latents into one ~38K-row sequence with full self-attention, so attention is ~70% of the hot path. This repo is the acceleration stack we built around that shape — three installable ComfyUI node packages ported and packaged from NVIDIA's Sol-Engine approach for GB10/SM121, the checkpoint and adapter work that makes a 33B dense DiT resident on a single Spark, and the production discipline (locked stills, takes with receipts) that turns a fast demo into finished film.
 
@@ -57,14 +57,25 @@ Deployed in the stack. Binaries are **not** in git (1.96 GB each); SHA-256 pinne
 | Adapter | Bytes | SHA-256 | Buys |
 |---|---:|---|---|
 | `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16` | 1,956,192,992 | `c396a9a06f58399e9df9754b18299818d84a2ddd371724ba48fe4a41221437dc` | FL2V generation in **4 steps** instead of 20 |
-| `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16` | 1,956,193,000 | `2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5a5b2b111e` | the 8-step middle rung |
+| `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16` | 1,956,193,000 | `2339acdf19bfe123f46b971ea35d367a84adb85de43627e1eceafa5b2b111e` | the 8-step middle rung |
 | `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16` | 1,956,193,000 | `5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c` | Ref2V in 4 steps |
 
 Training-side proof (a full 500-step LoRA run executed on the Spark, plus the persona LoRA programme): [`training/TRAINING.md`](training/TRAINING.md).
 
-## Production proof
+## Best clips — the curated set
 
-The stack's first film keeper — *Spillway* shot S01, take 005: **1024×576, 192 frames, 8 s, 20 steps, rendered end-to-end in 710.15 s** from a hash-locked photographic still, with a signed receipt (settings, input hashes, clip SHA-256 `98c964bf…`). The clip is [`clips/spillway-s01-keeper.mp4`](clips/spillway-s01-keeper.mp4); the receipt is [`receipts/keeper-receipt.json`](receipts/keeper-receipt.json). The short film is in production on this stack now, shot by shot, every take logged with seed, settings, measurements and verdict.
+Six clips survive curation (Oct 25, 2026) — only the best are kept and shipped here. Everything else the stack produced was a test, a benchmark, or a receipt: their data stays in [`receipts/`](receipts/), but they are not showcase clips. The **v0.1.0 (draft) release is the single download point for all six**; the three keeper shots are also in git under [`clips/`](clips/).
+
+| Clip | Measured facts | Get it |
+|---|---|---|
+| **FILM-WAR** | Finished film — 30 s, 1080p, produced with this stack | Release asset |
+| **FILM-BEACON** | Finished film — 30 s, 1080p, produced with this stack | Release asset |
+| **FILM-BRIDGE** | Finished film — 30 s, 1080p, produced with this stack | Release asset |
+| ***Spillway* S01 keeper** (take-005) | 1024×576, 192 frames, 8 s, 20 steps, rendered end-to-end in **710.15 s** from a hash-locked photographic still; signed receipt (settings, input hashes, clip SHA-256 `98c964bf…`); owner-verdicted keeper ("looks good") | [`clips/spillway-s01-keeper.mp4`](clips/spillway-s01-keeper.mp4) + release asset |
+| ***Spillway* S02 keeper** (take-002) | 1024×576, 192 frames, 8 s, 20 steps, **710.13 s**; clip SHA-256 `2e836122…`; verdict KEEPER in the lane's selection record after a source-grounded re-review | [`clips/spillway-s02-keeper.mp4`](clips/spillway-s02-keeper.mp4) + release asset |
+| ***Spillway* S03 keeper** (take-002) | 1024×576, 192 frames, 8 s, 20 steps, **710.14 s**; clip SHA-256 `ca41bef4…`; the fire-crossing shot — selected after three rendered alternatives, its join with S02 verified by the lane | [`clips/spillway-s03-keeper.mp4`](clips/spillway-s03-keeper.mp4) + release asset |
+
+The three *Spillway* clips are keeper shots from a production run — **not a finished film**: the production was halted by the owner on Oct 25, 2026 with 3 of its 15 shots locked as keepers. Full clip index with sizes and hashes: [`clips/INDEX.md`](clips/INDEX.md).
 
 ## The craft layer
 
@@ -86,6 +97,7 @@ Speed is half the story; the other half is control. [`craft/`](craft/) holds the
 | Corrupt-encoder diagnosis and the SHA-pinned replacement | [`receipts/encoder-diagnosis.md`](receipts/encoder-diagnosis.md) |
 | The acceleration A/B that did **not** ship (SageAttention patch rejected by the installed build — tested, recorded, baseline kept) | [`receipts/sage-attention-ab.md`](receipts/sage-attention-ab.md) |
 | Keeper take-005 receipt (710.15 s, verdict KEEPER) | [`receipts/keeper-receipt.json`](receipts/keeper-receipt.json) |
+| Best-clips curation note (what was removed from git, and where the sources live) | [`receipts/CURATION-NOTE.md`](receipts/CURATION-NOTE.md) |
 
 ## Layout
 
@@ -97,7 +109,7 @@ craft/                     prompt cookbook + quality gates
 production/                pinned harness, workflow config, stills manifest
 receipts/                  every number's evidence
 training/                  LoRA configs + run notes
-clips/                     sample outputs (index: clips/INDEX.md)
+clips/                     the curated best clips only (index: clips/INDEX.md)
 docs/                      deployment field guide
 ```
 

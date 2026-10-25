@@ -1,14 +1,11 @@
-# Sample clips
+# clips/ — the curated set
 
-Every clip below was produced on a single DGX Spark (GB10) with the stack in this repo.
+Only the best clips are kept (curated Oct 25, 2026). The three finished 1080p films ship as assets on the v0.1.0 (draft) release; the three *Spillway* keeper shots live here in git and on the same release — the release is the single download point for all six.
 
-| Clip | Bytes | SHA-256 | What it is |
+| File | Bytes | SHA-256 | What it is |
 |---|---:|---|---|
-| `spillway-s01-keeper.mp4` | 4,421,601 | `98c964bfa6e183ffff73d2df122e3911c84e43c6a2466a5caa08e6ab06622c29` | *Spillway* S01 take-005 — the first production keeper: 1024×576, 192 frames, 8 s, 20 steps, 710.15 s from a hash-locked still. Receipt: [`../receipts/keeper-receipt.json`](../receipts/keeper-receipt.json) |
-| `bench-b3-480p-8step-accel.mp4` | 521,071 | `31520b794d6f04b6d3c4a59420c0538bee0d39eb9995e8bd408930c554b92ac1` | The accelerated-benchmark clip at 480p — the turbo-adapter story in one file |
-| `forward-proof.mp4` | 558,700 | `dac049a47ac5e6db0450ffa6eaa17898f250190d087663aab87a7d538991d1e3` | Step-0 forward proof: 512×288, 124 frames, 2 steps, 30.02 s. Receipt: [`../receipts/forward-receipt.json`](../receipts/forward-receipt.json) |
-| `exp1-clip2.mp4` | 1,645,737 | `6d65fe755bdf7a27b7d41bf5c11ea6fdd62c8c289c87b5148412c7ad8160810c` | Early engine output |
-| `exp3-chainb.mp4` | 1,091,243 | `dec13f04abb6eaa72dda661b3796562a588f5255fb8798e46142f611acbe0c17` | Chained-shot control output |
-| `exp4-ref2va.mp4` | 2,100,639 | `7bed9def3ea6692dfffa777447b708146121082e1a58d5eb2e72decb6f0493f4` | Ref2VA output |
+| `spillway-s01-keeper.mp4` | 4,421,601 | `98c964bfa6e183ffff73d2df122e3911c84e43c6a2466a5caa08e6ab06622c29` | *Spillway* S01 take-005 — the first production keeper: 1024×576, 192 frames, 8 s, 20 steps, 710.15 s from a hash-locked still; owner verdict "looks good". Receipt: [`../receipts/keeper-receipt.json`](../receipts/keeper-receipt.json) |
+| `spillway-s02-keeper.mp4` | 5,649,982 | `2e836122d14b24195ec41d9fe1cab26e4afca9ca16cebdc8ac817a77c2695857` | *Spillway* S02 take-002 — keeper: 1024×576, 192 frames, 8 s, 20 steps, 710.13 s; verdict KEEPER in the lane's `takes/S02/KEEPER.json` after source-grounded re-review |
+| `spillway-s03-keeper.mp4` | 4,058,738 | `ca41bef4c9e3d75434cef9dd87a6f37dda3afb72bf21c600982fe6d637db29b8` | *Spillway* S03 take-002 — keeper: 1024×576, 192 frames, 8 s, 20 steps, 710.14 s; the fire-crossing shot, selected after three rendered alternatives, join with S02 verified by the lane (`takes/S03/KEEPER.json`) |
 
-The finished 1080p films (30 s: WAR, BEACON, BRIDGE) ship as Release assets, not git blobs.
+Removed in the Oct 25, 2026 curation: `bench-b3-480p-8step-accel.mp4`, `exp1-clip2.mp4`, `exp3-chainb.mp4`, `exp4-ref2va.mp4`, `forward-proof.mp4` — benchmark, early-engine and verification outputs. Their receipts remain under [`../receipts/`](../receipts/) as data and their sources remain in the production tree on the build machine; they are not showcase clips.
