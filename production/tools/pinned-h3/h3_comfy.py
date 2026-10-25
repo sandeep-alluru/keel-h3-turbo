@@ -51,7 +51,12 @@ OUT_LOCAL = (os.environ.get("H3_OUTPUT_ROOT") or os.environ.get("COMFY_OUT_LOCAL
 
 # R2-M13: the UNET is configured (H3_CHECKPOINT). The clip and the two VAEs keep
 # their own names, also configurable, but they have one default each.
-UNET_NAME = os.environ.get("H3_CHECKPOINT") or "minimax_h3_fl2va_fp8.safetensors"
+#
+# The default is the name the weight table in RECIPE.md gives: the pruned FP8
+# build, 20,958,205,608 bytes. Some trees carry those same bytes under the
+# shorter name minimax_h3_fl2va_fp8.safetensors; point H3_CHECKPOINT at that
+# file when your tree names it that way.
+UNET_NAME = os.environ.get("H3_CHECKPOINT") or "minimax_h3_fl2va_pruned_fp8_scaled.safetensors"
 CLIP_NAME = os.environ.get("H3_CLIP_NAME") or "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors"
 VAE_NAME = os.environ.get("H3_VAE_NAME") or "minimax_h3_video_vae_fp16.safetensors"
 AUDIO_VAE_NAME = os.environ.get("H3_AUDIO_VAE_NAME") or "minimax_h3_audio_vae_fp32.safetensors"
@@ -208,8 +213,8 @@ def require_not_halted(entry):
         from halt_guard import require_not_halted as _check
     except ImportError as exc:
         raise RuntimeError(
-            "halt_guard.py holds the production's stop marker and is not in this tree. "
-            "Put the production tree on PYTHONPATH to run this toolset."
+            "halt_guard.py sits beside this file. Run the toolset from "
+            "production/tools/pinned-h3/ so the module is on the path."
         ) from exc
     return _check(entry)
 
@@ -376,8 +381,16 @@ def _model_chain(graph, unet_ref, clip_ref, lora, lora_strength, accelerate):
     model_ref = unet_ref
     clip_out = clip_ref
     if accelerate:
-        graph["20"] = {"class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
-                       "inputs": {"model": model_ref}}
+        # The attention patch is the one the shipped workflow uses, with the same
+        # settings, so a run through this driver and a run through
+        # workflows/h3-fullstack.json take the same path through the model.
+        # The earlier node name here was not in any shipped pack, so an
+        # accelerated run stopped at the first submission.
+        graph["20"] = {"class_type": "SolAttnPatch",
+                       "inputs": {"model": model_ref, "tau": 1.3, "start_percent": 0.2,
+                                  "end_percent": 0.9, "min_tokens": 4096, "int8_qk": True,
+                                  "sink_conditioning": "exact_kv_and_rows", "morton": False,
+                                  "morton_curve": "2d_frame", "verbose": True, "use_tma": True}}
         model_ref = ["20", 0]
         graph["21"] = {"class_type": "ApplyMiniMaxH3FirstBlockCache",
                        "inputs": {"model": model_ref, "mode": "H3 Fast — 0.10 / max 2",
@@ -504,6 +517,8 @@ def main():
     ap.add_argument("--prompt-file", required=True)
     ap.add_argument("--steps", type=int, default=16)
     ap.add_argument("--seed", type=int, default=2511)
+    ap.add_argument("--seed-step", type=int, default=1,
+                    help="each span takes seed + span * seed-step")
     ap.add_argument("--width", type=int, default=704)
     ap.add_argument("--height", type=int, default=1280)
     ap.add_argument("--frames", type=int, default=124)
@@ -539,17 +554,33 @@ def main():
             raise SystemExit("[lora] %s is not on %s. It offers: %s"
                              % (args.lora, HOST, ", ".join(names)))
 
-    prompt = json.load(open(args.prompt_file))["prompt"]
+    # A prompt file carries either one prompt, or one prompt per span. A chain
+    # of six short generations from six different shots needs the second form:
+    # every span then carries its own prompt and its own seed, and the picture
+    # continues from the previous span's latent tail.
+    prompt_doc = json.load(open(args.prompt_file))
+    if "prompts" in prompt_doc:
+        prompts = list(prompt_doc["prompts"])
+        if args.spans > len(prompts):
+            raise SystemExit(
+                "[prompt] the file carries %d prompt(s) and %d span(s) were asked for"
+                % (len(prompts), args.spans))
+    else:
+        prompts = [prompt_doc["prompt"]]
+    prompt = prompts[0]
     first = upload(args.first)
     last = upload(args.last) if args.last else None
     print(f"[upload] {first} / {last or '(none: I2VA first-frame only)'}")
+    print(f"[prompt] {len(prompts)} prompt(s); span seeds start at {args.seed} "
+          f"and step by {args.seed_step}")
 
     if args.mode == "extend":
         # continuous take: span 0 starts from the keyframe, later spans continue from the pinned
         # latent tail alone (no keyframes), which is the only way H3 can exceed 14.4 s.
         results = []
         for span in range(args.spans):
-            graph = chain_graph(first, last, prompt, args.steps, args.seed,
+            graph = chain_graph(first, last, prompts[span], args.steps,
+                                args.seed + span * args.seed_step,
                                 args.width, args.height, args.frames,
                                 f"{args.prefix}_e{span}", span, span + 1,
                                 has_first=(span == 0), has_last=False,
@@ -572,7 +603,8 @@ def main():
 
     results = []
     for span in range(args.spans):
-        graph = chain_graph(first, last, prompt, args.steps, args.seed,
+        graph = chain_graph(first, last, prompts[span], args.steps,
+                            args.seed + span * args.seed_step,
                             args.width, args.height, args.frames,
                             f"{args.prefix}_s{span}", span, span + 1, has_first=(span == 0),
                             lora=args.lora, lora_strength=args.lora_strength,

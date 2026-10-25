@@ -17,7 +17,7 @@ import torch
 logger = logging.getLogger(__name__)
 
 
-def _batched_tiled_decode(self, z):
+def _batched_tiled_decode(self, z, frames=slice(None)):
     height, width = z.shape[-2] * self.vae_ratio, z.shape[-1] * self.vae_ratio
     y_idx, y_len, y_overlap = self.split_tiles(height)
     x_idx, x_len, x_overlap = self.split_tiles(width)
@@ -35,7 +35,9 @@ def _batched_tiled_decode(self, z):
         batch = torch.cat([t for _, t in items], dim=0)
         out = self._decode_pixels(batch)
         for n, (ij, _) in enumerate(items):
-            decoded[ij] = out[n:n + 1]
+            # The frame window is applied to the decoded tile, the same place the
+            # stock tiled_decode applies it.
+            decoded[ij] = out[n:n + 1][:, :, frames]
 
     # pass 2: identical blend/canvas logic to stock tiled_decode
     canvas = None

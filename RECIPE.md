@@ -43,31 +43,36 @@ git clone <this-repo> keel
 cd keel
 
 COMFY=/path/to/ComfyUI
-for pack in H3-SolAttn-SM121 H3-FirstBlockCache H3-Motion-Context; do
-  cp -r "custom_nodes/$pack" "$COMFY/custom_nodes/"
-done
-```
-
-`H3-SolAttn-SM121` carries the Sol-Attn patcher, the FirstBlockCache node, the batched-VAE
-patch, the GB10 spin-wait patch and the upstream installer:
-
-```bash
 bash custom_nodes/H3-SolAttn-SM121/install.sh --comfy-dir "$COMFY"
 ```
+
+One command brings in all three packs:
+
+* `ComfyUI_sol-attn_Blackwell` — the Sol-Attn patcher, the FirstBlockCache node, the batched-VAE
+  patch and the GB10 spin-wait patch;
+* `H3-FirstBlockCache` — the FirstBlockCache pack;
+* `H3-Motion-Context` — the clip-chaining pack.
+
+It also checks out ComfyUI itself. The Motion Context pack reads the H3 latent layout, and that
+layout changed in ComfyUI 0.34.0, so the installer pins **v0.41.0** — the revision the 30-second
+films in `assets/posters/` were rendered on. Set `COMFY_TAG` before running it to choose another
+revision.
 
 The batched VAE decode is a patch applied on import, not a graph node. It is **on** by default and
 is disabled with `H3_VAE_BATCHED=0`. That matters: with it off, your "full stack" number is not the
 full stack number.
 
-Verify the pack actually landed:
+Verify the packs actually landed:
 
 ```bash
 ls "$COMFY/custom_nodes/ComfyUI_sol-attn_Blackwell/sol_attn_node.py" \
-   "$COMFY/custom_nodes/h3_fbc_node.py" \
-   "$COMFY/custom_nodes/h3_vae_batch.py"
+   "$COMFY/custom_nodes/ComfyUI_sol-attn_Blackwell/h3_fbc_node.py" \
+   "$COMFY/custom_nodes/ComfyUI_sol-attn_Blackwell/h3_vae_batch.py" \
+   "$COMFY/custom_nodes/H3-Motion-Context/__init__.py" \
+   "$COMFY/custom_nodes/H3-FirstBlockCache/__init__.py"
 ```
 
-After you restart ComfyUI, the pack registers itself:
+After you restart ComfyUI, the packs register themselves:
 
 ```
 Import times for custom nodes:
@@ -217,7 +222,79 @@ clip was rejected.
 
 `aliveness_gate.py` answers the other question — is there enough going on to call it alive.
 
-## 6 — Check the claims before you repeat them
+## 6 — Chain short clips into one long take
+
+H3 renders a short clip at a time. Six 5.167-second generations make a 31.104-second film, and
+the Motion Context pack is what carries the picture across the seams: each span saves its latent
+tail, the next span loads that latent and continues from it, and a trim node drops the overlapping
+frames so the join carries no cut.
+
+The driver is `production/tools/pinned-h3/h3_comfy.py`.
+
+**One continuous take, six spans.** `--mode chain` takes one prompt per span and one seed per span:
+
+```bash
+python3 production/tools/pinned-h3/h3_comfy.py \
+  --mode chain --spans 6 \
+  --first shot-1.png \
+  --prompt-file prompts.json \
+  --seed 9501 --seed-step 1 \
+  --width 1280 --height 704 --frames 124 \
+  --steps 16 \
+  --prefix proof/war
+```
+
+`prompts.json` carries one prompt per span:
+
+```json
+{ "prompts": ["first shot", "second shot", "third shot", "fourth shot", "fifth shot", "sixth shot"] }
+```
+
+A file with a single `"prompt"` key gives every span the same prompt, which is how one take with no
+cuts is rendered. `--mode extend` is the same chain with no last keyframe.
+
+**Six shots, one film.** A film built from six separate shots is six single runs and one ffmpeg
+pass:
+
+```bash
+for i in 1 2 3 4 5 6; do
+  python3 production/tools/pinned-h3/h3_comfy.py \
+    --mode single \
+    --first "shot-$i.png" \
+    --prompt-file "prompt-$i.json" \
+    --seed $((9500 + i)) \
+    --width 1280 --height 704 --frames 124 \
+    --steps 16 \
+    --prefix "film/war-S$i"
+done
+
+ffmpeg -v error -y \
+  -i film/war-S1_00001_.mp4 -i film/war-S2_00001_.mp4 -i film/war-S3_00001_.mp4 \
+  -i film/war-S4_00001_.mp4 -i film/war-S5_00001_.mp4 -i film/war-S6_00001_.mp4 \
+  -filter_complex "[0:v][1:v][2:v][3:v][4:v][5:v]concat=n=6:v=1:a=0[vc];\
+[vc]scale=1920:-2:flags=lanczos[v];\
+[0:a][1:a][2:a][3:a][4:a][5:a]concat=n=6:v=0:a=1[a]" \
+  -map "[v]" -map "[a]" \
+  -c:v h264_nvenc -preset p5 -tune hq -rc vbr -cq 19 -b:v 0 -pix_fmt yuv420p \
+  -c:a aac -b:a 192k -movflags +faststart \
+  FILM-WAR-30s-1920x1056.mp4
+```
+
+Six spans of 124 frames at 24 fps is 744 frames — 31.104 seconds.
+
+**Measure the joins.** The join gate measures the seams on the finished file: the palette
+correlation and the luma jump either side of every cut, against two bars — palette correlation at
+least 0.35, luma jump at most 45.
+
+```bash
+python3 craft/gates/join_gate.py FILM-WAR-30s-1920x1056.mp4
+```
+
+The gate prints one line per boundary and exits 1 when a boundary sits outside the bars. The
+measurement runs on the delivered file rather than on the shots, because the stitch is where a join
+can break: the re-encode shifts the luma and the cut can land a frame late.
+
+## 7 — Check the claims before you repeat them
 
 ```bash
 python3 scripts/check_receipts.py

@@ -5,18 +5,23 @@
 #   or:  ./install.sh [--comfy-dir ~/comfy] [--skip-weights]
 #
 # What it does, in order:
-#   1. ComfyUI v0.30.1 checkout + deps against system python (torch >= 2.9, cu13)
+#   1. ComfyUI checkout + deps against system python (torch >= 2.9, cu13)
 #   2. MiniMax-H3 weights from Comfy-Org/MiniMax-H3 (~41 GB; skip with --skip-weights)
 #   3. Sol-Attn (KingGore) vendored PRE-PATCHED for sm_121  [Apache-2.0]
 #   4. Sol-Attn (kijai) cloned from upstream               [no license file -> not vendored]
 #   5. FirstBlockCache node + batched VAE decode           [this repo, Apache-2.0]
-#   6. Launcher + the tuned full-stack workflow
+#   6. The Motion Context and FirstBlockCache node packs   [this repo, Apache-2.0]
+#   7. Launcher + the tuned full-stack workflow
 set -euo pipefail
 
 COMFY_DIR="${HOME}/comfy"
 SKIP_WEIGHTS=0
-COMFY_TAG="v0.30.1"
+# The Motion Context pack refuses to run on a ComfyUI older than 0.34.0, because
+# 0.34.0 changed the H3 latent layout it reads. v0.41.0 is the revision the
+# 30-second films were rendered on.
+COMFY_TAG="${COMFY_TAG:-v0.41.0}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PACKS_DIR="$(cd "$REPO_DIR/.." && pwd)"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -29,7 +34,7 @@ done
 say() { printf "\n\033[1;32m==>\033[0m %s\n" "$*"; }
 die() { printf "\n\033[1;31mERROR:\033[0m %s\n" "$*"; exit 1; }
 
-say "0/6 preflight"
+say "0/7 preflight"
 python3 - <<'PY' || die "preflight failed — see the requirement printed above"
 import sys, torch
 cap = torch.cuda.get_device_capability()
@@ -48,7 +53,7 @@ except Exception:
 PY
 free -g | awk '/^Mem:/{print "  RAM total "$2"GB, available "$7"GB"}'
 
-say "1/6 ComfyUI ${COMFY_TAG}"
+say "1/7 ComfyUI ${COMFY_TAG}"
 mkdir -p "$COMFY_DIR" && cd "$COMFY_DIR"
 [ -d ComfyUI ] || git clone --depth 100 https://github.com/comfyanonymous/ComfyUI.git
 cd ComfyUI
@@ -58,7 +63,7 @@ pip3 install -q -r requirements.txt --break-system-packages 2>&1 | tail -1 || tr
 grep __version__ comfyui_version.py
 
 if [ "$SKIP_WEIGHTS" -eq 0 ]; then
-  say "2/6 weights (~41 GB from Comfy-Org/MiniMax-H3)"
+  say "2/7 weights (~41 GB from Comfy-Org/MiniMax-H3)"
   command -v hf >/dev/null || pip3 install -q huggingface_hub --break-system-packages
   cd "$COMFY_DIR/ComfyUI/models"
   hf download Comfy-Org/MiniMax-H3 \
@@ -69,16 +74,16 @@ if [ "$SKIP_WEIGHTS" -eq 0 ]; then
     --local-dir .
   rm -rf .cache
 else
-  say "2/6 weights SKIPPED (--skip-weights)"
+  say "2/7 weights SKIPPED (--skip-weights)"
 fi
 
-say "3/6 Sol-Attn (KingGore), pre-patched for sm_121"
+say "3/7 Sol-Attn (KingGore), pre-patched for sm_121"
 CN="$COMFY_DIR/ComfyUI/custom_nodes"
 mkdir -p "$CN"
 rm -rf "$CN/ComfyUI_sol-attn_Blackwell"
 cp -r "$REPO_DIR/vendor/ComfyUI_sol-attn_Blackwell" "$CN/"
 
-say "4/6 Sol-Attn (kijai) from upstream"
+say "4/7 Sol-Attn (kijai) from upstream"
 # Pinned to the commit this stack was benchmarked against. That repo is explicitly
 # a work in progress, so an unpinned clone can pull a breaking change into a fresh
 # install. Set KIJAI_REF=main to track upstream instead.
@@ -91,11 +96,22 @@ git -C "$CN/ComfyUI-SolAttn_triton" checkout -q "$KIJAI_REF" 2>/dev/null \
   || die "could not check out kijai ref $KIJAI_REF"
 echo "  kijai @ $(git -C "$CN/ComfyUI-SolAttn_triton" log -1 --format=%h)"
 
-say "5/6 FirstBlockCache + batched VAE decode (this repo)"
+say "5/7 FirstBlockCache + batched VAE decode (this repo)"
 cp "$REPO_DIR/nodes/h3_fbc_node.py" "$REPO_DIR/nodes/h3_vae_batch.py" \
    "$CN/ComfyUI_sol-attn_Blackwell/"
 
-say "6/6 launcher + workflows"
+say "6/7 Motion Context + FirstBlockCache node packs (this repo)"
+# These two are node packs in their own right: each has an __init__.py, so
+# ComfyUI loads it as a pack. The Sol-Attn pack is NOT copied in as a pack -
+# its nodes are installed above, under the name ComfyUI loads them by.
+for pack in H3-Motion-Context H3-FirstBlockCache; do
+  [ -d "$PACKS_DIR/$pack" ] || die "$pack is not next to this installer"
+  rm -rf "$CN/$pack"
+  cp -r "$PACKS_DIR/$pack" "$CN/"
+  echo "  $pack"
+done
+
+say "7/7 launcher + workflows"
 # Point the launcher at THIS install, not the default path.
 sed "s|^cd .*/ComfyUI$|cd ${COMFY_DIR}/ComfyUI|" \
     "$REPO_DIR/scripts/h3-comfy-launch.sh" > "$COMFY_DIR/h3-comfy-launch.sh"

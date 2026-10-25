@@ -118,22 +118,20 @@ set and a workflow away from the same stack.
   `opencv-python`, `numpy`)
 * For the craft gates: `opencv-python` and `numpy`
 
-**1 — Node packs.** Copy the three directories into your ComfyUI `custom_nodes/`:
-
-```bash
-cd /path/to/ComfyUI/custom_nodes
-cp -r /path/to/keel/custom_nodes/H3-SolAttn-SM121   .
-cp -r /path/to/keel/custom_nodes/H3-FirstBlockCache .
-cp -r /path/to/keel/custom_nodes/H3-Motion-Context .
-```
-
-`H3-SolAttn-SM121` is the full port — Sol-Attn, FirstBlockCache, the batched VAE decode and the
-GB10 spin-wait patch — and it ships its own installer if you would rather point it at your
-ComfyUI:
+**1 — Node packs.** The installer brings in all three packs and checks out ComfyUI:
 
 ```bash
 bash custom_nodes/H3-SolAttn-SM121/install.sh --comfy-dir /path/to/ComfyUI
 ```
+
+`H3-SolAttn-SM121` is the full port — Sol-Attn, FirstBlockCache, the batched VAE decode and the
+GB10 spin-wait patch — and it ships that installer. It puts `ComfyUI_sol-attn_Blackwell`,
+`H3-FirstBlockCache` and `H3-Motion-Context` into your ComfyUI's `custom_nodes/`, and the clip
+chaining pack in particular needs to be there as a pack: ComfyUI loads it from its `__init__.py`.
+
+The Motion Context pack reads the H3 latent layout, and that layout changed in ComfyUI 0.34.0, so
+the installer pins **v0.41.0** — the revision the 30-second films were rendered on. Set
+`COMFY_TAG` before running it to choose another revision.
 
 The batched VAE decode is an import-time patch on `MiniMaxH3VideoVAE.tiled_decode`, not a graph
 node, so it is **on** by default and disabled with `H3_VAE_BATCHED=0`. With it off, a "full
