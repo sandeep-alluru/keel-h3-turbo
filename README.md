@@ -13,9 +13,9 @@
   <a href="#watch">Watch</a>
 </p>
 
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/227ffe69-9189-45d0-86c5-2ef2cec104b8" poster="assets/hero-poster.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/hero-poster.png" width="880" alt="the teaser — MiniMax H3 rendered on one DGX Spark"></p>
+
+https://github.com/user-attachments/assets/227ffe69-9189-45d0-86c5-2ef2cec104b8
 
 <p align="center">
   <a href="https://github.com/user-attachments/assets/227ffe69-9189-45d0-86c5-2ef2cec104b8"><b>▶ Watch the teaser</b></a> ·
@@ -218,43 +218,49 @@ shots, plus the demo video. Every one of them plays on this page.
 
 ### Finished films
 
-<p align="center">
-  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BEACON-1920x1056.mp4" poster="assets/posters/film-beacon.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/posters/film-beacon.png" width="880" alt="Beacon — a woman carrying a lit pot through a burning street"></p>
+
+https://github.com/user-attachments/assets/5df236ec-5579-4401-a946-bcaeb5f2a3af
+
 <p align="center"><b>Beacon</b> — a woman carrying a lit pot through a burning street · 1920×1056, 24 fps · 31.104 s</p>
 
-<p align="center">
-  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-WAR-1920x1056.mp4" poster="assets/posters/film-war.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/posters/film-war.png" width="880" alt="War — a soldier behind a ruined wall"></p>
+
+https://github.com/user-attachments/assets/7241aa5b-5f19-466b-9e26-f95b798308ee
+
 <p align="center"><b>War</b> — a soldier behind a ruined wall · 1920×1056, 24 fps · 31.104 s</p>
 
-<p align="center">
-  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/FILM-BRIDGE-1920x1056.mp4" poster="assets/posters/film-bridge.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/posters/film-bridge.png" width="880" alt="Bridge — a rifle against a broken bridge"></p>
+
+https://github.com/user-attachments/assets/88329323-7985-4ef9-b122-7de1933bc058
+
 <p align="center"><b>Bridge</b> — a rifle against a broken bridge · 1920×1056, 24 fps · 31.104 s</p>
 
 ### Spillway shots
 
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/180fd966-4ef8-462c-99ca-0d987961d264" poster="assets/posters/shot-s01.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/posters/shot-s01.png" width="880" alt="Spillway S01"></p>
+
+https://github.com/user-attachments/assets/180fd966-4ef8-462c-99ca-0d987961d264
+
 <p align="center"><b>S01</b> · 1024×576, 24 fps · 8.0 s</p>
 
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/97218a32-2d88-463d-b461-a6b92fbb7dac" poster="assets/posters/shot-s02.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/posters/shot-s02.png" width="880" alt="Spillway S02"></p>
+
+https://github.com/user-attachments/assets/97218a32-2d88-463d-b461-a6b92fbb7dac
+
 <p align="center"><b>S02</b> · 1024×576, 24 fps · 8.0 s</p>
 
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/b40122ae-e52f-404f-9ab9-9f8fa824c8e2" poster="assets/posters/shot-s03.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/posters/shot-s03.png" width="880" alt="Spillway S03"></p>
+
+https://github.com/user-attachments/assets/b40122ae-e52f-404f-9ab9-9f8fa824c8e2
+
 <p align="center"><b>S03</b> · 1024×576, 24 fps · 8.0 s</p>
 
 ### Demo
 
-<p align="center">
-  <video src="https://github.com/sandeep-alluru/keel/releases/download/v0.1.0/keel-demo.mp4" poster="assets/posters/demo.png" width="880" muted loop playsinline controls preload="metadata"></video>
-</p>
+<p align="center"><img src="assets/posters/demo.png" width="880" alt="the demo — the acceleration story end to end"></p>
+
+https://github.com/user-attachments/assets/6bd88162-9e5a-4679-a11e-8ef6f651f04e
 
 <p align="center">The acceleration story end to end, from real captures. Rebuilt from the repository by
 `scripts/make_demo.py`.</p>

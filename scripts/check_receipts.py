@@ -158,6 +158,10 @@ def check_headline_claims(root: Path) -> list[str]:
         # Drop HTML tags for the same reason: a URL in a src attribute is an address, not a
         # measurement, and a UUID carries digits that read like one.
         text = re.sub(r"<[^>]*>", " ", text)
+        # Drop bare URLs for the same reason: a video link on its own line is an address, and the
+        # UUID in it carries digits that read like a measurement. A number written in prose is
+        # still caught, which is what the recorded negative test checks.
+        text = re.sub(r"https?://\S+", " ", text)
         for match in CLAIM_RE.finditer(text):
             number = normalise(match.group(1))
             if number in IGNORE_TOKENS:
