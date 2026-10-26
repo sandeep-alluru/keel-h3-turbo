@@ -36,8 +36,8 @@ bash custom_nodes/H3-SolAttn-SM121/install.sh --comfy-dir <fresh dir> --skip-wei
 | Python / torch | 3.12.3, torch 2.14.1+cu130 |
 | Device | NVIDIA GB10, `sm_121` |
 | Triton TMA descriptors | available |
-| ComfyUI | v0.30.1, cloned by the installer |
-| Landed | `ComfyUI_sol-attn_Blackwell` (Sol-Attn, FirstBlockCache, batched VAE), `ComfyUI-SolAttn_triton`, the H3 native nodes, the launcher and the tuned workflow |
+| ComfyUI | v0.30.1 at the time of this run; the installer now pins **v0.41.0**, and the same workflow runs on it — see §5c |
+| Landed | `ComfyUI_sol-attn_Blackwell` (Sol-Attn, FirstBlockCache, batched VAE), `ComfyUI-SolAttn_triton`, `H3-FirstBlockCache`, `H3-Motion-Context`, the H3 native nodes, the launcher and the tuned workflow |
 
 ## 3 — The weights, checked against the published hashes
 
@@ -100,6 +100,9 @@ stack, at the same seed, as the run that produced the published ladder.
 An earlier run of the same workflow at the same settings, against the same weights, produced a
 **byte-identical** file — the same SHA-256. The render is reproducible on this stack.
 
+Those figures are the run on **ComfyUI v0.30.1**. The installer now pins **v0.41.0**, and the same
+workflow on that revision produces a different file — see §5c.
+
 ## 5b — Three runs, one file
 
 | Run | Commit | Prompt execution | Output SHA-256 |
@@ -110,6 +113,45 @@ An earlier run of the same workflow at the same settings, against the same weigh
 
 Three runs, three wall times, one file. The wall time moves with the machine's load; the output
 holds still.
+
+## 5c — The same workflow on the pinned revision
+
+The installer pins **ComfyUI v0.41.0** now, because the Motion Context clip-chaining pack reads
+the H3 latent layout, and that layout changed in ComfyUI 0.34.0. The shipped workflow runs on that
+revision too, and it behaves the same way.
+
+| | v0.30.1 | v0.41.0 |
+|---|---|---|
+| `SolAttnPatch` | `sparse (1, 15455, 56, 128) tau=1.3 int8 tma` | `sparse (1, 15455, 56, 128) tau=1.3 int8 tma` |
+| `H3FirstBlockCache` | `steps computed=14 skipped=6` | `steps computed=14 skipped=6` |
+| Prompt execution | 198.32 s | 219.01 s · **203.83 s** on the fresh clone |
+| Output bytes | 520,124 | 966,638 |
+| Output SHA-256 | `5d4ac708…` | `e9b15f5e…` |
+
+The Sol-Attn configuration and the six skipped steps are the same on both revisions — steps 6, 7,
+9, 10, 12 and 13 — so the model's behaviour carries across the revision change. The output bytes
+differ, because the batched-VAE patch now accepts the frame window ComfyUI passes it and applies it
+where the stock decode applies it, where before it stopped with a type error. The wall time is a
+run time on a machine with other work resident, not a benchmark.
+
+The launcher passes `--disable-comfy-compiler`. ComfyUI 0.41.0 plans the H3 model's allocations up
+front, and on a Spark that is running other work the plan is larger than the memory that is left;
+the sampler then stops with `aimdo memory compile error`.
+
+### The v0.41.0 output, reproduced from a fresh clone
+
+The 203.83 s row is a run on a **fresh clone of the repository at `ee09f38`**, ComfyUI **v0.41.0**
+installed by the repository's own installer, the server started with the flags above, and
+`workflows/h3-fullstack.json` posted to `127.0.0.1:8196` with nothing else on it. It produced
+**966,638 bytes** at SHA-256 **`e9b15f5e808c37531f4c4fc627d246ef20bc8638a9580a27cb93552c1f6477fe`** —
+the same file, byte for byte, as the run this section was first written about.
+
+**One thing to keep constant, and it is in the file.** ComfyUI writes the whole graph into the mp4
+as a `prompt` metadata tag, and the graph carries the `SaveVideo` node's `filename_prefix`. The
+same render written as `proof/fullstack` instead of `video/h3_fullstack` comes out three bytes
+shorter, with a different SHA-256 and the same pictures. The digest is therefore a property of the
+graph *and* the filename it was saved under — which is what makes it a checkable artifact, and also
+what makes it worth stating here.
 
 ## 6 — The wall time, and the conditions it was taken under
 
