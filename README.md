@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/keel-logo.svg" width="420" alt="Keel" />
+  <img src="assets/keel-logo.svg" width="420" alt="Keel H3 Turbo" />
 </p>
 
 <p align="center"><b>Accelerated video diffusion interface on a single DGX Spark.</b></p>
@@ -37,9 +37,9 @@ not just the speedup.
 | **Community Sol-Engine port** — full stack | DGX Spark, `spark-13b3` | 864×480, 124f | 20 | **202.5 s** | **1.54×** | published · community SM121 port |
 | ComfyUI-Sol-H3 — SOL on, default | RTX PRO 6000, SM120 | not stated | not stated | 420.81 → **400.94 s** | 1.05× | published · xmarre/ComfyUI-Sol-H3 |
 | ComfyUI-Sol-H3 — SOL on, speed mode | RTX PRO 6000, SM120 | not stated | not stated | 420.81 → **380.57 s** | 1.11× | published · xmarre/ComfyUI-Sol-H3 |
-| **Keel** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 8 | 496 → **344 s** | **1.44×** | **measured here** · `receipts/bench-matrix.tsv` |
-| **Keel** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 16 | 635 → **545 s** | **1.17×** | **measured here** · `receipts/bench-matrix.tsv` |
-| **Keel** — 4-step turbo LoRA | DGX Spark, GB10 | 1280×704, 124f | 4 | **201 s** | **3.16×** | **measured here** · `receipts/bench-matrix.tsv` |
+| **Keel H3 Turbo** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 8 | 496 → **344 s** | **1.44×** | **measured here** · `receipts/bench-matrix.tsv` |
+| **Keel H3 Turbo** — acceleration vs plain control | DGX Spark, GB10 | 1280×704, 124f | 16 | 635 → **545 s** | **1.17×** | **measured here** · `receipts/bench-matrix.tsv` |
+| **Keel H3 Turbo** — 4-step turbo LoRA | DGX Spark, GB10 | 1280×704, 124f | 4 | **201 s** | **3.16×** | **measured here** · `receipts/bench-matrix.tsv` |
 
 <sub>**Conditions.** Rows 1–2: MiniMax H3, 832×480, 124 frames, 50 steps, one DGX Spark (GB10),
 as published by NVlabs/Sana on branch `sol-engine`; that release states no seed or batch size.
@@ -62,16 +62,16 @@ figures, the ComfyUI-Sol-H3 A/B, and the byte-exact residency ladder — is in
 
 ---
 
-## What Keel is
+## What Keel H3 Turbo is
 
-**Keel is** an interface for accelerated video diffusion on one 128 GB DGX Spark. MiniMax H3 — a 33B
+**Keel H3 Turbo is** an interface for accelerated video diffusion on one 128 GB DGX Spark. MiniMax H3 — a 33B
 joint video-and-audio diffusion model — is the first model it runs. It ships three installable
 ComfyUI node packs, the weight set that actually fits in unified memory, a seed-matched A/B method
 so you can measure the difference on your own box, and a checker that stops the build if a
 published number stops matching its receipt.
 
-Keel is the ComfyUI side of the same problem NVIDIA's Sol-Engine solves. Sol-Engine is their
-inference codebase with their own kernels, and `Sol-Attn` is their name for their method. **Keel is
+Keel H3 Turbo is the ComfyUI side of the same problem NVIDIA's Sol-Engine solves. Sol-Engine is their
+inference codebase with their own kernels, and `Sol-Attn` is their name for their method. **Keel H3 Turbo is
 not** that codebase and **is not** a fork of it — the node packs, the resident-weight recipe, the
 step-distillation adapters and the discipline around the numbers are written here. The published
 speed ladder quoted above belongs to the community Sol-Engine port, and it is attributed wherever
@@ -178,7 +178,7 @@ python3 scripts/check_receipts.py
 
 ## The technique: Trim
 
-**Trim** is Keel's named technique. NVIDIA's is Sol-Attn; Trim is the set of choices that make one
+**Trim** is Keel H3 Turbo's named technique. NVIDIA's is Sol-Attn; Trim is the set of choices that make one
 machine enough, plus the method of proving they work.
 
 Trim means three things, in order: **fit the model to the machine, cut the steps, then measure the
@@ -272,7 +272,7 @@ Every file above is hashed. Geometry, wall time and digest for each one are in
 
 ## Models & weights
 
-**Keel ships no weights. Not one byte.** Every checkpoint is published by somebody else and
+**Keel H3 Turbo ships no weights. Not one byte.** Every checkpoint is published by somebody else and
 downloaded by us. The complete inventory — every DiT variant, the text encoder, both decoders and
 the turbo LoRAs, with source, byte-exact size, published SHA-256 and what was done to each one —
 is in [`receipts/weights.md`](receipts/weights.md).
@@ -401,9 +401,9 @@ including the vendored kijai/KingGore tree, whose own changes are recorded in th
 
 Their respective upstream licences and attribution notices apply.
 
-**What Keel is not.** Not NVIDIA's Sol-Engine, and not a fork of it — that codebase is theirs, with
+**What Keel H3 Turbo is not.** Not NVIDIA's Sol-Engine, and not a fork of it — that codebase is theirs, with
 their own kernels, and the 3.92× in the table above is theirs. Not the community SM121 port
-either: that is drowzeys' work, credited above, and its published 1.54× belongs to it. Keel is the
+either: that is drowzeys' work, credited above, and its published 1.54× belongs to it. Keel H3 Turbo is the
 ComfyUI side of the same problem, written here — the node packs, the resident-weight recipe, the
 step-distillation adapters, and the discipline around the numbers.
 
@@ -413,7 +413,7 @@ step-distillation adapters, and the discipline around the numbers.
 
 ```bibtex
 @misc{keel,
-  title        = {Keel: accelerated video diffusion interface on a single DGX Spark},
+  title        = {Keel H3 Turbo: accelerated video diffusion interface on a single DGX Spark},
   howpublished = {\url{https://github.com/sandeep-alluru/keel}},
   note         = {ComfyUI node packs, resident weight set, and receipt-backed measurements.
                  MiniMax H3 is the first model it runs.}
