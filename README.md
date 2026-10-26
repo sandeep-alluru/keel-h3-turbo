@@ -13,10 +13,10 @@
   <a href="#watch">Watch</a>
 </p>
 
-https://github.com/user-attachments/assets/80e7cd33-c7cc-4ff9-b7c7-6dc4f0ad2ceb
+https://github.com/user-attachments/assets/4fb28f95-f391-43c6-abf1-c7981a28d567
 
 <p align="center">
-  <a href="https://github.com/user-attachments/assets/80e7cd33-c7cc-4ff9-b7c7-6dc4f0ad2ceb"><b>▶ Watch the product video</b></a> ·
+  <a href="https://github.com/user-attachments/assets/4fb28f95-f391-43c6-abf1-c7981a28d567"><b>▶ Watch the product video</b></a> ·
   <a href="#watch">Every clip →</a>
 </p>
 
