@@ -71,10 +71,11 @@ so you can measure the difference on your own box, and a checker that stops the 
 published number stops matching its receipt.
 
 Keel is the ComfyUI side of the same problem NVIDIA's Sol-Engine solves. Sol-Engine is their
-inference codebase with their own kernels, and `Sol-Attn` is their name for their method. Keel is
-an independent implementation on the ComfyUI side — the node packs, the resident-weight recipe,
-the step-distillation adapters, and the discipline around the numbers. The published speed ladder
-quoted above belongs to the community Sol-Engine port, and it is attributed wherever it appears.
+inference codebase with their own kernels, and `Sol-Attn` is their name for their method. **Keel is
+not** that codebase and **is not** a fork of it — the node packs, the resident-weight recipe, the
+step-distillation adapters and the discipline around the numbers are written here. The published
+speed ladder quoted above belongs to the community Sol-Engine port, and it is attributed wherever
+it appears.
 
 The largest first-party speedup below comes from the 4-step turbo LoRA: a step-count reduction as
 much as an acceleration. The Sol-Attn kernel and the batched VAE decode are installed in this
@@ -393,6 +394,12 @@ including the vendored kijai/KingGore tree, whose own changes are recorded in th
 `NOTICE` and in the patch file beside it.
 
 Their respective upstream licences and attribution notices apply.
+
+**What Keel is not.** Not NVIDIA's Sol-Engine, and not a fork of it — that codebase is theirs, with
+their own kernels, and the 3.92× in the table above is theirs. Not the community SM121 port
+either: that is drowzeys' work, credited above, and its published 1.54× belongs to it. Keel is the
+ComfyUI side of the same problem, written here — the node packs, the resident-weight recipe, the
+step-distillation adapters, and the discipline around the numbers.
 
 ---
 
