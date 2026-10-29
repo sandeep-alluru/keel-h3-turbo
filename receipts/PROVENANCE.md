@@ -126,6 +126,14 @@ What this repository said before, and what the record actually supports.
 
 ---
 
+## Three scenes (2026-10-29)
+
+| Number | Source |
+|---|---|
+| 23 shots, 0 retries, 13698.4 GPU s = 3.81 h for 114.75 s of film; 585.8–611.2 s per shot (mean 595.6 s ≈ 9.9 min) | `receipts/three-scenes-2026-10-29.md`, computed from the filtered ComfyUI history in `production/three-scenes-2026-10-29/receipts/`. Plain 16-step MiniMax H3 on the resident weight set; no acceleration nodes, so no speed-up is claimed. |
+
+---
+
 ## 4. Not in this repository
 
 * No licence determination. That is the production lead's call and it is deferred.

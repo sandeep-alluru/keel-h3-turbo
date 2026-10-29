@@ -1,0 +1,4 @@
+-rw-rw-r-- 1 20958205608 2026-10-21 15:40 diffusion_models/minimax_h3_fl2va_fp8.safetensors
+-rw-rw-r-- 1 21714795671 2026-10-21 15:36 text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors
+-rw-rw-r-- 1   605254808 2026-10-21 15:40 vae/minimax_h3_audio_vae_fp32.safetensors
+-rw-rw-r-- 1  5207808496 2026-10-21 15:40 vae/minimax_h3_video_vae_fp16.safetensors

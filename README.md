@@ -84,6 +84,13 @@ of them in — is the next run.
 
 ## 📰 News
 
+- **2026-10-29 — Prompt pack + benchmarks: three scenes.** Forest chase, Eagle hunt and Dragon net escape:
+  23 MiniMax H3 image-to-video shots on one DGX Spark, 16 steps, 0 retries, 3.81 h of GPU time for
+  114.75 s of film (about 9.9 min per 5.17 s shot). Every prompt, setting and timing, with the ComfyUI
+  history behind it, is in
+  [`production/three-scenes-2026-10-29/`](production/three-scenes-2026-10-29/). These shots used the
+  resident weight set at the plain 16-step setting, not the acceleration nodes.
+
 - **2026-10-25 — `v0.1.0`** — First release.
   - Three installable ComfyUI node packs: the SM121 Sol-Attn port, a standalone FirstBlockCache
     pack, and Motion-Context clip chaining.

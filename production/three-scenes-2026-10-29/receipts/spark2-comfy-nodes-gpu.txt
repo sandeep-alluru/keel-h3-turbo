@@ -1,0 +1,15 @@
+1261
+['SolidMask', 'SDTurboScheduler', 'SamplerSASolver', 'ResolutionBucket', 'StableCascade_SuperResolutionControlnet', 'HunyuanVideo15SuperResolution', 'FluxKVCache', 'MiniMaxMusic3TextEncode', 'EmptyMiniMaxMusic3LatentAudio', 'EmptyMiniMaxH3LatentAV', 'MiniMaxH3ImageToVideo', 'MiniMaxH3AddGuide', 'MiniMaxH3ReferenceToVideo', 'MiniMaxH3SigmaShift', 'MiniMaxH3FunControlNetApply', 'WanAnimate2Cache', 'QwenImage21Cache', 'EasyCache', 'LazyCache', 'ResolutionSelector', 'BriaIncreaseResolution', 'ComfyCloudMiniMaxH3TextToVideoNode', 'ComfyCloudMiniMaxH3FirstLastFrameToVideoNode', 'ComfyCloudMiniMaxH3ImageToVideoNode', 'ComfyCloudMiniMaxMusic3TextToAudioNode', 'ComfyCloudZImageTurboNode', 'ComfyCloudMageFlowTurboTextToImageNode', 'ElevenLabsAudioIsolation', 'HiggsfieldMotionTransferNode', 'KlingMotionControl', 'MinimaxTextToVideoNode', 'MinimaxImageToVideoNode', 'MinimaxHailuoVideoNode', 'MinimaxHailuo03TextToVideoNode', 'MinimaxHailuo03FirstLastFrameNode', 'MinimaxHailuo03ReferenceNode', 'MinimaxHailuo03ContextIRNode', 'MinimaxHailuo03RegenerateNode', 'MiniMaxH3MotionContext', 'MiniMaxH3MotionContextTrim', 'MiniMaxH3MotionContextSaveLatent', 'MiniMaxH3MotionContextLoadLatent', 'MiniMaxH3MotionContextChain', 'MiniMaxH3MotionContextSeamProbe', 'MiniMaxH3JoinMatch', 'MiniMaxH3SigmasTail', 'MiniMaxH3RefineBlend', 'ApplyMiniMaxH3FirstBlockCache', 'ConsolidateMasksKJ', 'WanVideoTeaCacheKJ', 'MiniMaxH3MemoryEfficientSageAttentionPatch', 'MiniMaxChunkFeedForward', 'MiniMaxLowVRAMAttention', 'MiniMaxH3TokenCounter']
+comfy_extras.nodes_minimax_h3
+example_node.py.example
+H3-FirstBlockCache
+H3-Motion-Context
+H3-SolAttn-SM121
+KJNodes
+__pycache__
+websocket_image_save.py
+name, memory.total [MiB]
+NVIDIA GB10, [N/A]
+DGX_NAME="DGX Spark"
+DGX_PRETTY_NAME="NVIDIA DGX Spark"
+DGX_SWBUILD_DATE="2025-09-10-13-50-03"

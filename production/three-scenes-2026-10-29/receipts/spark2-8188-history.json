@@ -1,0 +1,5084 @@
+{
+ "72a0742b-44af-4e70-95a2-1693a866bd32": {
+  "prompt": [
+   109,
+   "72a0742b-44af-4e70-95a2-1693a866bd32",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "ea57c94bdd58.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Live-action cinematic forest chase. The mounted hyena gallops hard forward along the muddy trail toward the right, its powerful legs driving the ground backward. The crouched orc bounces naturally with its stride and grips the reins. The enormous bear charges after them, gaining slightly and throwing mud with each heavy footfall. The camera tracks rapidly alongside the rider, keeping pace as tree trunks and ferns sweep past; wet earth sprays behind the animals. One continuous moving shot.\n\noverall_soundscape: Rapid pounding paws, heavy bear footfalls, splashing mud, the hyena's harsh panting, armour rattling and a pursuing bear roar.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129001,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/forest/F01/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "a5d61ec917564ec79d74b91de64a12e1",
+    "create_time": 1793256290250
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/forest/F01",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "72a0742b-44af-4e70-95a2-1693a866bd32",
+      "timestamp": 1793256290250
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "72a0742b-44af-4e70-95a2-1693a866bd32",
+      "timestamp": 1793256290254
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "72a0742b-44af-4e70-95a2-1693a866bd32",
+      "timestamp": 1793256886164
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "b42e7f30-d681-4b18-83c7-37741f10520e": {
+  "prompt": [
+   110,
+   "b42e7f30-d681-4b18-83c7-37741f10520e",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "c7a72fe12056.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Live-action cinematic close tracking shot during the forest chase. The mounted orc looks sharply over his shoulder, then faces forward and crouches lower as the hyena gallops hard to the right. His torso rises and falls with the animal's stride; his hands tighten the reins and battered armour rattles. The hyena's head drives forward with harsh panting. The camera races alongside at matching speed while wet forest trunks streak past behind them. One continuous shot.\n\noverall_soundscape: Rapid galloping paws, leather creak, rattling iron, strained breathing and a bear roaring behind them.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129003,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/forest/F03/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "91b740e38d664b7c92d2eecabb0fa1db",
+    "create_time": 1793256554176
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/forest/F03",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "b42e7f30-d681-4b18-83c7-37741f10520e",
+      "timestamp": 1793256886372
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "b42e7f30-d681-4b18-83c7-37741f10520e",
+      "timestamp": 1793256886386
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "b42e7f30-d681-4b18-83c7-37741f10520e",
+      "timestamp": 1793257476115
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "a83d0535-ecd7-4c13-a4bf-d509c7373445": {
+  "prompt": [
+   111,
+   "a83d0535-ecd7-4c13-a4bf-d509c7373445",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "2d19b0763137.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The live-action forest pursuit continues at full speed. The mounted hyena drives forward to the right with rapid powerful strides, the orc crouching low over the reins as his armour and hair jolt with the gallop. Behind them the massive bear charges around the muddy bend, following their exact path and scattering wet earth. The camera keeps tracking alongside, easing slightly wider to show the speed and the forest rushing past. The bear remains behind the mounted hyena. One continuous moving shot.\n\noverall_soundscape: Continuous rapid galloping, heavy bear paws striking mud, harsh breath, rattling armour and rushing forest wind.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129002,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/forest/F02/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "f2fd6b0beca74af9b3d780db01bf6a9d",
+    "create_time": 1793257018488
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/forest/F02",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "a83d0535-ecd7-4c13-a4bf-d509c7373445",
+      "timestamp": 1793257476313
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "a83d0535-ecd7-4c13-a4bf-d509c7373445",
+      "timestamp": 1793257476316
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "a83d0535-ecd7-4c13-a4bf-d509c7373445",
+      "timestamp": 1793258062118
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "7139b4f7-8740-4629-85d7-bfe34e4f34d4": {
+  "prompt": [
+   112,
+   "7139b4f7-8740-4629-85d7-bfe34e4f34d4",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "d18ef900561b.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The live-action mounted forest chase continues. The orc leans forward and urges the galloping hyena onward with his posture, gripping the reins as his body jolts with powerful running strides. The hyena pants and drives forward to the right. The camera tracks alongside and gradually eases back from the close view, revealing more of the animal's pumping shoulders and the rider firmly seated in the saddle while wet tree trunks whip past. One continuous moving shot.\n\noverall_soundscape: Hard galloping paws, rattling armour, rough breathing, rushing air and the pursuing bear's deeper footfalls behind.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129004,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/forest/F04/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "d1fc91bbfb8341d1a28db497c9efdce0",
+    "create_time": 1793257589992
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/forest/F04",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "7139b4f7-8740-4629-85d7-bfe34e4f34d4",
+      "timestamp": 1793258062290
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "7139b4f7-8740-4629-85d7-bfe34e4f34d4",
+      "timestamp": 1793258062292
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "7139b4f7-8740-4629-85d7-bfe34e4f34d4",
+      "timestamp": 1793258649794
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "e98986f4-ca34-4405-8dfe-d843cf6be32c": {
+  "prompt": [
+   113,
+   "e98986f4-ca34-4405-8dfe-d843cf6be32c",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "d09dd05ea4ca.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Live-action cinematic forest chase, low tracking beside the pursuing bear. The massive bear bounds forward to the right with heavy ground-shaking paw strikes, shoulders rolling and wet fur rippling. Mud and crushed ferns fly backward. Ahead on the same trail the mounted hyena gallops away with the orc leaning forward; the bear steadily closes the gap without reaching them. The camera races alongside the bear at low height as tree trunks sweep past. One continuous shot.\n\noverall_soundscape: Heavy pounding paws, a deep bear growl, splashing mud, snapping brush and the lighter gallop ahead.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129005,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/forest/F05/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "076bc68cf6de4c1c87b59ec410ef25c4",
+    "create_time": 1793258122761
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/forest/F05",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "e98986f4-ca34-4405-8dfe-d843cf6be32c",
+      "timestamp": 1793258649986
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "e98986f4-ca34-4405-8dfe-d843cf6be32c",
+      "timestamp": 1793258649989
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "e98986f4-ca34-4405-8dfe-d843cf6be32c",
+      "timestamp": 1793259237884
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "49d17935-aafb-43a0-88a4-6a6f3962f005": {
+  "prompt": [
+   114,
+   "49d17935-aafb-43a0-88a4-6a6f3962f005",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "0bc392fa1301.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Live-action cinematic fantasy forest chase. The mounted hyena gallops away along the muddy trail curving toward the right, the orc leaning low and holding the reins as the saddle rises and falls. The massive bear bounds after them with rolling shoulders and heavy paw strikes, remaining behind the rider. Mud flies backward and ferns shake as they rush past. The camera follows from the rear left, then gradually lets the animals gain distance, revealing the towering mossy forest ahead. The pursuit continues into the trees. One continuous shot.\n\noverall_soundscape: Pounding paws through mud, heavy bear breaths, leather creaks, clattering armour and rushing forest wind.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129006,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/forest/F06/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "a96ed2ff73ed419eab56abae763adc11",
+    "create_time": 1793259042537
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/forest/F06",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "49d17935-aafb-43a0-88a4-6a6f3962f005",
+      "timestamp": 1793259238058
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "49d17935-aafb-43a0-88a4-6a6f3962f005",
+      "timestamp": 1793259238062
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "49d17935-aafb-43a0-88a4-6a6f3962f005",
+      "timestamp": 1793259825181
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "63c56a7d-dd3d-4eb6-aa66-fca300c2054f": {
+  "prompt": [
+   115,
+   "63c56a7d-dd3d-4eb6-aa66-fca300c2054f",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "26ab747c9252.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Naturalistic cinematic wildlife. The golden eagle stands firmly on the cliff ledge as wind lifts the edge of its feathers. Its head turns sharply down and to the right, fixing on movement in the meadow below; it leans forward, alert and poised. The camera makes a slow, small push toward the eagle while keeping the ledge and open drop legible. One continuous shot.\n\noverall_soundscape: Open mountain wind brushing the rock face, soft feather rustle and faint distant meadow ambience.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129101,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/eagle/E01/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "e3666c707e454897b862ca4d4564ac9c",
+    "create_time": 1793259267544
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/eagle/E01",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "63c56a7d-dd3d-4eb6-aa66-fca300c2054f",
+      "timestamp": 1793259825356
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "63c56a7d-dd3d-4eb6-aa66-fca300c2054f",
+      "timestamp": 1793259825360
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "63c56a7d-dd3d-4eb6-aa66-fca300c2054f",
+      "timestamp": 1793260412874
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "966e1107-55ca-4347-8c72-ec48a997db59": {
+  "prompt": [
+   116,
+   "966e1107-55ca-4347-8c72-ec48a997db59",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "5817c8b2c4dd.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] A high, downward-looking wildlife view of the meadow below the cliff. The tawny rabbit makes several quick bounds toward the right through the short grass, pauses with its ears raised, and remains clearly visible against the ground. The camera gently follows its rightward movement without changing height. Sunlight and the meadow remain steady. One continuous shot.\n\noverall_soundscape: Light wind through short grass, faint small paw impacts and distant mountain ambience.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129102,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/eagle/E02/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "43f65a304e10416dae7539f239a40273",
+    "create_time": 1793259907118
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/eagle/E02",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "966e1107-55ca-4347-8c72-ec48a997db59",
+      "timestamp": 1793260413079
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "966e1107-55ca-4347-8c72-ec48a997db59",
+      "timestamp": 1793260413082
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "966e1107-55ca-4347-8c72-ec48a997db59",
+      "timestamp": 1793261001701
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "cbc2671b-a620-40ac-bb5b-c2e5e8289dcd": {
+  "prompt": [
+   117,
+   "cbc2671b-a620-40ac-bb5b-c2e5e8289dcd",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "2047f44f1880.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The golden eagle pushes firmly off the rock with both feet, spreads its broad wings and drops away from the cliff toward the meadow below on the right. Its wings draw closer to its body as the descent gathers speed. The camera follows the eagle outward and downward from the ledge, keeping the bird fully in view as rock recedes behind it. One continuous moving shot.\n\noverall_soundscape: A brief scrape of talons on stone, a heavy wing stroke and rising wind rushing past feathers.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129103,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/eagle/E03/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "c8b09d2d9ced4a5d9a0430aa13191049",
+    "create_time": 1793260470881
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/eagle/E03",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "cbc2671b-a620-40ac-bb5b-c2e5e8289dcd",
+      "timestamp": 1793261001899
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "cbc2671b-a620-40ac-bb5b-c2e5e8289dcd",
+      "timestamp": 1793261001912
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "cbc2671b-a620-40ac-bb5b-c2e5e8289dcd",
+      "timestamp": 1793261589175
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "48379e1d-220c-4513-a6e4-982d7224e9e8": {
+  "prompt": [
+   118,
+   "48379e1d-220c-4513-a6e4-982d7224e9e8",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "5f516046f9a9.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The low-flying golden eagle reaches the tawny rabbit, flares its wings and brings its open talons down around the rabbit's body. The talons visibly close into a firm grip, and a powerful downstroke lifts the rabbit clear of the grass. The camera tracks beside the contact at a steady low height, keeping the eagle's feet, the rabbit and the ground visible through the grasp and first lift. One continuous shot.\n\noverall_soundscape: A sudden rush of wings, brief grass rustle at contact and a deep close wingbeat as the eagle lifts.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129105,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/eagle/E05/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "44e4534511be4f44a1d23996295122e5",
+    "create_time": 1793261039292
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/eagle/E05",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "48379e1d-220c-4513-a6e4-982d7224e9e8",
+      "timestamp": 1793261589359
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "48379e1d-220c-4513-a6e4-982d7224e9e8",
+      "timestamp": 1793261589372
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "48379e1d-220c-4513-a6e4-982d7224e9e8",
+      "timestamp": 1793262179002
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "ac24b9b5-fead-478f-8789-5a11dd88a71e": {
+  "prompt": [
+   119,
+   "ac24b9b5-fead-478f-8789-5a11dd88a71e",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "5a9cc0b65f3f.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The golden eagle continues its fast descent and banks gently toward the sunlit grassy shoulder of the mountainside on the right. It follows the slope into a low approach over the alpine grass, spreading its wings to brake and extending its empty talons as the ground draws close. The camera follows from behind and lowers with the bird, keeping the flight continuous and the approaching grassy terrace readable. One continuous moving shot.\n\noverall_soundscape: Strong rushing air gives way to a forceful wing flare and the close hiss of grass below.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129104,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/eagle/E04/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "71bb7aed010f430898d760839b8adf3e",
+    "create_time": 1793261733603
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/eagle/E04",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "ac24b9b5-fead-478f-8789-5a11dd88a71e",
+      "timestamp": 1793262179177
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "ac24b9b5-fead-478f-8789-5a11dd88a71e",
+      "timestamp": 1793262179180
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "ac24b9b5-fead-478f-8789-5a11dd88a71e",
+      "timestamp": 1793262768790
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "6d3f6910-5442-45f9-bfb9-5f6753059e11": {
+  "prompt": [
+   120,
+   "6d3f6910-5442-45f9-bfb9-5f6753059e11",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "6563abd0c971.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The golden eagle continues climbing forward away from the grassy terrace with the same tawny rabbit held securely beneath its closed talons. Strong steady wingbeats lift both bodies higher; the rabbit stays held and hangs below the eagle, moving naturally with its flight. The camera tracks alongside the climb and gently eases farther back, widening enough to keep the eagle's full body and carried rabbit visible as the mountain meadow falls away below. One continuous moving shot.\n\noverall_soundscape: Heavy rhythmic wing strokes over open mountain wind, with the close grass sounds falling away.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129106,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/eagle/E06/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "a34b7633fef94abbb7e60058ebcd338c",
+    "create_time": 1793262328465
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/eagle/E06",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "6d3f6910-5442-45f9-bfb9-5f6753059e11",
+      "timestamp": 1793262768963
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "6d3f6910-5442-45f9-bfb9-5f6753059e11",
+      "timestamp": 1793262768966
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "6d3f6910-5442-45f9-bfb9-5f6753059e11",
+      "timestamp": 1793263361566
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "2715a4ee-7662-4fa1-a8fb-e3ae3fada24e": {
+  "prompt": [
+   121,
+   "2715a4ee-7662-4fa1-a8fb-e3ae3fada24e",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "f77dcf854242.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Live-action cinematic fantasy. The small rust-red dragon flies from the mountain gap toward the rocky shelf on the right, driving forward with powerful, measured wingbeats. Its wing membranes flex under the air and its long tail steadies a shallow bank along the cliff. The soldiers hold their positions beside the net launcher as the dragon approaches. The camera tracks beside the dragon at a steady pace, keeping the mountain wall receding behind it and the shelf in view. One continuous moving shot.\n\noverall_soundscape: Strong high-altitude wind, deep rhythmic wing strokes and a brief low dragon breath.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129201,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D01/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "fb6e7e9ff67044d6805bf12950a4e292",
+    "create_time": 1793262929534
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D01",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "2715a4ee-7662-4fa1-a8fb-e3ae3fada24e",
+      "timestamp": 1793263361761
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "2715a4ee-7662-4fa1-a8fb-e3ae3fada24e",
+      "timestamp": 1793263361765
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "2715a4ee-7662-4fa1-a8fb-e3ae3fada24e",
+      "timestamp": 1793263955048
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "91818fcf-1832-4548-a6f9-7b16599a9f57": {
+  "prompt": [
+   122,
+   "91818fcf-1832-4548-a6f9-7b16599a9f57",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "10a2c5f65614.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] Still holding the same tawny rabbit securely beneath its talons, the golden eagle veers gently away from the camera and flies out toward the distant sunlit mountain horizon. Its strong wingbeats carry both eagle and rabbit farther into the landscape; they grow steadily smaller together, with the rabbit remaining suspended beneath the bird. The camera stops matching the eagle's sideways speed and lets it recede into the wide mountain view, gently following its departure. One continuous moving shot.\n\noverall_soundscape: Wing strokes recede into spacious mountain wind and quiet distant meadow ambience.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129107,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/eagle/E07/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "d56c3b0599e64dfc9b860c15e163a07a",
+    "create_time": 1793263482016
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/eagle/E07",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "91818fcf-1832-4548-a6f9-7b16599a9f57",
+      "timestamp": 1793263955223
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "91818fcf-1832-4548-a6f9-7b16599a9f57",
+      "timestamp": 1793263955226
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "91818fcf-1832-4548-a6f9-7b16599a9f57",
+      "timestamp": 1793264550160
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "b85860a3-10d9-4635-837d-3018f11be33d": {
+  "prompt": [
+   123,
+   "b85860a3-10d9-4635-837d-3018f11be33d",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "f2f3a97c14d3.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The rust-red dragon tips its wings into a shallow outward bank along the cliff edge, sweeping through the open air in front of the soldiers' rocky shelf. Steady powerful wingbeats and its long tail balance the turn while the crew and their loaded net launcher remain on the shelf to the right. The camera eases back while tracking the bank, keeping the dragon's whole body and the nearby shelf visible rather than closing into its wings. One continuous moving shot.\n\noverall_soundscape: High mountain wind, heavy membrane wing strokes and a low dragon exhalation.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129202,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D02/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "1451b1a77fa74c9280a10c4d06c631e4",
+    "create_time": 1793264106298
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D02",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "b85860a3-10d9-4635-837d-3018f11be33d",
+      "timestamp": 1793264550335
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "b85860a3-10d9-4635-837d-3018f11be33d",
+      "timestamp": 1793264550338
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "b85860a3-10d9-4635-837d-3018f11be33d",
+      "timestamp": 1793265145551
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "4dc0eab5-78ae-42d9-98b9-cf2045e06afb": {
+  "prompt": [
+   124,
+   "4dc0eab5-78ae-42d9-98b9-cf2045e06afb",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "1cb7e4674d76.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The braced soldiers pull the release on their loaded wooden net launcher. Its throwing beam snaps forward toward the open gap on the left, casting the weighted rope net free of the crossbar and out over the cliff. The released net visibly separates from the machine and sails leftward through the air, its weighted corners spreading the mesh. The camera holds a clear side view of the machine and departing net so the physical release and flight are readable together. One continuous shot.\n\noverall_soundscape: A sharp wooden release, ropes snapping taut, a heavy mechanical clack and the airborne rush of the weighted net.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129203,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D03/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "3b3ec3aba2ec4fa582786c5d931b8a57",
+    "create_time": 1793264603235
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D03",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "4dc0eab5-78ae-42d9-98b9-cf2045e06afb",
+      "timestamp": 1793265145725
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "4dc0eab5-78ae-42d9-98b9-cf2045e06afb",
+      "timestamp": 1793265145729
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "4dc0eab5-78ae-42d9-98b9-cf2045e06afb",
+      "timestamp": 1793265746066
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "9f8e0efd-e9f0-43c7-ba11-1d22a7f2df6c": {
+  "prompt": [
+   125,
+   "9f8e0efd-e9f0-43c7-ba11-1d22a7f2df6c",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "69c999655e05.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The freely flying weighted rope net sails from right toward the dragon on the left. Its stone-weighted corners spread outward, opening the mesh across the dragon's flight path. The dragon raises its wings and checks its forward speed, its head facing the approaching net. The camera tracks alongside in a steady broadside view that keeps both the dragon's head and the opening net clearly visible. The intact mesh draws closer to its snout; the dragon remains outside the net. One continuous shot.\n\noverall_soundscape: Mountain wind, leathery wingbeats and weighted ropes whipping through the air.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129204,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D04/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "6fb59db12ec341c08158f2689304c829",
+    "create_time": 1793265188796
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D04",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "9f8e0efd-e9f0-43c7-ba11-1d22a7f2df6c",
+      "timestamp": 1793265746240
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "9f8e0efd-e9f0-43c7-ba11-1d22a7f2df6c",
+      "timestamp": 1793265746243
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "9f8e0efd-e9f0-43c7-ba11-1d22a7f2df6c",
+      "timestamp": 1793266351079
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "c85b18f7-7a06-4921-b4ec-d7ef3f70a7e8": {
+  "prompt": [
+   126,
+   "c85b18f7-7a06-4921-b4ec-d7ef3f70a7e8",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "4611dc7ac686.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The hovering rust-red dragon lowers its head toward the wooden net launcher and opens its jaws. A forceful stream of fire erupts from its mouth, crosses the short air gap and visibly strikes the launcher's wooden beam, frame and rope winch. The wood and ropes catch fire at the impact point as the soldiers recoil and step back to the right. The camera holds a clear broad side view containing the dragon's mouth, the connected flame and the equipment burning where it strikes. One continuous shot.\n\noverall_soundscape: A deep dragon inhalation becomes a forceful flame roar, followed by wood crackling, ropes burning and boots scraping backward over stone.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129207,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D07/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "d270f112681441adba763298135b7bde",
+    "create_time": 1793265958152
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D07",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "c85b18f7-7a06-4921-b4ec-d7ef3f70a7e8",
+      "timestamp": 1793266351284
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "c85b18f7-7a06-4921-b4ec-d7ef3f70a7e8",
+      "timestamp": 1793266351287
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "c85b18f7-7a06-4921-b4ec-d7ef3f70a7e8",
+      "timestamp": 1793266957211
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "5bbf4584-af41-43a7-bac6-b0f480d09910": {
+  "prompt": [
+   127,
+   "5bbf4584-af41-43a7-bac6-b0f480d09910",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "8b23fe0b6ff4.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The rust-red dragon opens its jaws directly beside the intact rope mesh and blasts a concentrated stream of fire into the net in front of its snout. The flame visibly connects from its mouth to the central mesh. The struck ropes ignite, blacken and snap, forming a widening burning hole while the weighted perimeter remains visible. The dragon keeps flapping at the same height. The camera tracks alongside at a steady broadside distance, keeping the mouth, flame contact and burning strands clear together. One continuous shot.\n\noverall_soundscape: A deep dragon breath becomes a roaring jet of flame, with sharp rope crackles and snapping burned strands over mountain wind.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129205,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D05/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "d6f9db11909246399a0c45a4ace67e76",
+    "create_time": 1793266423760
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D05",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "5bbf4584-af41-43a7-bac6-b0f480d09910",
+      "timestamp": 1793266957385
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "5bbf4584-af41-43a7-bac6-b0f480d09910",
+      "timestamp": 1793266957388
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "5bbf4584-af41-43a7-bac6-b0f480d09910",
+      "timestamp": 1793267565832
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "91ac9dbb-88b6-4c1f-8c57-6510672fe340": {
+  "prompt": [
+   128,
+   "91ac9dbb-88b6-4c1f-8c57-6510672fe340",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "3ff5eba2ff45.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The net launcher continues burning fiercely after the dragon's flame burst. Its scorched rope winch snaps loose and the upper wooden supports buckle; the long launching beam crashes down onto the wheeled base in a shower of sparks and broken timber. The machine stays collapsed and burning. The soldiers keep hurrying to the right away from the wreck while the dragon holds its position in the air to the left. The camera remains steady enough to show the timber structure break and fall. One continuous shot.\n\noverall_soundscape: Loud timber cracks, taut ropes snapping, falling wood hitting the wheeled frame, sustained fire and retreating boots on rock.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129208,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D08/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "ca7ace752e0545f8926ac138b53a29b3",
+    "create_time": 1793267026551
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D08",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "91ac9dbb-88b6-4c1f-8c57-6510672fe340",
+      "timestamp": 1793267566023
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "91ac9dbb-88b6-4c1f-8c57-6510672fe340",
+      "timestamp": 1793267566026
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "91ac9dbb-88b6-4c1f-8c57-6510672fe340",
+      "timestamp": 1793268174810
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "adeec70b-b776-41c0-ba23-d537a58b6347": {
+  "prompt": [
+   129,
+   "adeec70b-b776-41c0-ba23-d537a58b6347",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "ba6db63fa894.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The dragon closes its jaws and the flame jet stops. The burning rope net's weakened strands snap apart and its weighted remnants fall downward, leaving open air directly ahead. With a strong wingbeat the dragon drives forward through that cleared opening and emerges on the right beyond the falling burning ropes. The camera tracks alongside the dragon, clearly showing it move past the destroyed net as smoke and charred fragments trail below and behind. One continuous shot.\n\noverall_soundscape: The flame roar subsides into sharp rope snaps and crackling falling fragments, followed by powerful leathery wingbeats through mountain wind.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129206,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D06/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "1e05ff305d9341f9a7de396879e3b481",
+    "create_time": 1793267628303
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D06",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "adeec70b-b776-41c0-ba23-d537a58b6347",
+      "timestamp": 1793268174985
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "adeec70b-b776-41c0-ba23-d537a58b6347",
+      "timestamp": 1793268174988
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "adeec70b-b776-41c0-ba23-d537a58b6347",
+      "timestamp": 1793268778342
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "d8c711fe-5332-4129-a34d-d4e7fd7d7729": {
+  "prompt": [
+   130,
+   "d8c711fe-5332-4129-a34d-d4e7fd7d7729",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "d53b348f8b16.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The five frightened soldiers sprint along the rocky shelf away from the burning ruined net launcher. They run toward and past the camera's right side, their heavy boots scattering loose gravel and their worn armor jolting with urgent strides. The camera retreats along their escape route at running speed, keeping the staggered crew visible while the burning broken machine and the airborne dragon recede behind them to the left. One continuous moving shot.\n\noverall_soundscape: Rapid boots scraping and pounding on loose stone, rattling armor, hard breathing and distant crackling fire under mountain wind.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129209,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D09/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "302d76c25f0d4f5c98840f327733f05c",
+    "create_time": 1793268370605
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D09",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "d8c711fe-5332-4129-a34d-d4e7fd7d7729",
+      "timestamp": 1793268778525
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "d8c711fe-5332-4129-a34d-d4e7fd7d7729",
+      "timestamp": 1793268778529
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "d8c711fe-5332-4129-a34d-d4e7fd7d7729",
+      "timestamp": 1793269381627
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ },
+ "0518eb75-0cd3-455f-bfb7-5db3881b1c9a": {
+  "prompt": [
+   131,
+   "0518eb75-0cd3-455f-bfb7-5db3881b1c9a",
+   {
+    "1": {
+     "class_type": "UNETLoader",
+     "inputs": {
+      "unet_name": "minimax_h3_fl2va_fp8.safetensors",
+      "weight_dtype": "default"
+     }
+    },
+    "2": {
+     "class_type": "CLIPLoader",
+     "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax"
+     }
+    },
+    "3": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+     }
+    },
+    "4": {
+     "class_type": "VAELoader",
+     "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+     }
+    },
+    "5": {
+     "class_type": "LoadImage",
+     "inputs": {
+      "image": "f684e8a99d93.png"
+     }
+    },
+    "7": {
+     "class_type": "MiniMaxH3ImageToVideo",
+     "inputs": {
+      "clip": [
+       "2",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ],
+      "prompt": "For the target video, at 0.00 seconds into the target video, <Picture 1> (from [Shot 1]) is fully referenced.\n\nintegrated_multimodal_description: [Shot 1] The three soldiers still in view keep sprinting along the rocky path toward the foreground and right, following their companions who have already run ahead out of frame. Their boots pound and kick up gravel as they put more distance between themselves and the burning ruined launcher behind them on the left. The camera continues retreating along the same escape route with a slight widening, keeping their hurried running readable while the abandoned burning machine grows farther away. One continuous moving shot.\n\noverall_soundscape: Rapid boots, loose gravel, rattling armor and hard breathing remain close while the crackling fire grows more distant in the mountain wind.\n\nnon_diegetic_music: N/A",
+      "width": 1280,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+       "5",
+       0
+      ]
+     }
+    },
+    "8": {
+     "class_type": "MiniMaxH3SigmaShift",
+     "inputs": {
+      "model": [
+       "1",
+       0
+      ],
+      "shift_video": 12.0,
+      "shift_audio": 3.0
+     }
+    },
+    "9": {
+     "class_type": "KSampler",
+     "inputs": {
+      "model": [
+       "8",
+       0
+      ],
+      "positive": [
+       "7",
+       0
+      ],
+      "negative": [
+       "7",
+       0
+      ],
+      "latent_image": [
+       "7",
+       1
+      ],
+      "seed": 129210,
+      "steps": 16,
+      "cfg": 1.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0
+     }
+    },
+    "10": {
+     "class_type": "VAEDecode",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "3",
+       0
+      ]
+     }
+    },
+    "11": {
+     "class_type": "VAEDecodeAudio",
+     "inputs": {
+      "samples": [
+       "9",
+       0
+      ],
+      "vae": [
+       "4",
+       0
+      ]
+     }
+    },
+    "12": {
+     "class_type": "CreateVideo",
+     "inputs": {
+      "images": [
+       "10",
+       0
+      ],
+      "fps": 24.0,
+      "audio": [
+       "11",
+       0
+      ]
+     }
+    },
+    "13": {
+     "class_type": "SaveVideo",
+     "inputs": {
+      "video": [
+       "12",
+       0
+      ],
+      "filename_prefix": "three-scenes-20261029/dragon/D10/attempt-001",
+      "format": "auto"
+     }
+    }
+   },
+   {
+    "client_id": "4bc2994cabe345efb9664f2beb6248b5",
+    "create_time": 1793269452445
+   },
+   [
+    "13"
+   ]
+  ],
+  "outputs": {
+   "13": {
+    "images": [
+     {
+      "filename": "attempt-001_00001_.mp4",
+      "subfolder": "three-scenes-20261029/dragon/D10",
+      "type": "output",
+      "metadata": {
+       "kind": "video",
+       "width": 1280,
+       "height": 704,
+       "duration": 5.166666666666667,
+       "fps": 24.0,
+       "frame_count": 124
+      }
+     }
+    ],
+    "animated": [
+     true
+    ]
+   }
+  },
+  "status": {
+   "status_str": "success",
+   "completed": true,
+   "messages": [
+    [
+     "execution_start",
+     {
+      "prompt_id": "0518eb75-0cd3-455f-bfb7-5db3881b1c9a",
+      "timestamp": 1793269452446
+     }
+    ],
+    [
+     "execution_cached",
+     {
+      "nodes": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "8"
+      ],
+      "prompt_id": "0518eb75-0cd3-455f-bfb7-5db3881b1c9a",
+      "timestamp": 1793269452448
+     }
+    ],
+    [
+     "execution_success",
+     {
+      "prompt_id": "0518eb75-0cd3-455f-bfb7-5db3881b1c9a",
+      "timestamp": 1793270063684
+     }
+    ]
+   ]
+  },
+  "meta": {
+   "13": {
+    "node_id": "13",
+    "display_node": "13",
+    "parent_node": null,
+    "real_node_id": "13"
+   }
+  }
+ }
+}
